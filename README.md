@@ -1,4 +1,4 @@
-# user-manegement
+# user-management
 
 ## Project setup
 ```
