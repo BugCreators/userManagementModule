@@ -1,7 +1,7 @@
 <template>
   <div class="myNoData">
-    <img :src="$store.state.defaultNoData" alt>
-    <p>{{hint}}</p>
+    <img :src="$store.state.defaultNoData" alt />
+    <p>{{ hint }}</p>
   </div>
 </template>
 

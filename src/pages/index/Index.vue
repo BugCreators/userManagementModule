@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 导航栏 -->
-    <AvueHeader :isAdmin="false"/>
+    <AvueHeader :isAdmin="false" />
     <!-- 路由视图 -->
     <RouterView />
     <!-- 页脚 -->

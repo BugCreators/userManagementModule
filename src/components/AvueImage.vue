@@ -5,7 +5,7 @@
     @error="imageError"
     @load="showImage"
     v-show="showImageToggle"
-    alt 
+    alt
   />
 </template>
 <script>

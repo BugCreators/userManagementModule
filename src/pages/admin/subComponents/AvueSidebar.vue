@@ -1,11 +1,11 @@
 <template>
   <div>
-    <el-menu 
-      v-if="$store.state.sidebar != null" 
-      :default-active="currentComponent" 
+    <el-menu
+      v-if="$store.state.sidebar != null"
+      :default-active="currentComponent"
       router
     >
-      <el-menu-item 
+      <el-menu-item
         v-for="(item, index) in $store.state.sidebar"
         :index="item.href"
         :key="index"
@@ -13,7 +13,7 @@
         <span><i :class="item.class"></i>{{ item.title }}</span>
       </el-menu-item>
     </el-menu>
-  </div>  
+  </div>
 </template>
 
 <script>
@@ -32,5 +32,4 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-</style>
+<style lang="less" scoped></style>

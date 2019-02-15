@@ -3,31 +3,22 @@
     <div class="college-header">
       <div class="line"></div>
       <div class="college-type">
-        <img 
-          src="@/assets/images/college_list.png" 
-          alt>
+        <img src="@/assets/images/college_list.png" alt />
         <span class="title">学院列表</span>
       </div>
       <div class="line"></div>
     </div>
     <div class="college-list">
       <el-row :gutter="26">
-        <el-col 
-          v-for="item in list"
-          :span="3"  
-          :key="item.id"
-        >
-          <a 
-            class="college-card" 
-            :href="'index.html#/college/' + item.id"
-          >
+        <el-col v-for="item in list" :span="3" :key="item.id">
+          <a class="college-card" :href="'index.html#/college/' + item.id">
             <AvueImage
               :srcImage="item.coverUri || $store.state.defaultCollege"
               :replaceImage="$store.state.defaultCollege"
-              :class="['college-cover']" 
+              :class="['college-cover']"
             />
             <div class="cover-title">
-              <span>{{item.name}}</span>
+              <span>{{ item.name }}</span>
             </div>
           </a>
         </el-col>

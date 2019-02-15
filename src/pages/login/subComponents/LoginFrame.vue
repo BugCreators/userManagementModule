@@ -2,50 +2,42 @@
   <div class="content">
     <div class="twoLoginMethods">
       <div class="logo-login">
-        <img src="../../../assets/images/logo_home.png">
+        <img src="../../../assets/images/logo_home.png" />
       </div>
       <div class="loginBox">
-        <div class="loginAccount" >
+        <div class="loginAccount">
           <p class="login-method">账号登录</p>
           <div class="has-padding">
-            <div
-              v-if="errMes" 
-              class="errMes" 
-            >
-              <img 
-                src="../../../assets/images/popups_ic_prompt.png" 
-                alt
-              >
-              <span>{{errMes}}</span>
+            <div v-if="errMes" class="errMes">
+              <img src="../../../assets/images/popups_ic_prompt.png" alt />
+              <span>{{ errMes }}</span>
             </div>
-            <el-input 
-              type="text" 
-              class="hasMargin" 
-              v-model="username" 
+            <el-input
+              type="text"
+              class="hasMargin"
+              v-model="username"
               placeholder="点击输入您的账号"
-              @keyup.enter.native="login" 
+              @keyup.enter.native="login"
               clearable
             ></el-input>
-            <el-input 
-              type="password" 
-              class="password" 
-              v-model="password" 
+            <el-input
+              type="password"
+              class="password"
+              v-model="password"
               placeholder="点击输入密码"
-              @keyup.enter.native="login" 
-              clearable></el-input>
+              @keyup.enter.native="login"
+              clearable
+            ></el-input>
             <div class="remember">
               <el-checkbox v-model="remember">记住密码</el-checkbox>
-              <a 
-                href="#" 
-                class="forget" 
-                @click="clickForgetPwd"
-              >忘记密码？</a>
+              <a href="#" class="forget" @click="clickForgetPwd">忘记密码？</a>
             </div>
-            <el-button 
-              @click="login" 
-              :disabled="!username || !password" 
-              :class="{noClick: !username || !password}"
-            >{{logining == true ? "登陆中..." : "登 录"}}</el-button>
+            <el-button
+              @click="login"
+              :disabled="!username || !password"
+              :class="{ noClick: !username || !password }"
+              >{{ logining == true ? "登陆中..." : "登 录" }}</el-button
+            >
           </div>
         </div>
       </div>
@@ -80,16 +72,18 @@ export default {
   },
   created() {
     let that = this;
-    new Promise(res => res()).then(() => that.getSetting()).then(() => {
-      let userInfo = window.localStorage.getItem("avueUser");
-      if (userInfo != null) {
-        userInfo = JSON.parse(userInfo);
-        (that.username = userInfo.name), (that.password = userInfo.password);
-        that.remember = true;
-        that.isEncrypt = true;
-      }
-      return true;
-    });
+    new Promise(res => res())
+      .then(() => that.getSetting())
+      .then(() => {
+        let userInfo = window.localStorage.getItem("avueUser");
+        if (userInfo != null) {
+          userInfo = JSON.parse(userInfo);
+          (that.username = userInfo.name), (that.password = userInfo.password);
+          that.remember = true;
+          that.isEncrypt = true;
+        }
+        return true;
+      });
   },
   methods: {
     clickForgetPwd() {},

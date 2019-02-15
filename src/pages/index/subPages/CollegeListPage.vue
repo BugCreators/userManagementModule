@@ -3,18 +3,25 @@
   <div class="collegePage" ref="collegePage">
     <!-- 顶部banner -->
     <div class="poster">
-      <a 
-        :href="$store.state.setting.bannerHref ? $store.state.setting.bannerHref : '#'">
+      <a
+        :href="
+          $store.state.setting.bannerHref
+            ? $store.state.setting.bannerHref
+            : '#'
+        "
+      >
         <AvueImage
-          :srcImage="$store.state.setting.bannerUri || $store.state.defaultBanner"
-          :replaceImage="$store.state.defaultBanner" />
+          :srcImage="
+            $store.state.setting.bannerUri || $store.state.defaultBanner
+          "
+          :replaceImage="$store.state.defaultBanner"
+        />
       </a>
     </div>
     <!-- 学院列表 -->
     <div class="college-wrapper">
       <div class="container">
-        <CollegeList
-          :list="collegeList" />
+        <CollegeList :list="collegeList" />
         <myNoData v-if="!collegeList || collegeList.length <= 0" />
       </div>
     </div>

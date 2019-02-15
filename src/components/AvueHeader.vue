@@ -7,7 +7,7 @@
             :srcImage="$store.state.defaultLogo"
             :replaceImage="$store.state.defaultLogo"
           />
-            <!-- :srcImage="$store.state.setting.logoUri || $store.state.defaultLogo"
+          <!-- :srcImage="$store.state.setting.logoUri || $store.state.defaultLogo"
             :replaceImage="$store.state.defaultLogo"/> -->
         </a>
       </h1>

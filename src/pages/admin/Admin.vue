@@ -1,21 +1,11 @@
 <template>
   <div class="admin">
-    <AvueHeader :isAdmin="true"/>
+    <AvueHeader :isAdmin="true" />
     <el-row class="content">
-      <el-col 
-        class="sidebar"
-        :xs="4"
-        :sm="4"
-        :lg="3"
-      >
-        <AvueSidebar :currentComponent="currentComponent"/>
+      <el-col class="sidebar" :xs="4" :sm="4" :lg="3">
+        <AvueSidebar :currentComponent="currentComponent" />
       </el-col>
-      <el-col  
-        class="page-right"
-        :xs="20"
-        :sm="20"
-        :lg="21"
-      >
+      <el-col class="page-right" :xs="20" :sm="20" :lg="21">
         <RouterView />
       </el-col>
     </el-row>

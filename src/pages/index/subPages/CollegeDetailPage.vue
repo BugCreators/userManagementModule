@@ -12,19 +12,19 @@
           <AvueImage
             :srcImage="info.coverUri || $store.state.defaultCollege"
             :replaceImage="$store.state.defaultCollege"
-            :class="['college-img']" />
+            :class="['college-img']"
+          />
           <div class="detail-right">
-            <span class="college-name">{{info.name}}教育学院</span>
+            <span class="college-name">{{ info.name }}教育学院</span>
             <span class="college-otherInfo">
               官网链接：
               <a href="https://cn.vuejs.org/">https://cn.vuejs.org/</a>
             </span>
           </div>
         </div>
-        <div id="college-des">{{info.des ? info.des : '暂无概况~'}}</div>
+        <div id="college-des">{{ info.des ? info.des : "暂无概况~" }}</div>
         <div class="showMore" v-if="isShow" @click="showMore">
-          <span 
-            :class="[!isShowMore ? `icon-expand` : `icon-fold`]"></span>
+          <span :class="[!isShowMore ? `icon-expand` : `icon-fold`]"></span>
           {{ !isShowMore ? `显示` : `隐藏` }}
         </div>
       </div>
@@ -32,8 +32,7 @@
     <div class="college-major">
       <div class="detail">
         <h1>专业设置</h1>
-        <MajorList 
-          :majorList="info.majorList" />
+        <MajorList :majorList="info.majorList" />
         <myNoData v-if="info.majorList == null" />
       </div>
     </div>
