@@ -218,9 +218,6 @@ export default {
               height: 50px;
               padding: 0 24px;
               width: 280px;
-              &:focus {
-                border-color: @default_color;
-              }
             }
           }
           .remember {
@@ -269,14 +266,14 @@ export default {
           .el-button {
             background: @default_color;
             border-color: @default_color;
-            color: #fff;
+            color: #fff !important;
             font-size: 16px;
             height: 50px;
             margin-top: 60px;
             width: 100%;
             &.noClick {
-              background: #c1e8d1;
-              border-color: #c1e8d1;
+              background: #c1e8d1 !important;
+              border-color: #c1e8d1 !important;
             }
           }
         }

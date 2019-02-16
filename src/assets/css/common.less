@@ -67,3 +67,80 @@ img, object, select, input, textarea, button {
     }
   }
 }
+
+/*******************后台列表样式********************/
+.el-table {
+  th, td {
+    text-align: center !important;
+  }
+}
+
+.el-checkbox__inner {
+  &:hover, .el-checkbox__input.is-focus & {
+    border-color: @default_color !important;
+  }
+  .el-checkbox__input.is-checked & {
+    background-color: @default_color !important;
+    border-color: @default_color !important;
+  }
+}
+
+.cell {
+  i {
+    cursor: pointer;
+    margin-right: 5px;
+  }
+}
+
+.el-button {
+  &:active,
+  &:focus,
+  &:hover {
+    color: @default_color !important;
+    border-color: @default_color !important;
+  }
+}
+
+.el-button--primary {
+  background-color: @default_color !important;
+  border-color: @default_color !important;
+  &:focus,
+  &:hover{
+    color: white !important;
+  }
+}
+
+.el-button--danger {
+  &:focus,
+  &:hover{
+    background-color: #f56c6c !important;
+    border-color: #f56c6c !important;
+    color: white !important;
+  }
+}
+
+.el-dialog__headerbtn:hover .el-dialog__close {
+  color: @default_color !important;
+}
+
+.el-pagination.is-background {
+  .el-pager {
+    li {
+      &:not(.disabled){
+        &:hover {
+          color: @default_color !important;
+        }
+        &.active {
+          background-color: @default_color !important;
+          color: white !important;
+        }
+      }
+    }
+  }
+}
+
+.el-input__inner {
+  &:focus {
+    border-color: @default_color !important;
+  }
+}

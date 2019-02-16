@@ -30,15 +30,15 @@
 
 <script>
 import AvueImage from "@/components/AvueImage";
-import CollegeList from "../subComponents/CollegeList";
-import MyNoData from "@/components/MyNoData";
 
 export default {
   name: "collegeListPage",
   components: {
     AvueImage,
-    CollegeList,
-    MyNoData
+    CollegeList: () =>
+      import(/* webpackChunkName: "collegeList" */ "../subComponents/CollegeList"),
+    MyNoData: () =>
+      import(/* webpackChunkName: "myNoData" */ "@/components/MyNoData")
   },
   data() {
     return {

@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Router from "vue-router";
-import CollegeListPage from "./subPages/CollegeListPage.vue";
 
 Vue.use(Router);
 
@@ -9,13 +8,14 @@ export default new Router({
     {
       path: "/",
       name: "collegeListPage",
-      component: CollegeListPage
+      component: () =>
+        import(/* webpackChunkName: "collegeListPage" */ "./subPages/CollegeListPage")
     },
     {
       path: "/college/:id",
       name: "collegeDetail",
       component: () =>
-        import(/* webpackChunkName: "collegeDetail" */ "./subPages/CollegeDetailPage.vue")
+        import(/* webpackChunkName: "collegeDetail" */ "./subPages/CollegeDetailPage")
     },
     {
       path: "/login",

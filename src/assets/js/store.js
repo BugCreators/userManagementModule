@@ -32,7 +32,7 @@ export default new Vuex.Store({
     // 用户信息
     userInfo: ``,
 
-    token: ``,
+    //token: ``, 放入userInfo中
 
     sidebar: [
       {
@@ -65,7 +65,12 @@ export default new Vuex.Store({
     // 学院详情 参数: id
     getCollegeDetail: ``,
     // 用户登录 参数：name, password
-    login: ``
+    login: ``,
+    // 学院管理
+    // 添加学院
+    addCollege: ``,
+    // 删除学院
+    delColleges: ``
   },
   mutations: {
     setSetting(state, setting) {

@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Router from "vue-router";
-import CollegeManagement from "./subPages/CollegeManagement";
 
 Vue.use(Router);
 
@@ -9,8 +8,8 @@ const router = new Router({
     {
       path: "/",
       name: "admin",
-      // component: Admin,
-      component: CollegeManagement,
+      component: () =>
+        import(/* webpackChunkName: "collegeManagement" */ "./subPages/CollegeManagement/CollegeManagement"),
       meta: {
         requireAuth: true
       }
@@ -19,16 +18,16 @@ const router = new Router({
       path: "/collegeManagement",
       name: "collegeManagement",
       component: () =>
-        import(/* webpackChunkName: "collegeManagement" */ "./subPages/CollegeManagement.vue"),
+        import(/* webpackChunkName: "collegeManagement" */ "./subPages/CollegeManagement/CollegeManagement"),
       meta: {
         requireAuth: true
       }
     },
     {
-      path: "/departm entManagement",
+      path: "/departmentManagement",
       name: "departmentManagement",
       component: () =>
-        import(/* webpackChunkName: "departmentManagement" */ "./subPages/DepartmentManagement.vue"),
+        import(/* webpackChunkName: "departmentManagement" */ "./subPages/DepartmentManagement"),
       meta: {
         requireAuth: true
       }
@@ -37,7 +36,7 @@ const router = new Router({
       path: "/classManagement",
       name: "classManagement",
       component: () =>
-        import(/* webpackChunkName: "classManagement" */ "./subPages/ClassManagement.vue"),
+        import(/* webpackChunkName: "classManagement" */ "./subPages/ClassManagement"),
       meta: {
         requireAuth: true
       }
@@ -46,7 +45,7 @@ const router = new Router({
       path: "/setting",
       name: "setting",
       component: () =>
-        import(/* webpackChunkName: "setting" */ "./subPages/Setting.vue"),
+        import(/* webpackChunkName: "setting" */ "./subPages/Setting"),
       meta: {
         requireAuth: true
       }

@@ -42,8 +42,6 @@
 <script>
 import { Breadcrumb, BreadcrumbItem } from "element-ui";
 import AvueImage from "@/components/AvueImage";
-import CollegeDetailMajorList from "../subComponents/CollegeDetailMajorList";
-import MyNoData from "@/components/MyNoData";
 
 export default {
   name: "collegeDetailPage",
@@ -51,8 +49,10 @@ export default {
     elBreadcrumb: Breadcrumb,
     elBreadcrumbItem: BreadcrumbItem,
     AvueImage,
-    MajorList: CollegeDetailMajorList,
-    MyNoData
+    MajorList: () =>
+      import(/* webpackChunkName: "majorList" */ "../subComponents/CollegeDetailMajorList"),
+    MyNoData: () =>
+      import(/* webpackChunkName: "myNoData" */ "@/components/MyNoData")
   },
   data() {
     return {

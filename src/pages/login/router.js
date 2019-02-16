@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Login from "./Login.vue";
 
 Vue.use(Router);
 
@@ -9,7 +8,7 @@ const router = new Router({
     {
       path: "/",
       name: "login",
-      component: Login,
+      component: () => import(/* webpackChunkName: "login.chunk" */ "./Login"),
       meta: {
         requireAuth: true
       }
@@ -21,7 +20,8 @@ router.beforeEach((to, from, next) => {
     if (document.cookie.indexOf("avueUser") == -1) {
       next();
     } else {
-      window.history.go(-1);
+      // window.history.go(-1);
+      window.location = "/admin.html";
     }
   } else {
     next();
