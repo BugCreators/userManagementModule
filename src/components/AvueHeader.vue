@@ -58,13 +58,13 @@ export default {
   }
   .logo {
     float: left;
-    margin: 20px 0 0 0 !important;
+    margin: 10px 0 0 0 !important;
     img {
       width: auto;
     }
   }
 }
 .headerScroll {
-  background: url("../assets/images/nav_bg_scroll.png") repeat-x;
+  background: url("../assets/images/nav_bg_scroll.png") 0 -20px repeat-x;
 }
 </style>

@@ -9,7 +9,7 @@
           <p class="login-method">账号登录</p>
           <div class="has-padding">
             <div v-if="errMes" class="errMes">
-              <img src="../../../assets/images/popups_ic_prompt.png" alt />
+              <img src="../../../assets/images/icon/popups_prompt.png" alt />
               <span>{{ errMes }}</span>
             </div>
             <el-input

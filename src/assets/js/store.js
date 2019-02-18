@@ -36,19 +36,65 @@ export default new Vuex.Store({
 
     sidebar: [
       {
-        name: "college",
-        title: "学院管理",
-        href: "collegeManagement"
+        name: "adminManagement",
+        title: "管理员管理",
+        class: "el-icon-setting",
+        item: [
+          {
+            name: "role",
+            title: "角色管理",
+            href: ""
+          },
+          {
+            name: "power",
+            title: "权限管理",
+            href: ""
+          },
+          {
+            name: "adminList",
+            title: "管理员列表",
+            href: ""
+          }
+        ]
       },
       {
-        name: "partment",
-        title: "系别管理",
-        href: "departmentManagement"
+        name: "departManagement",
+        title: "学系管理",
+        class: "el-icon-setting",
+        item: [
+          {
+            name: "college",
+            title: "学院管理",
+            href: "collegeManagement"
+          },
+          {
+            name: "departmentManagement",
+            title: "院系管理",
+            href: "departmentManagement"
+          },
+          {
+            name: "class",
+            title: "班级管理",
+            href: "classManagement"
+          }
+        ]
       },
       {
-        name: "class",
-        title: "班级管理",
-        href: "classManagement"
+        name: "userManagement",
+        title: "账号管理",
+        class: "el-icon-setting",
+        item: [
+          {
+            name: "student",
+            title: "学生列表",
+            href: ""
+          },
+          {
+            name: "teacher",
+            title: "教师列表",
+            href: ""
+          }
+        ]
       },
       {
         name: "setting",

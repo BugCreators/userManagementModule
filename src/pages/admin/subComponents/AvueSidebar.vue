@@ -1,35 +1,49 @@
 <template>
-  <div>
-    <el-menu
-      v-if="$store.state.sidebar != null"
-      :default-active="currentComponent"
-      router
-    >
-      <el-menu-item
-        v-for="(item, index) in $store.state.sidebar"
-        :index="item.href"
-        :key="index"
-      >
-        <span><i :class="item.class"></i>{{ item.title }}</span>
+  <el-menu
+    v-if="$store.state.sidebar != null"
+    :default-active="currentComponent"
+    :collapse="isCollapse"
+    router
+  >
+    <div v-for="(item, index) in $store.state.sidebar" :key="index">
+      <el-submenu v-if="'item' in item" :index="subMenuIndex(index)">
+        <template slot="title">
+          <i :class="item.class"></i><span slot="title">{{ item.title }}</span>
+        </template>
+        <el-menu-item
+          v-for="(subItem, subIndex) in item.item"
+          :key="subIndex"
+          :index="subItem.href"
+        >
+          {{ subItem.title }}
+        </el-menu-item>
+      </el-submenu>
+      <el-menu-item v-else :index="item.href">
+        <i :class="item.class"></i><span slot="title">{{ item.title }}</span>
       </el-menu-item>
-    </el-menu>
-  </div>
+    </div>
+  </el-menu>
 </template>
 
 <script>
-import { Menu, MenuItem } from "element-ui";
+import { Menu, MenuItem, Submenu } from "element-ui";
 
 export default {
   name: "avueSidebar",
+  props: {
+    currentComponent: String,
+    isCollapse: Boolean
+  },
   components: {
     elMenu: Menu,
-    elMenuItem: MenuItem
+    elMenuItem: MenuItem,
+    elSubmenu: Submenu
   },
-  props: {
-    currentComponent: String
-  },
-  created() {}
+  created() {},
+  methods: {
+    subMenuIndex(index) {
+      return index.toString();
+    }
+  }
 };
 </script>
-
-<style lang="less" scoped></style>

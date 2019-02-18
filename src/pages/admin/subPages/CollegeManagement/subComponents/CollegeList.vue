@@ -8,12 +8,21 @@
       <el-table-column label="学院名" prop="name" width="200"></el-table-column>
       <el-table-column label="院徽" width="150">
         <template slot-scope="scope">
-          <AvueImage
-            :srcImage="scope.row.coverUri || $store.state.defaultCollege"
-            :replaceImage="$store.state.defaultCollege"
-          />
+          <el-popover placement="right" trigger="hover">
+            <AvueImage
+              :srcImage="scope.row.coverUri || $store.state.defaultCollege"
+              :replaceImage="$store.state.defaultCollege"
+            />
+            <AvueImage
+              :className="[thumbnail]"
+              slot="reference"
+              :srcImage="scope.row.coverUri || $store.state.defaultCollege"
+              :replaceImage="$store.state.defaultCollege"
+            />
+          </el-popover>
         </template>
       </el-table-column>
+      <el-table-column label="官网链接" prop="" width="200"></el-table-column>
       <el-table-column label="学院描述" prop="des"></el-table-column>
       <el-table-column label="操作" width="100">
         <template slot-scope="scope">
@@ -53,6 +62,7 @@ import {
   Message,
   MessageBox,
   Pagination,
+  Popover,
   Table,
   TableColumn
 } from "element-ui";
@@ -66,6 +76,7 @@ export default {
       import(/* webpackChunkName: "collegeEditLog" */ "./CollegeEditLog"),
     elButton: Button,
     elPagination: Pagination,
+    elPopover: Popover,
     elTable: Table,
     elTableColumn: TableColumn
   },
@@ -86,7 +97,8 @@ export default {
       pageSize: 5,
       pageIndex: 1,
       selectedCollegeId: [],
-      showEditLog: false
+      showEditLog: false,
+      thumbnail: "thumbnail"
     };
   },
   created() {},

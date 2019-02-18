@@ -8,8 +8,7 @@ h5,
 h6,
 form, 
 input, 
-button, 
-textarea, 
+button,
 p {
   margin: 0;
 }
@@ -36,39 +35,68 @@ img, object, select, input, textarea, button {
   vertical-align: middle;
 }
 
+// 缩略图
+.thumbnail{
+  width: 50px;
+  height: 50px;
+}
+
+.el-popover {
+  text-align: center !important;
+}
+
 .el-loading-spinner {
   .path {
     stroke: @default_color !important;
   }
 }
 
+/***************菜单样式***************/
 .el-menu {
-  background: none;
+  background: @header_bg;
   border: none;
-  .el-menu-item {
-    color: white;
-    font-size: 16px;
-    transition: none;
-    &:hover, 
-    &:focus, 
-    &.is-active {
-      background-color: transparent !important;
-      border-right: 3px solid @default_color;
-      color: @default_color;
-      i {
-        color: @default_color;
+  &:not(.el-menu--collapse) {
+    width: @sidebar_width;
+  }
+  .el-submenu {
+    &__title {
+      color: white;
+      &:hover {
+        background-color: fadeout(white, 95%);
       }
     }
     i {
       color: white;
-      display: inline-block;
-      margin-bottom: 3px;
-      margin-right: 5px;
     }
   }
 }
 
-/*******************后台列表样式********************/
+// .el-menu--collapse {
+//   width: @siderbar_width_fold;
+// }
+
+.el-menu-item {
+  color: white;
+  transition: none;
+  &:hover, 
+  &:focus, 
+  &.is-active {
+    background-color: transparent !important;
+    border-right: 3px solid @default_color;
+    color: @default_color;
+    i {
+      color: @default_color;
+    }
+  }
+  i {
+    color: white;
+    display: inline-block;
+    margin-right: 5px;
+  }
+}
+
+/*******************后台样式********************/
+// 列表
 .el-table {
   th, td {
     text-align: center !important;
@@ -86,12 +114,18 @@ img, object, select, input, textarea, button {
 }
 
 .cell {
+  display: -webkit-box;
+  overflow : hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
   i {
     cursor: pointer;
     margin-right: 5px;
   }
 }
 
+// 按钮
 .el-button {
   &:active,
   &:focus,
@@ -119,10 +153,12 @@ img, object, select, input, textarea, button {
   }
 }
 
+// 对话框
 .el-dialog__headerbtn:hover .el-dialog__close {
   color: @default_color !important;
 }
 
+// 分页
 .el-pagination.is-background {
   .el-pager {
     li {
@@ -139,6 +175,7 @@ img, object, select, input, textarea, button {
   }
 }
 
+// 输入栏
 .el-input__inner {
   &:focus {
     border-color: @default_color !important;

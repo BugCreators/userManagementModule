@@ -27,7 +27,7 @@ const router = new Router({
       path: "/departmentManagement",
       name: "departmentManagement",
       component: () =>
-        import(/* webpackChunkName: "departmentManagement" */ "./subPages/DepartmentManagement"),
+        import(/* webpackChunkName: "departmentManagement" */ "./subPages/DepartmentManagement/DepartmentManagement"),
       meta: {
         requireAuth: true
       }
@@ -36,7 +36,7 @@ const router = new Router({
       path: "/classManagement",
       name: "classManagement",
       component: () =>
-        import(/* webpackChunkName: "classManagement" */ "./subPages/ClassManagement"),
+        import(/* webpackChunkName: "classManagement" */ "./subPages/ClassManagement/ClassManagement"),
       meta: {
         requireAuth: true
       }
@@ -45,7 +45,7 @@ const router = new Router({
       path: "/setting",
       name: "setting",
       component: () =>
-        import(/* webpackChunkName: "setting" */ "./subPages/Setting"),
+        import(/* webpackChunkName: "setting" */ "./subPages/Setting/Setting"),
       meta: {
         requireAuth: true
       }

@@ -142,7 +142,7 @@ export default {
       font-size: 14px;
       margin-bottom: 5px;
       span {
-        background: no-repeat url("../../../assets/images/ic_expand.png");
+        background: no-repeat url("../../../assets/images/icon/expand.png");
         display: inline-block;
         height: 10px;
         margin-right: 5px;

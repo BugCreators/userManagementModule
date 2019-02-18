@@ -1,29 +1,36 @@
 <template>
   <div class="admin">
     <AvueHeader :isAdmin="true" />
-    <el-row class="content">
-      <el-col class="sidebar" :xs="4" :sm="4" :lg="3">
-        <AvueSidebar :currentComponent="currentComponent" />
-      </el-col>
-      <el-col class="page-right" :xs="20" :sm="20" :lg="21">
+    <div class="content">
+      <div class="sidebar">
+        <div :class="isCollapse ? `sidebar-width-fold` : ``">
+          <AvueSidebar :isCollapse="isCollapse" :currentComponent="currentComponent" />
+        </div>
+      </div>
+      <div class="displaySidebar" @click="sidebarSwitch">
+        <i class="el-icon-caret-left"></i>
+      </div>
+      <div class="content-right" :class="isCollapse ? `content-right-fold` : ``">
         <RouterView />
-      </el-col>
-    </el-row>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import AvueHeader from "@/components/AvueHeader";
-import { Row, Col } from "element-ui";
 import AvueSidebar from "./subComponents/AvueSidebar";
 
 export default {
   name: "admin",
   components: {
     AvueHeader,
-    elRow: Row,
-    elCol: Col,
     AvueSidebar
+  },
+  data() {
+    return {
+      isCollapse: false
+    }
   },
   computed: {
     // 获取当前组件名
@@ -34,25 +41,61 @@ export default {
     currentComponent() {
       return this.currentName == "" ? "collegeManagement" : this.currentName;
     }
+  },
+  methods: {
+    sidebarSwitch() {
+      this.isCollapse = !this.isCollapse;
+    }
   }
 };
 </script>
 
 <style lang="less" scoped>
-.admin {
+.content {
   height: 100%;
-  .content {
-    box-sizing: content-box;
-    height: 100%;
-    padding-top: @header_height;
-    .sidebar {
-      background: @header_bg;
-      height: ~"calc(100% - @{header_height})";
+  padding-top: @header_height;
+}
+.sidebar {
+  background: @header_bg;
+  height: ~"calc(100% - @{header_height})";
+  width: @sidebar_width;
+  &-fold {
+    width: @sidebar_width_fold;
+  }
+  &, &-fold {
+    ul {
+      height: 100%;
       position: fixed;
     }
-    .page-right {
-      margin-left: 12.5%;
+  }
+}
+.displaySidebar{
+  bottom: 0;
+  left: 200px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  width: 0px;
+  z-index: 10;
+  i {
+    display: block;
+    outline: none;
+    position: absolute;
+    top: 50%;
+    width: 17px;
+    &:active {
+      // transform: rotate(2deg);
     }
   }
+}
+.content-right {
+  overflow: hidden;
+  transition: all .3s;
+    margin-left: @sidebar_width;
+    width: ~"calc(100% - @{sidebar_width})";
+    &-fold {
+      margin-left: @sidebar_width_fold;
+      width: ~"calc(100% - @{sidebar_width_fold})";
+    }
 }
 </style>
