@@ -5,16 +5,21 @@
     :collapse="isCollapse"
     router
   >
-    <div class="el-submenu__title displaySidebar" @click="sidebarSwitch">
-      <i
-        class="el-icon-d-arrow-left"
-        :class="isCollapse ? 'i-flod' : 'i-no-flod'"
-      ></i>
-    </div>
+    <el-tooltip effect="dark" :content="isCollapse? '展开' : '折叠'" placement="right">
+      <li class="el-submenu">
+      <div class="el-submenu__title sidebar-switch" @click="sidebarSwitch">
+          <i
+            class="el-icon-d-arrow-left"
+            :class="isCollapse ? 'i-flod' : 'i-no-flod'"
+          ></i>
+      </div>
+      </li>
+    </el-tooltip>
     <div v-for="(item, index) in $store.state.sidebar" :key="index">
       <el-submenu v-if="'item' in item" :index="subMenuIndex(index)">
         <template slot="title">
-          <i :class="item.class"></i><span v-if="!isCollapse" slot="title">{{ item.title }}</span>
+          <i :class="item.class"></i
+          ><span v-if="!isCollapse" slot="title">{{ item.title }}</span>
         </template>
         <el-menu-item
           v-for="(subItem, subIndex) in item.item"
@@ -32,27 +37,27 @@
 </template>
 
 <script>
-import { Menu, MenuItem, Submenu } from "element-ui";
+import { Menu, MenuItem, Submenu, Tooltip } from "element-ui";
 
 export default {
   name: "avueSidebar",
+  components: {
+    elMenu: Menu,
+    elMenuItem: MenuItem,
+    elSubmenu: Submenu,
+    elTooltip: Tooltip
+  },
   props: {
     currentComponent: String,
     isCollapse: Boolean
   },
-  components: {
-    elMenu: Menu,
-    elMenuItem: MenuItem,
-    elSubmenu: Submenu
-  },
-  created() {},
   methods: {
     subMenuIndex(index) {
       return index.toString();
     },
     sidebarSwitch() {
       this.$emit("sidebarswitch");
-    }
+    },
   }
 };
 </script>
@@ -70,18 +75,13 @@ export default {
 }
 .flod-animate(0, 180deg, flod);
 .flod-animate(180deg, 360deg, no-flod);
-.displaySidebar {
-  position: relative;
-  width: 100%;
+.sidebar-switch {
   i {
     color: white;
     display: inline-block;
-    height: 14px;
-    left: 5px;
-    position: relative;
-    animation: no-flod .3s forwards;
+    animation: no-flod 0.3s forwards;
     &.i-flod {
-      animation: flod .3s forwards;
+      animation: flod 0.3s forwards;
     }
   }
 }

@@ -61,7 +61,7 @@ img, object, select, input, textarea, button {
   .el-submenu {
     &__title {
       color: white;
-      &:hover {
+      &:hover, &:focus{
         background-color: fadeout(white, 95%);
       }
     }
@@ -92,6 +92,13 @@ img, object, select, input, textarea, button {
     color: white;
     display: inline-block;
     margin-right: 5px;
+  }
+}
+
+// 文字提示
+.el-tooltip {
+  &:focus {
+    outline: none;
   }
 }
 

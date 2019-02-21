@@ -31,7 +31,7 @@ export default {
   },
   data() {
     return {
-      isCollapse: false
+      isCollapse: null
     };
   },
   computed: {
@@ -44,9 +44,21 @@ export default {
       return this.currentName == "" ? "collegeManagement" : this.currentName;
     }
   },
+  created() {
+    let isCollapse = localStorage.getItem("isCollapse");
+    if (isCollapse != null) {
+      this.isCollapse = isCollapse === "true" ? true : false;
+    } else {
+      this.isCollapse = false;
+    }
+    window.addEventListener("beforeunload", this.loadStore);
+  },
   methods: {
     sidebarswitch() {
       this.isCollapse = !this.isCollapse;
+    },
+    loadStore() {
+      localStorage.setItem("isCollapse", this.isCollapse);
     }
   }
 };
