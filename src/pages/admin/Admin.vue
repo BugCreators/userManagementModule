@@ -7,14 +7,28 @@
           :isCollapse="isCollapse"
           :currentComponent="currentComponent"
           @sidebarswitch="sidebarswitch"
+          @switchtab="switchtab"
         />
       </div>
-      <div
+      <el-tabs
         class="content-right"
+        type="card"
+        v-model="editableTabsValue"
         :class="isCollapse ? 'content-right-fold' : ''"
+        @tab-click="switchComponents"
+        @tab-remove="removeTab"
       >
+        <el-tab-pane
+          v-for="item in editableTabs"
+          :key="item.name"
+          :closable="item.closable"
+          :label="item.title"
+          :name="item.name"
+          lazy
+        >
+        </el-tab-pane>
         <RouterView />
-      </div>
+      </el-tabs>
     </div>
   </div>
 </template>
@@ -22,31 +36,44 @@
 <script>
 import AvueHeader from "@/components/AvueHeader";
 import AvueSidebar from "./subComponents/AvueSidebar";
+import { Tabs, TabPane } from "element-ui";
 
 export default {
   name: "admin",
   components: {
     AvueHeader,
-    AvueSidebar
+    AvueSidebar,
+    elTabs: Tabs,
+    elTabPane: TabPane
   },
   data() {
     return {
-      isCollapse: null
+      editableTabs: [
+        {
+          title: "我的桌面",
+          name: "1",
+          href: "/"
+        }
+      ],
+      editableTabsValue: "1",
+      isCollapse: null,
+      tabIndex: 1
     };
   },
   computed: {
-    // 获取当前组件名
     currentName() {
       let currentLocation = window.location.href.split("/");
       return currentLocation[currentLocation.length - 1];
     },
     currentComponent() {
-      return this.currentName == "" ? "collegeManagement" : this.currentName;
+      return this.currentName == "" ? "/" : this.currentName;
     }
   },
   created() {
     let isCollapse = localStorage.getItem("isCollapse");
-    if (isCollapse != null) {
+    this.editableTabs = JSON.parse(localStorage.getItem("currentPageTab"));
+    this.editableTabsValue = localStorage.getItem("currentPageActive");
+    if (isCollapse) {
       this.isCollapse = isCollapse === "true" ? true : false;
     } else {
       this.isCollapse = false;
@@ -58,7 +85,66 @@ export default {
       this.isCollapse = !this.isCollapse;
     },
     loadStore() {
+      localStorage.setItem("currentPageTab", JSON.stringify(this.editableTabs));
+      localStorage.setItem("currentPageActive", this.editableTabsValue);
       localStorage.setItem("isCollapse", this.isCollapse);
+    },
+    addTab(item) {
+      let newTabName = ++this.tabIndex + "";
+      this.editableTabs.push({
+        closable: "closable",
+        title: item.title,
+        name: newTabName,
+        href: item.href
+      });
+      this.editableTabsValue = newTabName;
+    },
+    removeTab(targetName) {
+      let tabs = this.editableTabs,
+        activeName = this.editableTabsValue;
+      if (activeName === targetName) {
+        tabs.forEach((tab, index) => {
+          if (tab.name === targetName) {
+            let nextTab = tabs[index + 1] || tabs[index - 1];
+            if (nextTab) {
+              activeName = nextTab.name;
+            }
+          }
+        });
+      }
+      this.editableTabsValue = activeName;
+      this.editableTabs = tabs.filter(tab => tab.name !== targetName);
+      this.switchComponents({
+        name: activeName
+      });
+    },
+    switchtab(item) {
+      let tabExisted = true,
+        tabs = this.editableTabs;
+      let activeName;
+      tabs.map(tab => {
+        if (tab.title === item.title) {
+          tabExisted = false;
+          activeName = tab.name;
+          return;
+        }
+      });
+      if (tabExisted) {
+        this.addTab(item);
+      } else {
+        this.editableTabsValue = activeName;
+      }
+    },
+    switchComponents(item) {
+      let tabs = this.editableTabs;
+      let switchPath;
+      tabs.map(tab => {
+        if (tab.name === item.name) {
+          switchPath = tab.href;
+          return;
+        }
+      });
+      this.$router.push({ path: switchPath });
     }
   }
 };
@@ -72,7 +158,9 @@ export default {
 .sidebar {
   background: @header_bg;
   height: ~"calc(100% - @{header_height})";
+  position: relative;
   width: @sidebar_width;
+  z-index: 999;
   ul {
     height: 100%;
     position: fixed;
@@ -80,7 +168,7 @@ export default {
 }
 .content-right {
   overflow: hidden;
-  transition: all 0.43s;
+  transition: all 0.4s;
   margin-left: @sidebar_width;
   width: ~"calc(100% - @{sidebar_width})";
   &-fold {

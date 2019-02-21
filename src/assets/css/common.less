@@ -103,6 +103,23 @@ img, object, select, input, textarea, button {
 }
 
 /*******************后台样式********************/
+// 选项卡
+.el-tabs--card > .el-tabs__header { 
+  .el-tabs__ {
+    &nav {
+      border: none;
+    }
+    &item {
+      &:hover {
+      color: @default_color;;
+      }
+      &.is-active {
+        color: @default_color;
+        border-bottom-color: @default_color;
+      }
+    }
+  }
+}
 // 列表
 .el-table {
   th, td {

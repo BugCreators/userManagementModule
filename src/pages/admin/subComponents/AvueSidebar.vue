@@ -5,14 +5,18 @@
     :collapse="isCollapse"
     router
   >
-    <el-tooltip effect="dark" :content="isCollapse? '展开' : '折叠'" placement="right">
+    <el-tooltip
+      effect="dark"
+      placement="right"
+      :content="isCollapse ? '展开' : '折叠'"
+    >
       <li class="el-submenu">
-      <div class="el-submenu__title sidebar-switch" @click="sidebarSwitch">
+        <div class="el-submenu__title sidebar-switch" @click="sidebarSwitch">
           <i
             class="el-icon-d-arrow-left"
             :class="isCollapse ? 'i-flod' : 'i-no-flod'"
           ></i>
-      </div>
+        </div>
       </li>
     </el-tooltip>
     <div v-for="(item, index) in $store.state.sidebar" :key="index">
@@ -25,6 +29,7 @@
           v-for="(subItem, subIndex) in item.item"
           :key="subIndex"
           :index="subItem.href"
+          @click="switchTab(subItem)"
         >
           {{ subItem.title }}
         </el-menu-item>
@@ -58,6 +63,9 @@ export default {
     sidebarSwitch() {
       this.$emit("sidebarswitch");
     },
+    switchTab(item) {
+      this.$emit("switchtab", item);
+    }
   }
 };
 </script>

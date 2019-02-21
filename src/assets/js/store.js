@@ -103,6 +103,12 @@ export default new Vuex.Store({
         href: "setting"
       }
     ],
+    // 当前页面状态
+    // currentPageStatus: {
+    //   isCollapse: null,
+    //   tabs: [],
+    //   tabActive: null
+    // },
     /*******************网络接口*******************/
     // 系统设置
     getSysSetting: ``,
@@ -121,6 +127,9 @@ export default new Vuex.Store({
   mutations: {
     setSetting(state, setting) {
       state.setting = setting;
+    },
+    setCurrentPageStatus(state, status) {
+      state.currentPageStatus = status;
     },
     clearUserInfo(state) {
       state.userInfo = ``;

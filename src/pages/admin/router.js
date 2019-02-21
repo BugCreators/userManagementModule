@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
+import Home from "./subPages/Home/Home";
 
 Vue.use(Router);
 
@@ -8,8 +9,7 @@ const router = new Router({
     {
       path: "/",
       name: "admin",
-      component: () =>
-        import(/* webpackChunkName: "collegeManagement" */ "./subPages/CollegeManagement/CollegeManagement"),
+      component: Home,
       meta: {
         requireAuth: true
       }
@@ -59,8 +59,9 @@ const router = new Router({
     }
   ]
 });
-router.beforeEach((to, from, next) => {
-  if (to.matched.some(res => res.meta.requireAuth)) {
+router.beforeEach(
+  (to, from, next) => {
+    // if (to.matched.some(res => res.meta.requireAuth)) {
     //判断是否需要登录权限
     if (document.cookie.indexOf("avueUser") != -1) {
       // 判断是否登录
@@ -72,8 +73,10 @@ router.beforeEach((to, from, next) => {
         query: { redirect: to.fullPath }
       });
     }
-  } else {
-    next();
   }
-});
+  // else {
+  //   next();
+  // }
+  // }
+);
 export default router;

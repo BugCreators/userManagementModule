@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>学院管理</h1>
     <CollegeList />
   </div>
 </template>
