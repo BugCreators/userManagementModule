@@ -1,8 +1,12 @@
 <template>
   <div class="collegeList">
-    <div class="listWarp">
-      <el-button type="primary" @click="openLog(0)">添加学院</el-button>
-    </div>
+    <ListWarp
+      :addFuncName="'openlog'"
+      :amount="collegeList.length"
+      :delFuncName="'collegesdel'"
+      @collegesdel="collegesdel"
+      @openlog="openlog"
+    />
     <el-table :data="collegeList" @selection-change="selectedChange">
       <el-table-column type="selection" width="50"></el-table-column>
       <el-table-column label="学院名" prop="name" width="200"></el-table-column>
@@ -26,15 +30,15 @@
       <el-table-column label="学院描述" prop="des"></el-table-column>
       <el-table-column label="操作" width="100">
         <template slot-scope="scope">
-          <i class="el-icon-edit" @click="openLog(scope.row.id)"></i>
-          <i class="el-icon-delete" @click="collegesDel([scope.row.id])"></i>
+          <i class="el-icon-edit" @click="openlog(scope.row.id)"></i>
+          <i
+            class="el-icon-delete"
+            @click="collegesdel([{ id: scope.row.id }])"
+          ></i>
         </template>
       </el-table-column>
     </el-table>
     <div class="listWarp2">
-      <el-button type="danger" @click="collegesDel(selectedCollegeId)"
-        >删除</el-button
-      >
       <div class="collegeListPage" v-if="collegeList.length !== 0">
         <el-pagination
           layout="prev, pager, next"
@@ -49,16 +53,13 @@
     </div>
     <CollegeEditLog
       v-if="showEditLog"
-      @closelog="closelog"
       :collegeId="currentCollegeId"
-      :showEditLog="showEditLog"
     />
   </div>
 </template>
 
 <script>
 import {
-  Button,
   Message,
   MessageBox,
   Pagination,
@@ -67,6 +68,7 @@ import {
   TableColumn
 } from "element-ui";
 import AvueImage from "@/components/AvueImage";
+import ListWarp from "../../components/ListWarp";
 
 export default {
   name: "collegeList",
@@ -74,11 +76,11 @@ export default {
     AvueImage,
     CollegeEditLog: () =>
       import(/* webpackChunkName: "collegeEditLog" */ "./CollegeEditLog"),
-    elButton: Button,
     elPagination: Pagination,
     elPopover: Popover,
     elTable: Table,
-    elTableColumn: TableColumn
+    elTableColumn: TableColumn,
+    ListWarp
   },
   data() {
     return {
@@ -97,11 +99,15 @@ export default {
       pageSize: 5,
       pageIndex: 1,
       selectedCollegeId: [],
-      showEditLog: false,
       thumbnail: "thumbnail"
     };
   },
   created() {},
+  computed: {
+    showEditLog() {
+      return this.$store.state.showLog;
+    }
+  },
   methods: {
     getCollegeList() {
       let that = this;
@@ -126,21 +132,25 @@ export default {
     selectedChange(selection) {
       this.selectedCollegeId = selection;
     },
-    openLog(collegeId) {
+    openlog(collegeId) {
       this.currentCollegeId = collegeId;
-      this.showEditLog = true;
+      this.$store.commit("switchShowLog");
     },
-    closelog() {
-      this.currentCollegeId = null;
-      this.showEditLog = false;
-    },
-    collegesDel(collegesId) {
+    collegesdel(collegesId) {
       let that = this;
-      if (!collegesId.length) {
-        Message.warning({
-          message: "请选择至少一个学院"
-        });
-        return;
+      if (collegesId === undefined) {
+        if (this.selectedCollegeId.length > 0) {
+          collegesId = this.selectedCollegeId.map((value, index, array) => {
+            return {
+              id: array[index]["id"]
+            };
+          });
+        } else {
+          Message.warning({
+            message: "请选择至少一个学院"
+          });
+          return;
+        }
       }
       MessageBox.confirm("此操作将删除所选学院的所有信息，是否继续？", "提示", {
         confirmButtonText: "确定",
@@ -183,20 +193,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.collegeList {
-  padding: 0 50px;
-}
-.listWarp {
-  margin-bottom: 10px;
-  overflow: hidden;
-  button {
-    float: right;
-  }
-}
 .listWarp2 {
   margin: 10px 0 20px;
   .collegeListPage {
     float: right;
+    line-height: 2;
   }
 }
 </style>

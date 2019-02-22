@@ -1,16 +1,16 @@
 <template>
   <div>
-    <CollegeList />
+    <CollegesList />
   </div>
 </template>
 
 <script>
-import CollegeList from "./subComponents/CollegeList";
+import CollegesList from "./components/CollegesList";
 
 export default {
   name: "college",
   components: {
-    CollegeList
+    CollegesList
   }
 };
 </script>

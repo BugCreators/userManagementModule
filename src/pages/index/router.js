@@ -9,13 +9,13 @@ export default new Router({
       path: "/",
       name: "collegeListPage",
       component: () =>
-        import(/* webpackChunkName: "collegeListPage" */ "./subPages/CollegeListPage")
+        import(/* webpackChunkName: "collegeListPage" */ "./pages/CollegeListPage")
     },
     {
       path: "/college/:id",
       name: "collegeDetail",
       component: () =>
-        import(/* webpackChunkName: "collegeDetail" */ "./subPages/CollegeDetailPage")
+        import(/* webpackChunkName: "collegeDetail" */ "./pages/CollegeDetailPage")
     },
     {
       path: "/login",

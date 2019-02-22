@@ -36,7 +36,7 @@ export default {
   components: {
     AvueImage,
     CollegeList: () =>
-      import(/* webpackChunkName: "collegeList" */ "../subComponents/CollegeList"),
+      import(/* webpackChunkName: "collegeList" */ "../components/CollegeList"),
     MyNoData: () =>
       import(/* webpackChunkName: "myNoData" */ "@/components/MyNoData")
   },

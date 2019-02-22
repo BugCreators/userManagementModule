@@ -8,7 +8,7 @@
 
 <script>
 import AvueHeader from "@/components/AvueHeader";
-import LoginFrame from "./subComponents/LoginFrame";
+import LoginFrame from "./components/LoginFrame";
 import AvueFooter from "@/components/AvueFooter";
 
 export default {

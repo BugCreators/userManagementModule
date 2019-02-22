@@ -104,20 +104,31 @@ img, object, select, input, textarea, button {
 
 /*******************后台样式********************/
 // 选项卡
-.el-tabs--card > .el-tabs__header { 
-  .el-tabs__ {
-    &nav {
-      border: none;
-    }
-    &item {
-      &:hover {
-      color: @default_color;;
+.el-tabs--card {
+  & > .el-tabs__header {
+    background: white;
+    position: fixed;
+    width: 100%;
+    z-index: 888;
+    .el-tabs__ {
+      &nav {
+        border: none;
       }
-      &.is-active {
-        color: @default_color;
-        border-bottom-color: @default_color;
+      &item {
+        &:hover {
+          color: @default_color;;
+        }
+        &.is-active {
+          background: #f2f2f2;
+          border-bottom: none;
+          color: @default_color;
+        }
       }
     }
+  }
+  & > .el-tabs__content {
+    margin-top: 50px;
+    padding: 20px;
   }
 }
 // 列表

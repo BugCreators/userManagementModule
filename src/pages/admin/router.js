@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Home from "./subPages/Home/Home";
+import Home from "./pages/Home/Home";
 
 Vue.use(Router);
 
@@ -9,43 +9,92 @@ const router = new Router({
     {
       path: "/",
       name: "admin",
-      component: Home,
-      meta: {
-        requireAuth: true
-      }
+      component: Home
     },
     {
-      path: "/collegeManagement",
-      name: "collegeManagement",
+      // 身份管理
+      path: "/role",
+      name: "role",
       component: () =>
-        import(/* webpackChunkName: "collegeManagement" */ "./subPages/CollegeManagement/CollegeManagement"),
+        import(/* webpackChunkName: "role" */ "./pages/Role/Role"),
       meta: {
         requireAuth: true
       }
     },
     {
-      path: "/departmentManagement",
-      name: "departmentManagement",
+      // 权限管理
+      path: "/authority",
+      name: "authority",
       component: () =>
-        import(/* webpackChunkName: "departmentManagement" */ "./subPages/DepartmentManagement/DepartmentManagement"),
+        import(/* webpackChunkName: "authority" */ "./pages/Authority/Authority"),
       meta: {
         requireAuth: true
       }
     },
     {
-      path: "/classManagement",
-      name: "classManagement",
+      // 管理员列表
+      path: "/administrator",
+      name: "administrator",
       component: () =>
-        import(/* webpackChunkName: "classManagement" */ "./subPages/ClassManagement/ClassManagement"),
+        import(/* webpackChunkName: "administrator" */ "./pages/Administrator/Administrator"),
       meta: {
         requireAuth: true
       }
     },
     {
+      // 学院管理
+      path: "/college",
+      name: "college",
+      component: () =>
+        import(/* webpackChunkName: "college" */ "./pages/College/College"),
+      meta: {
+        requireAuth: true
+      }
+    },
+    {
+      // 院系管理
+      path: "/department",
+      name: "department",
+      component: () =>
+        import(/* webpackChunkName: "department" */ "./pages/Department/Department"),
+      meta: {
+        requireAuth: true
+      }
+    },
+    {
+      // 班级管理
+      path: "/class",
+      name: "class",
+      component: () =>
+        import(/* webpackChunkName: "class" */ "./pages/Class/Class"),
+      meta: {
+        requireAuth: true
+      }
+    },
+    {
+      path: "/student",
+      name: "student",
+      component: () =>
+        import(/* webpackChunkName: "student" */ "./pages/Student/Student"),
+      meta: {
+        requireAuth: true
+      }
+    },
+    {
+      path: "/teacher",
+      name: "teacher",
+      component: () =>
+        import(/* webpackChunkName: "teacher" */ "./pages/Teacher/Teacher"),
+      meta: {
+        requireAuth: true
+      }
+    },
+    {
+      // 基本设置
       path: "/setting",
       name: "setting",
       component: () =>
-        import(/* webpackChunkName: "setting" */ "./subPages/Setting/Setting"),
+        import(/* webpackChunkName: "setting" */ "./pages/Setting/Setting"),
       meta: {
         requireAuth: true
       }
@@ -61,7 +110,7 @@ const router = new Router({
 });
 router.beforeEach(
   (to, from, next) => {
-    // if (to.matched.some(res => res.meta.requireAuth)) {
+    if (to.matched.some(res => res.meta.requireAuth)) {
     //判断是否需要登录权限
     if (document.cookie.indexOf("avueUser") != -1) {
       // 判断是否登录
@@ -74,9 +123,9 @@ router.beforeEach(
       });
     }
   }
-  // else {
-  //   next();
-  // }
-  // }
+  else {
+    next();
+  }
+  }
 );
 export default router;

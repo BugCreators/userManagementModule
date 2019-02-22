@@ -35,7 +35,7 @@
 
 <script>
 import AvueHeader from "@/components/AvueHeader";
-import AvueSidebar from "./subComponents/AvueSidebar";
+import AvueSidebar from "./components/AvueSidebar";
 import { Tabs, TabPane } from "element-ui";
 
 export default {
@@ -62,17 +62,19 @@ export default {
   },
   computed: {
     currentName() {
-      let currentLocation = window.location.href.split("/");
-      return currentLocation[currentLocation.length - 1];
+      return this.$route.name;
     },
     currentComponent() {
-      return this.currentName == "" ? "/" : this.currentName;
+      return this.currentName == "admin" ? "/" : this.currentName;
     }
   },
   created() {
     let isCollapse = localStorage.getItem("isCollapse");
     this.editableTabs = JSON.parse(localStorage.getItem("currentPageTab"));
     this.editableTabsValue = localStorage.getItem("currentPageActive");
+    this.switchComponents({
+      name: this.editableTabsValue
+    });
     if (isCollapse) {
       this.isCollapse = isCollapse === "true" ? true : false;
     } else {
@@ -167,9 +169,9 @@ export default {
   }
 }
 .content-right {
+  margin-left: @sidebar_width;
   overflow: hidden;
   transition: all 0.4s;
-  margin-left: @sidebar_width;
   width: ~"calc(100% - @{sidebar_width})";
   &-fold {
     margin-left: @sidebar_width_fold;

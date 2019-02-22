@@ -50,7 +50,7 @@ export default {
     elBreadcrumbItem: BreadcrumbItem,
     AvueImage,
     MajorList: () =>
-      import(/* webpackChunkName: "majorList" */ "../subComponents/CollegeDetailMajorList"),
+      import(/* webpackChunkName: "majorList" */ "../components/CollegeDetailMajorList"),
     MyNoData: () =>
       import(/* webpackChunkName: "myNoData" */ "@/components/MyNoData")
   },

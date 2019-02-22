@@ -36,46 +36,46 @@ export default new Vuex.Store({
 
     sidebar: [
       {
-        name: "adminManagement",
+        name: "admin",
         title: "管理员管理",
         class: "el-icon-setting",
         item: [
           {
             name: "role",
             title: "角色管理",
-            href: ""
+            href: "role"
           },
           {
-            name: "power",
+            name: "authority",
             title: "权限管理",
-            href: ""
+            href: "authority"
           },
           {
-            name: "adminList",
+            name: "administrator",
             title: "管理员列表",
-            href: ""
+            href: "administrator"
           }
         ]
       },
       {
-        name: "departManagement",
+        name: "depart",
         title: "学系管理",
         class: "el-icon-setting",
         item: [
           {
             name: "college",
             title: "学院管理",
-            href: "collegeManagement"
+            href: "college"
           },
           {
-            name: "departmentManagement",
+            name: "department",
             title: "院系管理",
-            href: "departmentManagement"
+            href: "department"
           },
           {
             name: "class",
             title: "班级管理",
-            href: "classManagement"
+            href: "class"
           }
         ]
       },
@@ -87,12 +87,12 @@ export default new Vuex.Store({
           {
             name: "student",
             title: "学生列表",
-            href: ""
+            href: "student"
           },
           {
             name: "teacher",
             title: "教师列表",
-            href: ""
+            href: "teacher"
           }
         ]
       },
@@ -109,6 +109,9 @@ export default new Vuex.Store({
     //   tabs: [],
     //   tabActive: null
     // },
+
+    showLog: false,
+
     /*******************网络接口*******************/
     // 系统设置
     getSysSetting: ``,
@@ -128,8 +131,8 @@ export default new Vuex.Store({
     setSetting(state, setting) {
       state.setting = setting;
     },
-    setCurrentPageStatus(state, status) {
-      state.currentPageStatus = status;
+    switchShowLog(state) {
+      state.showLog = !state.showLog;
     },
     clearUserInfo(state) {
       state.userInfo = ``;
@@ -164,7 +167,7 @@ export default new Vuex.Store({
     },
     //有数组的请求.
     // eslint-disable-next-line
-    postArrItems({ commit, stata }, opts) {
+    postArrItems({ commit, state }, opts) {
       axios
         .post(
           opts.url,
