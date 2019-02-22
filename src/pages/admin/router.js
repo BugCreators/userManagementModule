@@ -108,9 +108,8 @@ const router = new Router({
     }
   ]
 });
-router.beforeEach(
-  (to, from, next) => {
-    if (to.matched.some(res => res.meta.requireAuth)) {
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(res => res.meta.requireAuth)) {
     //判断是否需要登录权限
     if (document.cookie.indexOf("avueUser") != -1) {
       // 判断是否登录
@@ -122,10 +121,8 @@ router.beforeEach(
         query: { redirect: to.fullPath }
       });
     }
-  }
-  else {
+  } else {
     next();
   }
-  }
-);
+});
 export default router;
