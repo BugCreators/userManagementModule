@@ -149,8 +149,8 @@ module.exports = {
 
     hotOnly: true, // 热更新
 
-    // proxy: 'http://localhost:8088',
-    proxy: null
+    proxy: 'http://localhost:8088',
+    // proxy: null
   },
   /************************************************************************************/
 

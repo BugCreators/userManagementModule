@@ -125,7 +125,9 @@ export default new Vuex.Store({
     // 添加学院
     addCollege: ``,
     // 删除学院
-    delColleges: ``
+    delColleges: ``,
+    // 修改学院
+    changeCollege: ``
   },
   mutations: {
     setSetting(state, setting) {
@@ -156,7 +158,7 @@ export default new Vuex.Store({
     },
     // eslint-disable-next-line
     postItems({ commit, state }, opts) {
-      return axios.post(opts.url, stringify(opts.query)).then(
+      return axios.post(opts.url, opts.query, opts.config).then(
         res => {
           opts.cb(res.data);
         },

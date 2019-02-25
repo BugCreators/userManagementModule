@@ -88,7 +88,7 @@ export default {
     };
   },
   created() {
-    this.$emit("listamount", this.collegeList.length);//后期删除
+    this.$emit("listamount", this.collegeList.length); //将数组长度传给父组件，后期删除
   },
   computed: {
     showEditLog() {
@@ -115,7 +115,7 @@ export default {
           }
         }
       });
-      this.$emit("listamount", this.collegeList.length);
+      // this.$emit("listamount", this.collegeList.length);
     },
     selectedChange(selection) {
       this.selectedCollegeId = selection;

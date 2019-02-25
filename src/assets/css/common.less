@@ -211,8 +211,45 @@ img, object, select, input, textarea, button {
 }
 
 // 输入栏
-.el-input__inner {
+.el-input__inner, .el-textarea__inner{
   &:focus {
     border-color: @default_color !important;
+  }
+}
+
+// 上传
+.el-upload {
+  &&--picture-card {
+    &:hover {
+      border-color: @default_color;
+    }
+  }
+  &:focus {
+    &, .el-upload-dragger {
+      border-color: @default_color !important;
+    }
+  }
+}
+
+.el-upload-dragger {
+  border: none !important;
+  height: 100% !important;
+  width: 100% !important;
+  &:hover {
+    // border-color: @default_color !important;
+  }
+  em {
+    color: @default_color !important;
+  }
+  .el-icon-upload {
+    display: block;
+    font-size: 24px !important;
+    line-height: 1 !important;
+    margin: 20px 0 0 !important;
+  }
+  .el-upload__text {
+    display: inline-block;
+    font-size: 6px !important;
+    line-height: 40px;
   }
 }

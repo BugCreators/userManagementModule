@@ -57,7 +57,7 @@ export default {
       ],
       editableTabsValue: "1",
       isCollapse: null,
-      tabIndex: 1
+      // tabIndex: 1
     };
   },
   computed: {
@@ -66,12 +66,17 @@ export default {
     },
     currentComponent() {
       return this.currentName == "admin" ? "/" : this.currentName;
+    },
+    tabIndex() {
+      return Math.floor(Math.random() * 10000000);
     }
   },
   created() {
     let isCollapse = localStorage.getItem("isCollapse");
-    this.editableTabs = JSON.parse(localStorage.getItem("currentPageTab"));
-    this.editableTabsValue = localStorage.getItem("currentPageActive");
+    editableTabs = JSON.parse(localStorage.getItem("currentPageTab")); 
+    editableTabsValue = localStorage.getItem("currentPageActive");
+    this.editableTabs = editableTabs.length > 0 ? this.editableTabs : editableTabs;
+    this.editableTabsValue = editableTabsValue.length > 0 ? this.editableTabsValue : editableTabsValue;
     this.switchComponents({
       name: this.editableTabsValue
     });
@@ -92,7 +97,8 @@ export default {
       localStorage.setItem("isCollapse", this.isCollapse);
     },
     addTab(item) {
-      let newTabName = ++this.tabIndex + "";
+      // let newTabName = this.tabIndex + "";
+      let newTabName = Math.floor(Math.random() * 10000000) + "";
       this.editableTabs.push({
         closable: "closable",
         title: item.title,

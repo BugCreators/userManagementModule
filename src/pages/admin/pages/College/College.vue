@@ -7,7 +7,11 @@
       @collegesdel="collegesdel"
       @openlog="openlog"
     />
-    <CollegesList ref="colleges-list" @openlog="openlog" @listamount="listamount" />
+    <CollegesList
+      ref="colleges-list"
+      @openlog="openlog"
+      @listamount="listamount"
+    />
     <CollegeDetailLog v-if="showLog" :collegeId="currentCollegeId" />
   </div>
 </template>
@@ -42,11 +46,9 @@ export default {
     },
     showLog() {
       return this.$store.state.showLog;
-    },
+    }
   },
-  created() {
-
-  },
+  created() {},
   methods: {
     listamount(amount) {
       this.listAmount = amount;

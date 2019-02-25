@@ -34,7 +34,7 @@
           {{ subItem.title }}
         </el-menu-item>
       </el-submenu>
-      <el-menu-item v-else :index="item.href">
+      <el-menu-item v-else :index="item.href" @click="switchTab(item)">
         <i :class="item.class"></i><span slot="title">{{ item.title }}</span>
       </el-menu-item>
     </div>

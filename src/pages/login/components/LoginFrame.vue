@@ -115,6 +115,11 @@ export default {
           name: this.username,
           password: that.isEncrypt ? this.password : md5(that.password)
         },
+        config: {
+          header: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        },
         cb(res) {
           if (res.success) {
             if (that.remember) {
