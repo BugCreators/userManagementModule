@@ -117,7 +117,7 @@ export default {
         },
         config: {
           header: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            "Content-Type": "application/x-www-form-urlencoded"
           }
         },
         cb(res) {

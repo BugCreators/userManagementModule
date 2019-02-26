@@ -102,6 +102,30 @@ img, object, select, input, textarea, button {
   }
 }
 
+.el-submenu__icon-arrow {
+  .el-menu--collapse & {
+    opacity: 0;
+  }
+}
+
+// icon
+.sidebar-icon(@url) {
+  background: url(@url) no-repeat;
+  height: 18px;
+  margin-left: 3px;
+}
+.el-icon- {
+  &admin {
+    .sidebar-icon("../images/icon/admin.png");
+  }
+  &depart {
+    .sidebar-icon("../images/icon/school.png");
+  }
+  &user {
+    .sidebar-icon("../images/icon/user.png");
+  }
+}
+
 /*******************后台样式********************/
 // 选项卡
 .el-tabs--card {

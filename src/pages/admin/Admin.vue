@@ -56,8 +56,7 @@ export default {
         }
       ],
       editableTabsValue: "1",
-      isCollapse: null,
-      // tabIndex: 1
+      isCollapse: null
     };
   },
   computed: {
@@ -72,11 +71,15 @@ export default {
     }
   },
   created() {
-    let isCollapse = localStorage.getItem("isCollapse");
-    editableTabs = JSON.parse(localStorage.getItem("currentPageTab")); 
-    editableTabsValue = localStorage.getItem("currentPageActive");
-    this.editableTabs = editableTabs.length > 0 ? this.editableTabs : editableTabs;
-    this.editableTabsValue = editableTabsValue.length > 0 ? this.editableTabsValue : editableTabsValue;
+    let isCollapse = localStorage.getItem("isCollapse"),
+      editableTabs = localStorage.getItem("currentPageTab"),
+      editableTabsValue = localStorage.getItem("currentPageActive");
+    this.editableTabs = editableTabs
+      ? JSON.parse(editableTabs)
+      : this.editableTabs;
+    this.editableTabsValue = editableTabsValue
+      ? editableTabsValue
+      : this.editableTabsValue;
     this.switchComponents({
       name: this.editableTabsValue
     });
@@ -97,7 +100,6 @@ export default {
       localStorage.setItem("isCollapse", this.isCollapse);
     },
     addTab(item) {
-      // let newTabName = this.tabIndex + "";
       let newTabName = Math.floor(Math.random() * 10000000) + "";
       this.editableTabs.push({
         closable: "closable",

@@ -38,7 +38,7 @@ export default new Vuex.Store({
       {
         name: "admin",
         title: "管理员管理",
-        class: "el-icon-setting",
+        class: "el-icon-admin",
         item: [
           {
             name: "role",
@@ -60,7 +60,7 @@ export default new Vuex.Store({
       {
         name: "depart",
         title: "学系管理",
-        class: "el-icon-setting",
+        class: "el-icon-depart",
         item: [
           {
             name: "college",
@@ -82,7 +82,7 @@ export default new Vuex.Store({
       {
         name: "userManagement",
         title: "账号管理",
-        class: "el-icon-setting",
+        class: "el-icon-user",
         item: [
           {
             name: "student",
