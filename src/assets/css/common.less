@@ -162,6 +162,17 @@ img, object, select, input, textarea, button {
   }
 }
 
+.errorMsg {
+  color: #dd6161;
+}
+
+.el-checkbox__input.is-indeterminate {
+  .el-checkbox__inner {
+    background-color: @default_color !important;
+    border-color: @default_color !important;
+  }
+}
+
 .el-checkbox__inner {
   &:hover, .el-checkbox__input.is-focus & {
     border-color: @default_color !important;

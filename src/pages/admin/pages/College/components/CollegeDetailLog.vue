@@ -1,5 +1,9 @@
 <template>
-  <el-dialog :before-close="closelog" :title="logTitle" :visible.sync="showLog">
+  <el-dialog
+    :before-close="closeDetailLog"
+    :title="logTitle"
+    :visible.sync="showDetailLog"
+  >
     <el-form
       id="form"
       label-position="right"
@@ -29,6 +33,7 @@
           action=""
           accept="image/jpg,image/png"
           list-type="picture-card"
+          :on-change="handleChange"
           :auto-upload="false"
           :file-list="fileList"
           :limit="1"
@@ -48,7 +53,7 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="closelog">取 消</el-button>
+      <el-button @click="closeDetailLog">取 消</el-button>
       <el-button type="primary" @click="validateForm('collegeDetail')"
         >确 定</el-button
       >
@@ -68,7 +73,7 @@ import {
 } from "element-ui";
 
 export default {
-  name: "collegeEditLog",
+  name: "collegeDetailLog",
   components: {
     elButton: Button,
     elDialog: Dialog,
@@ -87,10 +92,13 @@ export default {
         des: "",
         website: "",
         logo: {
-          name: "haha",
-          url: "https://cn.vuejs.org/images/logo.png"
+          name: "",
+          url: "",
+          size: "",
+          type: ""
         }
       },
+      isChange: false,
       fileList: [],
       rules: {
         collegeName: [
@@ -102,20 +110,33 @@ export default {
   created() {
     if (this.collegeId) {
       this.getCollegeDetail();
+      this.fileList.push(this.collegeDetail.logo);
     }
-    this.fileList.push(this.collegeDetail.logo);
   },
   computed: {
     logTitle() {
       let title = this.collegeId ? "编辑" : "添加";
       return title + "学院";
     },
-    showLog() {
-      return this.$store.state.showLog;
+    showDetailLog() {
+      return this.$store.state.showDetailLog;
     }
   },
   methods: {
     getCollegeDetail() {
+      /**********TEST***********/
+      this.collegeDetail = {
+        collegeName: "教育学院",
+        des: "哈哈哈",
+        website: "https://cn.vuejs.org",
+        logo: {
+          name: "logo.png",
+          url: "https://cn.vuejs.org/images/logo.png",
+          size: 6849,
+          type: "image/png"
+        }
+      };
+      /***********END***********/
       let that = this;
       this.$store.dispatch("getItems", {
         url: that.$store.state.getCollegeDetail,
@@ -125,30 +146,37 @@ export default {
         cb(res) {
           if (res.success) {
             that.collegeDetail = res.data;
+            // that.fileList.push(res.data.logo);
           } else {
             Message.error({
               message: res.message || "获取信息失败，请稍后再试"
             });
-            // that.closelog();
+            // that.closeDetailLog();
           }
         }
       });
+    },
+    handleChange() {
+      this.isChange = true;
     },
     validateForm(formName) {
       let that = this;
       this.$refs[formName].validate(valid => {
         if (valid) {
           let formData = new FormData(document.getElementById("form"));
-          let file = formData.get("file");
-          const isJPG = file.type === "image/jpg" || file.type === "image/png";
-          const isLt1M = file.size / 1024 / 1024 < 1;
-          if (!isJPG) {
-            Message.error("只能上传jpg/png文件!");
-            return;
-          }
-          if (!isLt1M) {
-            Message.error(`文件大小不能超过1MB!`);
-            return;
+          if (this.isChange) {
+            let file = formData.get("file");
+            const isJPG =
+              file.type === "image/jpg" || file.type === "image/png";
+            const isLt1M = file.size / 1024 / 1024 < 1;
+            if (!isJPG) {
+              Message.error("只能上传jpg/png文件!");
+              return;
+            }
+            if (!isLt1M) {
+              Message.error(`文件大小不能超过1MB!`);
+              return;
+            }
           }
           that.formSubmit(formData);
         } else {
@@ -189,8 +217,8 @@ export default {
         }
       });
     },
-    closelog() {
-      this.$store.commit("switchShowLog");
+    closeDetailLog() {
+      this.$store.commit("switchDetailLog");
     }
   }
 };

@@ -1,37 +1,42 @@
 <template>
   <div>
     <ListWarp
-      :addFuncName="'openlog'"
-      :amount="listAmount"
+      :addFuncName="'openDetailLog'"
+      :amount="amountOfData"
       :delFuncName="'collegesdel'"
       @collegesdel="collegesdel"
-      @openlog="openlog"
+      @openDetailLog="opendetaillog"
     />
-    <CollegesList
+    <CollegeList
       ref="colleges-list"
-      @openlog="openlog"
-      @listamount="listamount"
+      @openDetailLog="opendetaillog"
+      @amountOfData="amountofdata"
     />
-    <CollegeDetailLog v-if="showLog" :collegeId="currentCollegeId" />
+    <CollegeBatchImport v-if="showImportLog" />
+    <CollegeDetailLog v-if="showDetailLog" :collegeId="currentCollegeId" />
   </div>
 </template>
 
 <script>
-import CollegesList from "./components/CollegesList";
+import CollegeBatchImport from "./components/CollegeBatchImport";
+import CollegeList from "./components/CollegeList";
 import ListWarp from "./../components/ListWarp";
 
 export default {
   name: "college",
   components: {
+    CollegeBatchImport,
+    // : () =>
+    //   import( webpackChunkName: "collegeBatchImport"  "./components/CollegeBatchImport"),
     CollegeDetailLog: () =>
       import(/* webpackChunkName: "collegeDetailLog" */ "./components/CollegeDetailLog"),
-    CollegesList,
+    CollegeList,
     ListWarp
   },
   data() {
     return {
       currentCollegeId: undefined,
-      listAmount: 0
+      amountOfData: 0
     };
   },
   computed: {
@@ -44,21 +49,24 @@ export default {
         }
       );
     },
-    showLog() {
-      return this.$store.state.showLog;
+    showDetailLog() {
+      return this.$store.state.showDetailLog;
+    },
+    showImportLog() {
+      return this.$store.state.showImportLog;
     }
   },
   created() {},
   methods: {
-    listamount(amount) {
-      this.listAmount = amount;
+    amountofdata(amount) {
+      this.amountOfData = amount;
     },
     collegesdel() {
       this.$refs["colleges-list"].collegesdel(this.selectedCollegeId);
     },
-    openlog(collegeId) {
+    opendetaillog(collegeId) {
       this.currentCollegeId = collegeId;
-      this.$store.commit("switchShowLog");
+      this.$store.commit("switchDetailLog");
     }
   }
 };

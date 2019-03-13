@@ -110,7 +110,11 @@ export default new Vuex.Store({
     //   tabActive: null
     // },
 
-    showLog: false,
+    // 学院详情对话框
+    showDetailLog: false,
+
+    // 批量导入对话框
+    showImportLog: false,
 
     /*******************网络接口*******************/
     // 系统设置
@@ -133,8 +137,11 @@ export default new Vuex.Store({
     setSetting(state, setting) {
       state.setting = setting;
     },
-    switchShowLog(state) {
-      state.showLog = !state.showLog;
+    switchDetailLog(state) {
+      state.showDetailLog = !state.showDetailLog;
+    },
+    switchImportLog(state) {
+      state.showImportLog = !state.showImportLog;
     },
     clearUserInfo(state) {
       state.userInfo = ``;
