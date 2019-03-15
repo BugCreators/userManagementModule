@@ -20,6 +20,13 @@ export default new Vuex.Store({
       copyright,
       icp
     }*/
+    // 搜索值
+    searchValue: {
+      college: ``,
+      department: ``,
+      class: ``,
+      name: ``
+    },
     // 默认logo
     defaultLogo: require(`../images/default/logo.png`),
     // 默认头像
@@ -130,10 +137,16 @@ export default new Vuex.Store({
     addCollege: ``,
     // 删除学院
     delColleges: ``,
+    // 批量添加
+    batchAddCollege: ``,
     // 修改学院
     changeCollege: ``
   },
   mutations: {
+    setSearchValue(state, value) {
+      state.searchValue = value;
+      console.log(state.searchValue);
+    },
     setSetting(state, setting) {
       state.setting = setting;
     },

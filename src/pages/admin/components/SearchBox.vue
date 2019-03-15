@@ -1,0 +1,58 @@
+<template>
+  <div class="searchLine">
+    <el-input v-model="searchValue.name" :placeholder="placeholder"></el-input>
+    <el-button type="primary" @click="serchValueChange"
+      ><i class="el-icon-search"></i>搜索</el-button
+    >
+  </div>
+</template>
+
+<script>
+import { Button, Input } from "element-ui";
+
+export default {
+  name: "searchBox",
+  components: {
+    elButton: Button,
+    elInput: Input
+  },
+  props: {
+    moduleName: String
+  },
+  data() {
+    return {
+      searchValue: {
+        college: "",
+        department: "",
+        class: "",
+        name: ""
+      }
+    };
+  },
+  computed: {
+    placeholder() {
+      return "请输入" + this.moduleName + "名称";
+    }
+  },
+  methods: {
+    serchValueChange() {
+      this.$store.commit("setSearchValue", {
+        college: "",
+        department: "",
+        name: this.searchValue.name
+      });
+    }
+  }
+};
+</script>
+
+<style lang="less">
+.searchLine {
+  margin-bottom: 10px;
+  text-align: center;
+  .el-input {
+    margin-right: 10px;
+    width: 20%;
+  }
+}
+</style>

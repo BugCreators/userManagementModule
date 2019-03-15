@@ -13,7 +13,6 @@
         accept=".xls,.xlsx"
         action="111"
         class="excelUpload"
-        ref="upload"
         :auto-upload="false"
         :limit="1"
         :on-change="readExcel"
@@ -43,7 +42,7 @@
 </template>
 
 <script>
-import { Button, Dialog, Message, Upload } from "element-ui";
+import { Button, Dialog, Loading, Message, Upload } from "element-ui";
 import CollegeList from "./CollegeList";
 import XLSX from "xlsx";
 
@@ -59,7 +58,7 @@ export default {
     return {
       collegeListExcel: [],
       title: "批量导入",
-      isImport: true
+      isImport: true // 导入按钮点击状态
     };
   },
   computed: {
@@ -77,7 +76,9 @@ export default {
         xlsx =
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
       if (file.raw.type !== xls && file.raw.type !== xlsx) {
-        Message.error("请选择Excel格式的文件！");
+        Message.error({
+          message: "请选择Excel格式的文件！"
+        });
         return false;
       }
       const fileReader = new FileReader();
@@ -101,7 +102,9 @@ export default {
             that.collegeListExcel.push(item);
           });
         } catch (e) {
-          Message.error("文件类型不正确！");
+          Message.error({
+            message: "文件类型不正确！"
+          });
           return false;
         }
       };
@@ -109,9 +112,33 @@ export default {
     },
     removeExcel() {
       this.collegeListExcel = [];
+      this.isImport = true;
     },
     importExcel() {
-      console.log(this.collegeListExcel);
+      let loadingInstance = Loading.service({
+        text: "导入中，请稍候···"
+      });
+      this.$store.dispatch("postArrItems", {
+        url: this.$store.state.batchAddCollege,
+        query: {
+          collegeList: this.collegeListExcel,
+          token: this.$store.state.userInfo.token
+        },
+        cb(res) {
+          this.$nextTick(() => {
+            loadingInstance.close();
+          });
+          if (res.success) {
+            Message.success({
+              message: "导入成功！"
+            });
+          } else {
+            Message.error({
+              message: "导入失败，请稍候重试！"
+            });
+          }
+        }
+      });
     }
   }
 };

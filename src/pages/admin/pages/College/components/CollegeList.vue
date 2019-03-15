@@ -12,7 +12,7 @@
             />
             <AvueImage
               slot="reference"
-              :className="[thumbnail]"
+              :className="['thumbnail']"
               :srcImage="scope.row.coverUri || $store.state.defaultCollege"
               :replaceImage="$store.state.defaultCollege"
             />
@@ -48,7 +48,7 @@
           layout="prev, pager, next"
           :page-size="pageSize"
           :current-page="pageIndex"
-          :total="collegeList.length"
+          :total="collegeListAmount"
           @current-change="pageChange"
           background
         >
@@ -85,6 +85,7 @@ export default {
   data() {
     return {
       collegeList: [],
+      collegeListAmount: null,
       collegeDetail: {
         id: "",
         name: ""
@@ -92,9 +93,25 @@ export default {
       currentCollegeId: null,
       pageSize: 5,
       pageIndex: 1,
-      selectedCollegeId: [],
-      thumbnail: "thumbnail"
+      selectedCollegeId: []
     };
+  },
+  computed: {
+    searchValue() {
+      return this.$store.state.searchValue;
+    },
+    showDetailLog() {
+      return this.$store.state.showDetailLog;
+    }
+  },
+  watch: {
+    collegeListExcel(newV) {
+      this.collegeListAmount = newV.length;
+      this.collegeList = newV.slice(0, this.pageSize);
+    },
+    searchValue() {
+      this.getCollegeList();
+    }
   },
   created() {
     if (!this.collegeListExcel) {
@@ -106,20 +123,9 @@ export default {
         { id: 4, name: "教育学院" },
         { id: 5, name: "教育学院" }
       ];
-    } else {
-      this.collegeList = this.collegeListExcel;
+      this.collegeListAmount = 5;
     }
-    this.$emit("amountOfData", this.collegeList.length); //将数组长度传给父组件，后期删除
-  },
-  computed: {
-    showDetailLog() {
-      return this.$store.state.showDetailLog;
-    }
-  },
-  watch: {
-    collegeListExcel(newV, oldV) {
-      this.collegeList = newV;
-    }
+    this.$emit("amountOfData", this.collegeListAmount); //将数组长度传给父组件，后期删除
   },
   methods: {
     getCollegeList() {
@@ -129,12 +135,15 @@ export default {
         query: {
           pageSize: that.pageSize,
           pageIndex: that.pageIndex,
+          searchValue: that.searchValue,
           token: that.$store.state.userInfo.token
         },
         cb(res) {
           if (res.success) {
             that.collegeList = res.list;
-            that.$emit("amountOfData", that.collegeList.length);
+            // that.collegeListAmount = res.data.amount;
+            that.collegeListAmount = 5;
+            that.$emit("amountOfData", that.collegeListAmount);
           } else {
             Message.error({
               message: res.message || "获取列表失败，请稍后再试"
@@ -189,9 +198,19 @@ export default {
           });
         });
     },
+    importListChange() {
+      this.collegeList = this.collegeListExcel.slice(
+        5 * (this.pageIndex - 1),
+        5 + 5 * (this.pageIndex - 1)
+      );
+    },
     pageChange(page) {
       this.pageIndex = page;
-      this.getCollegeList();
+      if (!this.isImport) {
+        this.getCollegeList();
+      } else {
+        this.importListChange();
+      }
     }
   }
 };

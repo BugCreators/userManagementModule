@@ -1,9 +1,11 @@
 <template>
   <div>
+    <SearchBox :moduleName="moduleName" />
     <ListWarp
       :addFuncName="'openDetailLog'"
       :amount="amountOfData"
       :delFuncName="'collegesdel'"
+      :moduleName="moduleName"
       @collegesdel="collegesdel"
       @openDetailLog="opendetaillog"
     />
@@ -18,25 +20,26 @@
 </template>
 
 <script>
-import CollegeBatchImport from "./components/CollegeBatchImport";
+import SearchBox from "./../../components/SearchBox";
 import CollegeList from "./components/CollegeList";
 import ListWarp from "./../components/ListWarp";
 
 export default {
   name: "college",
   components: {
-    CollegeBatchImport,
-    // : () =>
-    //   import( webpackChunkName: "collegeBatchImport"  "./components/CollegeBatchImport"),
+    CollegeBatchImport: () =>
+      import(/* webpackChunkName: "collegeBatchImport" */ "./components/CollegeBatchImport"),
     CollegeDetailLog: () =>
       import(/* webpackChunkName: "collegeDetailLog" */ "./components/CollegeDetailLog"),
     CollegeList,
-    ListWarp
+    ListWarp,
+    SearchBox
   },
   data() {
     return {
+      amountOfData: 0,
       currentCollegeId: undefined,
-      amountOfData: 0
+      moduleName: "学院"
     };
   },
   computed: {

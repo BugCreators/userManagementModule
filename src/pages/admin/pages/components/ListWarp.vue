@@ -1,7 +1,7 @@
 <template>
   <div class="listWarp">
     <el-button type="danger" @click="batchDeletion">批量删除</el-button>
-    <el-button type="primary" @click="add">添加学院</el-button>
+    <el-button type="primary" @click="add">添加{{ moduleName }}</el-button>
     <el-button type="primary" @click="batchImport">批量添加</el-button>
     <span class="dataSum">共有数据：{{ amount }} 条</span>
   </div>
@@ -18,7 +18,8 @@ export default {
   props: {
     addFuncName: String,
     amount: Number,
-    delFuncName: String
+    delFuncName: String,
+    moduleName: String
   },
   methods: {
     batchDeletion() {
