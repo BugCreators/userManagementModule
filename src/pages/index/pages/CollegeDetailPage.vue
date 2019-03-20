@@ -10,19 +10,27 @@
           v-if="info != ''" -->
         <div class="basis">
           <AvueImage
-            :srcImage="info.coverUri || $store.state.defaultCollege"
+            :srcImage="info.logo || $store.state.defaultCollege"
             :replaceImage="$store.state.defaultCollege"
             :class="['college-img']"
           />
           <div class="detail-right">
-            <span class="college-name">{{ info.name }}教育学院</span>
+            <span class="college-name">{{ info.name }}</span>
+            <span v-if="info.english_name" class="college-otherInfo">{{
+              info.english_name
+            }}</span>
             <span class="college-otherInfo">
+              <a :href="info.website">进入学院官网→</a></span
+            >
+            <!-- <span v-if="info.website" class="college-otherInfo">
               官网链接：
-              <a href="https://cn.vuejs.org/">https://cn.vuejs.org/</a>
-            </span>
+              <a :href="info.website">{{ info.website }}</a>
+            </span> -->
           </div>
         </div>
-        <div id="college-des">{{ info.des ? info.des : "暂无概况~" }}</div>
+        <div id="college-des">
+          {{ info.description ? info.description : "暂无概况~" }}
+        </div>
         <div class="showMore" v-if="isShow" @click="showMore">
           <span :class="[!isShowMore ? `icon-expand` : `icon-fold`]"></span>
           {{ !isShowMore ? `显示` : `隐藏` }}
@@ -40,7 +48,7 @@
 </template>
 
 <script>
-import { Breadcrumb, BreadcrumbItem } from "element-ui";
+import { Breadcrumb, BreadcrumbItem, MessageBox } from "element-ui";
 import AvueImage from "@/components/AvueImage";
 
 export default {
@@ -58,7 +66,9 @@ export default {
     return {
       collegeId: this.$route.params.id,
       info: {
-        des: ``,
+        name: ``,
+        website: ``,
+        description: ``,
         majorList: []
       },
       isShow: false,
@@ -66,21 +76,37 @@ export default {
     };
   },
   created() {
-    var that = this;
-    this.$store.dispatch("getItems", {
-      url: this.$store.state.getCollegeDetail,
-      query: {
-        id: that.collegeId
-      },
-      cb(res) {
-        if (res.success) {
-          that.info = res.data.list;
-          that.isShow = true;
-        }
-      }
-    });
+    this.getCollegeDetail();
+  },
+  watch: {
+    "$route.path": function() {
+      this.getCollegeDetail(this.$route.params.id);
+    }
   },
   methods: {
+    getCollegeDetail(id) {
+      var that = this;
+      this.$store.dispatch("getItems", {
+        url: this.$store.state.getCollegeDetail,
+        query: {
+          id: id ? id : this.collegeId
+        },
+        cb(res) {
+          if (res.code === 200) {
+            that.info = res.data;
+            that.isShow = false; // true
+          } else {
+            MessageBox.alert(res.msg, res.code + `错误`, {
+              type: `error`,
+              confirmButtonText: `确定`,
+              callback() {
+                location.href = "/index.html";
+              }
+            });
+          }
+        }
+      });
+    },
     showMore() {
       let el = document.getElementById("college-des");
       if (this.isShowMore) {
@@ -98,12 +124,6 @@ export default {
 <style lang="less" scoped>
 .college-detail-page {
   padding-top: @header_height;
-  .bread {
-    height: 40px;
-    line-height: 40px;
-    margin: 0 auto;
-    width: @content_width;
-  }
   .detail {
     background-color: white;
     margin: 0 auto;
@@ -162,13 +182,13 @@ export default {
       float: left;
       height: 200px;
       margin-right: 50px;
-      width: 320px;
     }
   }
   .college-major {
     background: white;
     height: 500px;
     margin: 20px auto 0;
+    overflow: hidden;
     padding: 20px 0;
     h1 {
       border-left: 4px solid @default_color;

@@ -15,7 +15,7 @@
             <el-input
               type="text"
               class="hasMargin"
-              v-model="username"
+              v-model="number"
               placeholder="点击输入您的账号"
               @keyup.enter.native="login"
               clearable
@@ -34,8 +34,8 @@
             </div>
             <el-button
               @click="login"
-              :disabled="!username || !password"
-              :class="{ noClick: !username || !password }"
+              :disabled="!number || !password"
+              :class="{ noClick: !number || !password }"
               >{{ logining == true ? "登陆中..." : "登 录" }}</el-button
             >
           </div>
@@ -59,7 +59,8 @@ export default {
   },
   data() {
     return {
-      username: "",
+      // username: "",
+      number: "",
       password: "",
       errMes: "",
       remember: "",
@@ -75,15 +76,20 @@ export default {
     new Promise(res => res())
       .then(() => that.getSetting())
       .then(() => {
-        let userInfo = window.localStorage.getItem("avueUser");
+        let userInfo = localStorage.getItem("avueUser");
         if (userInfo != null) {
           userInfo = JSON.parse(userInfo);
-          (that.username = userInfo.name), (that.password = userInfo.password);
+          (that.number = userInfo.number), (that.password = userInfo.password);
           that.remember = true;
           that.isEncrypt = true;
         }
         return true;
       });
+  },
+  watch: {
+    password(newV, oldV) {
+      if (oldV) this.isEncrypt = false;
+    }
   },
   methods: {
     clickForgetPwd() {},
@@ -99,7 +105,7 @@ export default {
     },
     login() {
       this.errMes = "";
-      if (this.username == "") {
+      if (this.number == "") {
         this.errMes = "账号不能为空";
         return;
       }
@@ -109,30 +115,31 @@ export default {
       }
       let that = this;
       this.logining = true;
-      this.$store.dispatch("postItem", {
+      this.$store.dispatch("postItems", {
         url: this.$store.state.login,
         query: {
-          name: this.username,
+          number: this.number,
           password: that.isEncrypt ? this.password : md5(that.password)
         },
-        config: {
-          header: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          }
-        },
+        // config: {
+        //   header: {
+        //     "Content-Type": "application/x-www-form-urlencoded"
+        //   }
+        // },
         cb(res) {
-          if (res.success) {
+          if (res.code === 200) {
+            /********** 记住密码 START ********/
             if (that.remember) {
               let obj = {
-                name: that.username,
-                password: that.Encrypt ? that.password : md5(that.password)
+                number: that.number,
+                password: that.isEncrypt ? that.password : md5(that.password)
               };
               let objStr = JSON.stringify(obj);
-              window.localStorage.setItem("avueUser", objStr);
+              localStorage.setItem("avueUser", objStr);
             } else {
-              window.localStorage.removeItem("avueUser");
+              localStorage.removeItem("avueUser");
             }
-
+            /************** END **************/
             let userObj = res.data;
             userObj.password = that.isEncrypt
               ? that.password
@@ -142,13 +149,14 @@ export default {
 
             let fromUrl = getUrlParam("fromUrl");
             if (fromUrl != "" && fromUrl != null) {
-              window.location.href = fromUrl;
+              location.href = fromUrl;
             } else {
-              window.location = "admin.html";
+              location = "index.html";
             }
           } else {
+            that.logining = false;
             that.loading = false;
-            that.errMes = res.message;
+            that.errMes = res.msg;
           }
         }
       });
@@ -165,10 +173,9 @@ export default {
   min-height: 894px;
   .twoLoginMethods {
     left: 50%;
-    margin-top: -247px;
     margin-left: -219px;
     position: absolute;
-    top: 50%;
+    top: 25%;
     width: 360px;
     .logo-login {
       margin-bottom: 50px;

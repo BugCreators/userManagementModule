@@ -5,6 +5,9 @@ import { stringify } from "qs";
 
 Vue.use(Vuex);
 
+// const baseUrl = "http://127.0.0.1/avue/public";
+const baseUrl = "http://api.avue.com";
+
 export default new Vuex.Store({
   state: {
     /*******************基础数据********************/
@@ -39,7 +42,7 @@ export default new Vuex.Store({
     // 用户信息
     userInfo: ``,
 
-    //token: ``, 放入userInfo中
+    //token: ``, //放入userInfo中
 
     sidebar: [
       {
@@ -47,6 +50,11 @@ export default new Vuex.Store({
         title: "管理员管理",
         class: "el-icon-admin",
         item: [
+          {
+            name: "branch",
+            title: "部门管理",
+            href: "branch"
+          },
           {
             name: "role",
             title: "角色管理",
@@ -76,7 +84,7 @@ export default new Vuex.Store({
           },
           {
             name: "department",
-            title: "院系管理",
+            title: "院系机构",
             href: "department"
           },
           {
@@ -125,13 +133,17 @@ export default new Vuex.Store({
 
     /*******************网络接口*******************/
     // 系统设置
-    getSysSetting: ``,
+    getSysSetting: baseUrl + `/api/user/sysSetting`,
     // 学院列表
-    getCollegeList: ``,
+    getCollegeList: baseUrl + `/api/college/collegeList`,
     // 学院详情 参数: id
-    getCollegeDetail: ``,
+    getCollegeDetail: baseUrl + `/api/college/collegeDetail`,
     // 用户登录 参数：name, password
-    login: ``,
+    login: baseUrl + `/api/user/login`,
+    // 获取用户信息
+    getUserInfo: baseUrl + `/api/user/userInfo`,
+    // 获取Token
+    getToken: baseUrl + `/api/api/lssue`,
     // 学院管理
     // 添加学院
     addCollege: ``,
@@ -178,7 +190,8 @@ export default new Vuex.Store({
     },
     // eslint-disable-next-line
     postItems({ commit, state }, opts) {
-      return axios.post(opts.url, opts.query, opts.config).then(
+      return axios.post(opts.url, opts.query).then(
+      // return axios.post(opts.url, opts.query, opts.config).then(
         res => {
           opts.cb(res.data);
         },
@@ -206,8 +219,27 @@ export default new Vuex.Store({
           }
         );
     },
-    getUserInfo() {},
+    // eslint-disable-next-line
+    getUserInfo({ commit, state }) {
+      let c_start, c_end;
+      if (document.cookie.length > 0) {
+        c_start = document.cookie.indexOf("avueUser=");
+        if (c_start != -1) {
+          c_start = c_start + "avueUser=".length;
+          c_end = document.cookie.indexOf(";", c_start);
+          if (c_end == -1) c_end = document.cookie.length;
+          state.userInfo = JSON.parse(
+            decodeURIComponent(document.cookie.substring(c_start, c_end))
+          );
+          return true;
+        } else {
+          document.cookie = "avueUser=" + "null";
+        }
+      }
+      return false;
+    },
     clearUserInfo() {
+      document.cookie = "avueUser=" + "null";
       localStorage.token = ``;
     }
   }

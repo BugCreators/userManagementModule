@@ -12,7 +12,9 @@
       >
         <AvueImage
           :srcImage="
-            $store.state.setting.bannerUri || $store.state.defaultBanner
+            $store.state.setting.bannerUri
+              ? $store.state.setting.bannerUri
+              : $store.state.defaultBanner
           "
           :replaceImage="$store.state.defaultBanner"
         />
@@ -49,9 +51,9 @@ export default {
     let that = this;
     this.$store.dispatch("getItems", {
       url: this.$store.state.getCollegeList,
-      cb: function(res) {
-        if (res.success) {
-          that.collegeList = res.data.list;
+      cb(res) {
+        if (res.code === 200) {
+          that.collegeList = res.data;
         }
       }
     });
@@ -61,6 +63,7 @@ export default {
 
 <style lang="less" scoped>
 .collegePage {
+  overflow: hidden;
   padding-top: @header_height;
   .poster {
     margin: 0 auto;
@@ -74,7 +77,6 @@ export default {
   .college-wrapper {
     background: url("../../../assets/images/college_background.png") no-repeat
       center center;
-    height: 510px;
     padding-top: 50px;
     .container {
       width: @content_width;

@@ -17,11 +17,11 @@ const router = new Router({
 });
 router.beforeEach((to, from, next) => {
   if (to.matched.some(res => res.meta.requireAuth)) {
-    if (document.cookie.indexOf("avueUser") == -1) {
+    if (document.cookie.indexOf("avueUser=null") !== -1) {
       next();
     } else {
       // window.history.go(-1);
-      window.location = "/admin.html";
+      window.location = "/index.html";
     }
   } else {
     next();

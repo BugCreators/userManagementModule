@@ -12,6 +12,16 @@ const router = new Router({
       component: Home
     },
     {
+      // 部门管理
+      path: "/branch",
+      name: "branch",
+      component: () =>
+        import(/* webpackChunkName: "branch" */ "./pages/Branch/Branch"),
+      meta: {
+        requireAuth: true
+      }
+    },
+    {
       // 身份管理
       path: "/role",
       name: "role",

@@ -55,6 +55,39 @@ img, object, select, input, textarea, button {
   }
 }
 
+// Dropdown
+.el-dropdown-menu__item {
+  &:focus, &:not(.is-disabled):hover {
+    color: @default_color;
+  }
+}
+
+// Bread
+.bread {
+  height: 40px;
+  line-height: 40px !important;
+  margin: 0 auto;
+  width: @content_width;
+}
+
+// Radio
+.el-radio__input {
+  &.is-checked {
+    & .el-radio__inner {
+      background: @default_color !important;
+      border-color: @default_color !important;
+    }
+    & + .el-radio__label {
+      color: @default_color !important;
+    }
+  }
+}
+
+.el-radio__inner {
+  &:hover {
+    border-color: @default_color !important;
+  }
+}
 /***************菜单样式***************/
 .el-menu {
   background: @header_bg;

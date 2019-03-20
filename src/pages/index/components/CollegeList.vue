@@ -13,7 +13,7 @@
         <el-col v-for="item in list" :span="3" :key="item.id">
           <a class="college-card" :href="'index.html#/college/' + item.id">
             <AvueImage
-              :srcImage="item.coverUri || $store.state.defaultCollege"
+              :srcImage="item.logo || $store.state.defaultCollege"
               :replaceImage="$store.state.defaultCollege"
               :class="['college-cover']"
             />
@@ -86,7 +86,7 @@ export default {
       border-radius: 3px;
       display: inline-block;
       height: 128px;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       overflow: hidden;
       position: relative;
       width: 128px;
@@ -108,6 +108,7 @@ export default {
           display: table-cell;
           height: 0;
           overflow: hidden;
+          padding: 0 20px;
           vertical-align: middle;
         }
       }

@@ -19,7 +19,7 @@ export default {
     AvueFooter
   },
   created() {
-    document.cookie = "avueUser=11111111111";
+    // document.cookie = "";
   }
 };
 </script>

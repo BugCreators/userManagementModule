@@ -18,6 +18,12 @@ export default new Router({
         import(/* webpackChunkName: "collegeDetail" */ "./pages/CollegeDetailPage")
     },
     {
+      path: "/userInfo",
+      name: "userInfo",
+      component: () =>
+        import(/* webpackChunkName: "userInfo" */ "./pages/UserInfo")
+    },
+    {
       path: "/login",
       name: "login",
       beforeEnter() {
