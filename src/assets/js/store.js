@@ -133,17 +133,19 @@ export default new Vuex.Store({
 
     /*******************网络接口*******************/
     // 系统设置
-    getSysSetting: baseUrl + `/api/user/sysSetting`,
+    getSysSetting: baseUrl + `/api/user/getSysSetting`,
     // 学院列表
-    getCollegeList: baseUrl + `/api/college/collegeList`,
+    getCollegeList: baseUrl + `/api/college/getCollegeList`,
     // 学院详情 参数: id
-    getCollegeDetail: baseUrl + `/api/college/collegeDetail`,
+    getCollegeDetail: baseUrl + `/api/college/getCollegeDetail`,
     // 用户登录 参数：name, password
     login: baseUrl + `/api/user/login`,
     // 获取用户信息
-    getUserInfo: baseUrl + `/api/user/userInfo`,
+    getUserInfo: baseUrl + `/api/user/getUserInfo`,
     // 获取Token
     getToken: baseUrl + `/api/api/lssue`,
+    // 修改个人信息
+    changeUserInfo: baseUrl + `/api/user/changeUserInfo`,
     // 学院管理
     // 添加学院
     addCollege: ``,
@@ -191,7 +193,7 @@ export default new Vuex.Store({
     // eslint-disable-next-line
     postItems({ commit, state }, opts) {
       return axios.post(opts.url, opts.query).then(
-      // return axios.post(opts.url, opts.query, opts.config).then(
+        // return axios.post(opts.url, opts.query, opts.config).then(
         res => {
           opts.cb(res.data);
         },

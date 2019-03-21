@@ -6,8 +6,6 @@
     </el-breadcrumb>
     <div class="college-info">
       <div class="detail">
-        <!-- <AvueImage
-          v-if="info != ''" -->
         <div class="basis">
           <AvueImage
             :srcImage="info.logo || $store.state.defaultCollege"
@@ -22,10 +20,6 @@
             <span class="college-otherInfo">
               <a :href="info.website">进入学院官网→</a></span
             >
-            <!-- <span v-if="info.website" class="college-otherInfo">
-              官网链接：
-              <a :href="info.website">{{ info.website }}</a>
-            </span> -->
           </div>
         </div>
         <div id="college-des">
@@ -37,11 +31,10 @@
         </div>
       </div>
     </div>
-    <div class="college-major">
+    <div class="college-major" v-if="info.major.length">
       <div class="detail">
         <h1>专业设置</h1>
-        <MajorList :majorList="info.majorList" />
-        <myNoData v-if="info.majorList == null" />
+        <MajorList :majorList="info.major" />
       </div>
     </div>
   </div>
@@ -58,9 +51,7 @@ export default {
     elBreadcrumbItem: BreadcrumbItem,
     AvueImage,
     MajorList: () =>
-      import(/* webpackChunkName: "majorList" */ "../components/CollegeDetailMajorList"),
-    MyNoData: () =>
-      import(/* webpackChunkName: "myNoData" */ "@/components/MyNoData")
+      import(/* webpackChunkName: "majorList" */ "../components/CollegeDetailMajorList")
   },
   data() {
     return {
@@ -69,7 +60,7 @@ export default {
         name: ``,
         website: ``,
         description: ``,
-        majorList: []
+        major: []
       },
       isShow: false,
       isShowMore: false
@@ -94,11 +85,12 @@ export default {
         cb(res) {
           if (res.code === 200) {
             that.info = res.data;
-            that.isShow = false; // true
+            if (res.data.description.length > 245) {
+              that.isShow = true;
+            }
           } else {
             MessageBox.alert(res.msg, res.code + `错误`, {
-              type: `error`,
-              confirmButtonText: `确定`,
+              type: "error",
               callback() {
                 location.href = "/index.html";
               }
@@ -136,6 +128,7 @@ export default {
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 3;
       font-size: 16px;
+      line-height: 1.5;
       margin-top: 15px;
       overflow: hidden;
       text-indent: 2em;
@@ -186,7 +179,6 @@ export default {
   }
   .college-major {
     background: white;
-    height: 500px;
     margin: 20px auto 0;
     overflow: hidden;
     padding: 20px 0;

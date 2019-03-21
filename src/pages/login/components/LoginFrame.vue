@@ -59,7 +59,6 @@ export default {
   },
   data() {
     return {
-      // username: "",
       number: "",
       password: "",
       errMes: "",
@@ -121,11 +120,6 @@ export default {
           number: this.number,
           password: that.isEncrypt ? this.password : md5(that.password)
         },
-        // config: {
-        //   header: {
-        //     "Content-Type": "application/x-www-form-urlencoded"
-        //   }
-        // },
         cb(res) {
           if (res.code === 200) {
             /********** 记住密码 START ********/

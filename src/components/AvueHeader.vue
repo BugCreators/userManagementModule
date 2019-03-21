@@ -12,7 +12,10 @@
         </a>
       </h1>
       <div class="userInfo">
-        <a class="loginButton" :href="buttonInfo.href" v-if="!$store.state.userInfo"
+        <a
+          class="loginButton"
+          :href="buttonInfo.href"
+          v-if="!$store.state.userInfo"
           >{{ buttonInfo.text }}</a
         >
         <div v-else>
@@ -24,7 +27,10 @@
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="userInfo">个人信息</el-dropdown-item>
-              <el-dropdown-item v-if="false" command="userManagement">用户管理</el-dropdown-item>
+              <el-dropdown-item command="changePw">修改密码</el-dropdown-item>
+              <el-dropdown-item v-if="false" command="userManagement"
+                >用户管理</el-dropdown-item
+              >
               <el-dropdown-item command="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -83,6 +89,8 @@ export default {
           this.$router.push({
             path: "/userInfo"
           });
+          break;
+        case "changePw":
           break;
         case "userManagement":
           location.href = "admin.html";

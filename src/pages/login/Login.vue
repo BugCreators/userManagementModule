@@ -17,9 +17,6 @@ export default {
     AvueHeader,
     LoginFrame,
     AvueFooter
-  },
-  created() {
-    // document.cookie = "";
   }
 };
 </script>

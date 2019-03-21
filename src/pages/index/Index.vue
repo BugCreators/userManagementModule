@@ -45,7 +45,7 @@ export default {
             that.setting = res.data;
             that.$store.commit("setSetting", res.data);
           } else {
-            MessageBox.alert(`读取系统配置出错，请联系管理员`, `系统出错`, {
+            MessageBox.alert(`读取系统配置出错，请稍候重试`, `系统出错`, {
               type: `error`,
               confirmButtonText: `确定`
             });
