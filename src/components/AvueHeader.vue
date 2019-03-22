@@ -28,7 +28,7 @@
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="userInfo">个人信息</el-dropdown-item>
               <el-dropdown-item command="changePw">修改密码</el-dropdown-item>
-              <el-dropdown-item v-if="false" command="userManagement"
+              <el-dropdown-item v-if="true" command="userManagement"
                 >用户管理</el-dropdown-item
               >
               <el-dropdown-item command="logout">退出登录</el-dropdown-item>

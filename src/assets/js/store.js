@@ -145,7 +145,7 @@ export default new Vuex.Store({
     // 获取Token
     getToken: baseUrl + `/api/api/lssue`,
     // 修改个人信息
-    changeUserInfo: baseUrl + `/api/user/changeUserInfo`,
+    changeUserInfoByUser: baseUrl + `/api/user/changeUserInfoByUser`,
     // 学院管理
     // 添加学院
     addCollege: ``,
@@ -192,8 +192,11 @@ export default new Vuex.Store({
     },
     // eslint-disable-next-line
     postItems({ commit, state }, opts) {
-      return axios.post(opts.url, opts.query).then(
-        // return axios.post(opts.url, opts.query, opts.config).then(
+        return axios.post(opts.url, stringify(opts.query), {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+          }
+        }).then(
         res => {
           opts.cb(res.data);
         },
@@ -205,22 +208,27 @@ export default new Vuex.Store({
     //有数组的请求.
     // eslint-disable-next-line
     postArrItems({ commit, state }, opts) {
-      axios
-        .post(
-          opts.url,
-          stringify(opts.query, {
-            indices: false
-          })
-        )
-        .then(
-          res => {
-            opts.cb(res);
-          },
-          err => {
-            console.log(err);
-          }
-        );
+      state.postItems(opts.url, stringify(opts.query, {
+        indices: false
+      }))
     },
+    // postArrItems({ commit, state }, opts) {
+    //   axios
+    //     .post(
+    //       opts.url,
+    //       stringify(opts.query, {
+    //         indices: false
+    //       })
+    //     )
+    //     .then(
+    //       res => {
+    //         opts.cb(res);
+    //       },
+    //       err => {
+    //         console.log(err);
+    //       }
+    //     );
+    // },
     // eslint-disable-next-line
     getUserInfo({ commit, state }) {
       let c_start, c_end;

@@ -140,7 +140,7 @@ export default {
   methods: {
     getUserInfo() {
       let that = this;
-      this.$store.dispatch("getItems", {
+      this.$store.dispatch("postItems", {
         url: this.$store.state.getUserInfo,
         query: {
           number: this.$store.state.userInfo.number,
@@ -154,20 +154,63 @@ export default {
       });
     },
     changeInfo() {
+      let that = this;
       MessageBox.confirm("确定进行修改？", "确认修改", {
         type: "warning",
         callback(action) {
           switch (action) {
+            default:
             case "cancel":
             case "close":
               Message.info("取消修改");
               break;
             case "confirm":
-              Message.success("修改成功！");
+              that.changeInfoByUser();
               break;
           }
         }
       });
+    },
+    changeInfoByUser() {
+      this.$store.dispatch("postItems", {
+        url: this.$store.state.changeUserInfoByUser,
+        query: {
+          number: this.userInfo.number,
+          email: this.userInfo.email,
+          sex: this.userInfo.sex,
+          address: this.userInfo.address,
+          description: this.userInfo.description,
+          token: this.$store.state.userInfo.token
+        },
+        cb(res) {
+          let that = this;
+          if (res.code === 200) {
+            Message.success(res.msg)
+          } else if (res.code === 402) {
+            this.$store.dispatch("clearUserInfo").then(() => {
+              that.$store.commit("clearUserInfo");
+            });
+            MessageBox.confirm("会话已过期，要进行操作请重新登陆！", "会话过期", {
+              cancelButtonText: "回到首页",
+              confirmButtonText: "登录",
+              type: "warning",
+              callback(action) {
+                switch (action) {
+                  case "cancel":
+                  case "close":
+                    location.href = "index.html";
+                    break;
+                  case "confirm":
+                    location.href = "login.html";
+                    break;
+                }
+              }
+            });
+          } else {
+            Message.error(res.msg);
+          };
+        }
+      })
     }
   }
 };

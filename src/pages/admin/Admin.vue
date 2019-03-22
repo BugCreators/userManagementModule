@@ -71,6 +71,9 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch("getUserInfo");
+  },
+  mounted() {
     let isCollapse = localStorage.getItem("isCollapse"),
       editableTabs = localStorage.getItem("currentPageTab"),
       editableTabsValue = localStorage.getItem("currentPageActive");
