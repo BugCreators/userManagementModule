@@ -1,12 +1,12 @@
 <template>
-  <div class="userInfo">
-    <el-breadcrumb separator=">" class="bread">
+  <div class="userInfo" :class="!isAdmin? 'pdt-hh' : 'mg--20'">
+    <el-breadcrumb v-if="!isAdmin" separator=">" class="bread">
       <el-breadcrumb-item to="/">首页</el-breadcrumb-item>
       <el-breadcrumb-item>个人信息</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="userInfo-page">
-      <div class="userInfo-detail">
-        <el-form :model="userInfo">
+      <div class="userInfo-main">
+        <el-form label-position="left" :model="userInfo">
           <el-form-item v-for="item in i18n" :key="item.index" :label="item.cn">
             <el-input
               v-if="!item.radio"
@@ -26,7 +26,7 @@
             </div>
           </el-form-item>
           <div class="btns">
-            <el-button type="primary" @click="changeInfo">修改</el-button>
+            <el-button type="primary" @click="confirmChange">修改</el-button>
           </div>
         </el-form>
       </div>
@@ -116,6 +116,14 @@ export default {
       ]
     };
   },
+  computed: {
+    isAdmin() {
+      if (location.href.indexOf("admin") != -1) {
+        return true;
+      }
+      return false;
+    }
+  },
   created() {
     if (document.cookie.indexOf("avueUser=null") !== -1) {
       MessageBox.confirm("请先登录！", "提示", {
@@ -149,11 +157,13 @@ export default {
         cb(res) {
           if (res.code === 200) {
             that.userInfo = res.data;
+          } else if (res.code === 402) {
+            that.reload();
           }
         }
       });
     },
-    changeInfo() {
+    confirmChange() {
       let that = this;
       MessageBox.confirm("确定进行修改？", "确认修改", {
         type: "warning",
@@ -172,6 +182,7 @@ export default {
       });
     },
     changeInfoByUser() {
+      let that = this;
       this.$store.dispatch("postItems", {
         url: this.$store.state.changeUserInfoByUser,
         query: {
@@ -183,34 +194,41 @@ export default {
           token: this.$store.state.userInfo.token
         },
         cb(res) {
-          let that = this;
           if (res.code === 200) {
-            Message.success(res.msg)
+            Message.success(res.msg);
           } else if (res.code === 402) {
-            this.$store.dispatch("clearUserInfo").then(() => {
-              that.$store.commit("clearUserInfo");
-            });
-            MessageBox.confirm("会话已过期，要进行操作请重新登陆！", "会话过期", {
-              cancelButtonText: "回到首页",
-              confirmButtonText: "登录",
-              type: "warning",
-              callback(action) {
-                switch (action) {
-                  case "cancel":
-                  case "close":
-                    location.href = "index.html";
-                    break;
-                  case "confirm":
-                    location.href = "login.html";
-                    break;
-                }
-              }
-            });
+            that.reload();
           } else {
             Message.error(res.msg);
-          };
+          }
         }
-      })
+      });
+    },
+    reload() {
+      let that = this;
+      this.$store.dispatch("clearUserInfo").then(() => {
+        that.$store.commit("clearUserInfo");
+      });
+      MessageBox.confirm(
+        "会话已过期，要进行操作请重新登陆！",
+        "会话过期",
+        {
+          cancelButtonText: "回到首页",
+          confirmButtonText: "登录",
+          type: "warning",
+          callback(action) {
+            switch (action) {
+              case "cancel":
+              case "close":
+                location.href = "index.html";
+                break;
+              case "confirm":
+                location.href = "login.html";
+                break;
+            }
+          }
+        }
+      );
     }
   }
 };
@@ -218,12 +236,11 @@ export default {
 
 <style lang="less" scoped>
 .userInfo {
-  padding-top: @header_height;
   &-page {
     background: white;
     padding: 30px 0;
   }
-  &-detail {
+  &-main {
     margin: 0 auto;
     width: 1200px;
     .el-input {

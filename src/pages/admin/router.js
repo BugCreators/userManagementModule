@@ -113,7 +113,25 @@ const router = new Router({
       path: "/login",
       name: "login",
       beforeEnter() {
-        window.location = "/login.html";
+        location = "/login.html";
+      }
+    },
+    {
+      path: "/userInfo",
+      name: "userInfo",
+      component: () =>
+        import(/* webpackChunkName: "userInfo" */ "../index/pages/UserInfo"),
+      meta: {
+        requireAuth: true
+      }
+    },
+    {
+      path: "/changePw",
+      name: "changePw",
+      component: () =>
+        import(/* webpackChunkName: "changePw" */ "../index/pages/ChangePassword"),
+      meta: {
+        requireAuth: true
       }
     }
   ]

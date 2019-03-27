@@ -1,7 +1,7 @@
 <template>
   <div class="listWarp">
     <el-button type="danger" @click="batchDeletion">批量删除</el-button>
-    <el-button type="primary" @click="add">添加{{ moduleName }}</el-button>
+    <el-button type="primary" @click="add">添加{{ i18n[moduleName] }}</el-button>
     <el-button type="primary" @click="batchImport">批量添加</el-button>
     <span class="dataSum">共有数据：{{ amount }} 条</span>
   </div>
@@ -20,6 +20,16 @@ export default {
     amount: Number,
     delFuncName: String,
     moduleName: String
+  },
+  data() {
+    return {
+      i18n: {
+        college: "学院",
+        department: "部门",
+        major: "专业",
+        class: "班级"
+      }
+    }
   },
   methods: {
     batchDeletion() {

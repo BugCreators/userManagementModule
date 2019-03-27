@@ -4,6 +4,9 @@
     <el-button type="primary" @click="serchValueChange"
       ><i class="el-icon-search"></i>搜索</el-button
     >
+    <el-button @click="serchValueClear"
+      ><i class="el-icon-refresh"></i>重置</el-button
+    >
   </div>
 </template>
 
@@ -26,21 +29,34 @@ export default {
         department: "",
         class: "",
         name: ""
+      },
+      i18n: {
+        college: "学院",
+        department: "部门",
+        major: "专业",
+        class: "班级"
       }
     };
   },
   computed: {
     placeholder() {
-      return "请输入" + this.moduleName + "名称";
+      return "请输入" + this.i18n[this.moduleName] + "名称";
     }
   },
   methods: {
     serchValueChange() {
       this.$store.commit("setSearchValue", {
-        college: "",
-        department: "",
         name: this.searchValue.name
       });
+    },
+    serchValueClear() {
+      if (this.searchValue.name) {
+        this.searchValue.name = "";
+        this.$store.commit("setSearchValue", {
+          name: ""
+        });
+      }
+      
     }
   }
 };

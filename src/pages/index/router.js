@@ -24,6 +24,12 @@ export default new Router({
         import(/* webpackChunkName: "userInfo" */ "./pages/UserInfo")
     },
     {
+      path: "/changePw",
+      name: "changePassword",
+      component: () =>
+        import(/* webpackChunkName: "changePw" */ "./pages/ChangePassword")
+    },
+    {
       path: "/login",
       name: "login",
       beforeEnter() {

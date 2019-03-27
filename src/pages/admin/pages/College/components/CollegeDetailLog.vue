@@ -139,7 +139,7 @@ export default {
       /***********END***********/
       let that = this;
       this.$store.dispatch("getItems", {
-        url: that.$store.state.getCollegeDetail,
+        url: that.$store.state.getCollegeDetailByAdmin,
         query: {
           id: that.collegeId
         },

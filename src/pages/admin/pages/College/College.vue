@@ -39,7 +39,7 @@ export default {
     return {
       amountOfData: 0,
       currentCollegeId: undefined,
-      moduleName: "学院"
+      moduleName: "college"
     };
   },
   computed: {

@@ -1,10 +1,10 @@
 <template>
   <div class="header">
-    <div :class="isAdmin ? 'container-admin' : 'container'">
+    <div :class="isAdmin? 'container-admin' : 'container'">
       <h1 class="logo">
-        <a href="index.html">
+        <a :href="isAdmin? 'admin.html' : 'index.html'">
           <AvueImage
-            :srcImage="$store.state.defaultLogo"
+            :srcImage="isAdmin? $store.state.adminLogo : $store.state.defaultLogo"
             :replaceImage="$store.state.defaultLogo"
           />
           <!-- :srcImage="$store.state.setting.logoUri || $store.state.defaultLogo"
@@ -28,9 +28,12 @@
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="userInfo">个人信息</el-dropdown-item>
               <el-dropdown-item command="changePw">修改密码</el-dropdown-item>
-              <el-dropdown-item v-if="true" command="userManagement"
-                >用户管理</el-dropdown-item
-              >
+              <div v-if="$store.state.userInfo.intoBackstage">
+                <el-dropdown-item v-if="!isAdmin" command="userManagement"
+                  >用户管理</el-dropdown-item
+                >
+                <el-dropdown-item command="index" v-else>回到首页</el-dropdown-item>
+              </div>
               <el-dropdown-item command="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -91,9 +94,15 @@ export default {
           });
           break;
         case "changePw":
+          this.$router.push({
+            path: "/changePw"
+          });
           break;
         case "userManagement":
           location.href = "admin.html";
+          break;
+        case "index":
+          location.href = "index.html";
           break;
         case "logout":
           this.logout();

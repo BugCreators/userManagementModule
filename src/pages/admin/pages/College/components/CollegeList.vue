@@ -3,17 +3,18 @@
     <el-table :data="collegeList" @selection-change="selectedChange">
       <el-table-column type="selection" width="50"></el-table-column>
       <el-table-column label="学院名" prop="name" width="200"></el-table-column>
+      <el-table-column label="英文名" prop="english_name" width="200"></el-table-column>
       <el-table-column v-if="!isImport" label="院徽" width="150">
         <template slot-scope="scope">
           <el-popover placement="right" trigger="hover">
             <AvueImage
-              :srcImage="scope.row.coverUri || $store.state.defaultCollege"
+              :srcImage="scope.row.logo || $store.state.defaultCollege"
               :replaceImage="$store.state.defaultCollege"
             />
             <AvueImage
               slot="reference"
               :className="['thumbnail']"
-              :srcImage="scope.row.coverUri || $store.state.defaultCollege"
+              :srcImage="scope.row.logo || $store.state.defaultCollege"
               :replaceImage="$store.state.defaultCollege"
             />
           </el-popover>
@@ -23,8 +24,10 @@
         label="官网链接"
         prop="website"
         width="200"
-      ></el-table-column>
-      <el-table-column label="学院描述" prop="des"></el-table-column>
+      ><template slot-scope="scope">
+        <a target="_blank" :href="scope.row.website">{{ scope.row.website }}</a>
+      </template></el-table-column>
+      <el-table-column label="学院描述" prop="description"></el-table-column>
       <el-table-column
         v-if="isImport"
         label="消息"
@@ -48,7 +51,7 @@
           layout="prev, pager, next"
           :page-size="pageSize"
           :current-page="pageIndex"
-          :total="collegeListAmount"
+          :total="collegeListCount"
           @current-change="pageChange"
           background
         >
@@ -85,13 +88,13 @@ export default {
   data() {
     return {
       collegeList: [],
-      collegeListAmount: null,
+      collegeListCount: null,
       collegeDetail: {
         id: "",
         name: ""
       },
       currentCollegeId: null,
-      pageSize: 5,
+      pageSize: 6,
       pageIndex: 1,
       selectedCollegeId: []
     };
@@ -106,7 +109,7 @@ export default {
   },
   watch: {
     collegeListExcel(newV) {
-      this.collegeListAmount = newV.length;
+      this.collegeListCount = newV.length;
       this.collegeList = newV.slice(0, this.pageSize);
     },
     searchValue() {
@@ -115,23 +118,14 @@ export default {
   },
   created() {
     if (!this.collegeListExcel) {
-      // this.getCollegeList();
-      this.collegeList = [
-        { id: 1, name: "教育学院" },
-        { id: 2, name: "教育学院" },
-        { id: 3, name: "教育学院" },
-        { id: 4, name: "教育学院" },
-        { id: 5, name: "教育学院" }
-      ];
-      this.collegeListAmount = 5;
+      this.getCollegeList();
     }
-    this.$emit("amountOfData", this.collegeListAmount); //将数组长度传给父组件，后期删除
   },
   methods: {
     getCollegeList() {
       let that = this;
-      return this.$store.dispatch("getItems", {
-        url: that.$store.state.getCollegeList,
+      return this.$store.dispatch("postItems", {
+        url: that.$store.state.getCollegeListByAdmin,
         query: {
           pageSize: that.pageSize,
           pageIndex: that.pageIndex,
@@ -139,11 +133,10 @@ export default {
           token: that.$store.state.userInfo.token
         },
         cb(res) {
-          if (res.success) {
-            that.collegeList = res.list;
-            // that.collegeListAmount = res.data.amount;
-            that.collegeListAmount = 5;
-            that.$emit("amountOfData", that.collegeListAmount);
+          if (res.code === 200) {
+            that.collegeList = res.data.list;
+            that.collegeListCount = res.data.count;
+            that.$emit("amountOfData", that.collegeListCount);
           } else {
             Message.error({
               message: res.message || "获取列表失败，请稍后再试"

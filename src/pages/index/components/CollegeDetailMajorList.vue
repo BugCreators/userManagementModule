@@ -7,8 +7,7 @@
           <el-collapse-item v-if="item[key]" :title="value" :name="index">
             <div class="majorInfo">{{ item[key] }}</div>
           </el-collapse-item>
-          <div v-else>
-          </div>
+          <div v-else></div>
         </div>
       </el-collapse>
     </div>

@@ -36,7 +36,7 @@
 <script>
 import AvueHeader from "@/components/AvueHeader";
 import AvueSidebar from "./components/AvueSidebar";
-import { Tabs, TabPane } from "element-ui";
+import { MessageBox, Tabs, TabPane } from "element-ui";
 
 export default {
   name: "admin",
@@ -63,15 +63,58 @@ export default {
     currentName() {
       return this.$route.name;
     },
-    currentComponent() {
-      return this.currentName == "admin" ? "/" : this.currentName;
+    currentComponent: {
+      get() {
+        return this.currentName == "admin" ? "/" : this.currentName;
+      },
+      set(value) {
+        return value;
+      }
     },
     tabIndex() {
       return Math.floor(Math.random() * 10000000);
     }
   },
   created() {
-    this.$store.dispatch("getUserInfo");
+    if (document.cookie.indexOf("avueUser=null") !== -1) {
+      MessageBox.confirm("请先登录！", "提示", {
+        cancelButtonText: "回到首页",
+        confirmButtonText: "登录",
+        type: "warning",
+        callback(action) {
+          switch (action) {
+            case "cancel":
+            case "close":
+              location.href = "index.html";
+              break;
+            case "confirm":
+              location.href = "login.html";
+              break;
+          }
+        }
+      });
+    };
+    this.$store.dispatch("getUserInfo").then(() => {
+      this.$store.dispatch("getItems", {
+        url: this.$store.state.intoBackstage,
+        query: {
+          token: this.$store.state.userInfo.token
+        },
+        cb(res) {
+          if (res.code === 200) {
+            if (res.data.intoBackstage === 0) {
+              MessageBox.alert("你没有足够的权限进入后台", "提示", {
+                confirmButtonText: "确定",
+                type: "warning",
+                callback() {
+                  location.href = "index.html";
+                }
+              })
+            }
+          }
+        }
+      });
+    });
   },
   mounted() {
     let isCollapse = localStorage.getItem("isCollapse"),
