@@ -1,5 +1,5 @@
 <template>
-  <div class="userInfo" :class="!isAdmin? 'pdt-hh' : 'mg--20'">
+  <div class="userInfo" :class="!isAdmin ? 'pdt-hh' : 'mg--20'">
     <el-breadcrumb v-if="!isAdmin" separator=">" class="bread">
       <el-breadcrumb-item to="/">首页</el-breadcrumb-item>
       <el-breadcrumb-item>个人信息</el-breadcrumb-item>
@@ -209,26 +209,22 @@ export default {
       this.$store.dispatch("clearUserInfo").then(() => {
         that.$store.commit("clearUserInfo");
       });
-      MessageBox.confirm(
-        "会话已过期，要进行操作请重新登陆！",
-        "会话过期",
-        {
-          cancelButtonText: "回到首页",
-          confirmButtonText: "登录",
-          type: "warning",
-          callback(action) {
-            switch (action) {
-              case "cancel":
-              case "close":
-                location.href = "index.html";
-                break;
-              case "confirm":
-                location.href = "login.html";
-                break;
-            }
+      MessageBox.confirm("会话已过期，要进行操作请重新登陆！", "会话过期", {
+        cancelButtonText: "回到首页",
+        confirmButtonText: "登录",
+        type: "warning",
+        callback(action) {
+          switch (action) {
+            case "cancel":
+            case "close":
+              location.href = "index.html";
+              break;
+            case "confirm":
+              location.href = "login.html";
+              break;
           }
         }
-      );
+      });
     }
   }
 };

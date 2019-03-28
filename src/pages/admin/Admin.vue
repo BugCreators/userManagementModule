@@ -93,7 +93,7 @@ export default {
           }
         }
       });
-    };
+    }
     this.$store.dispatch("getUserInfo").then(() => {
       this.$store.dispatch("getItems", {
         url: this.$store.state.intoBackstage,
@@ -109,8 +109,16 @@ export default {
                 callback() {
                   location.href = "index.html";
                 }
-              })
+              });
             }
+          } else {
+            MessageBox.alert(res.msg, "提示", {
+              confirmButtonText: "确定",
+              type: "warning",
+              callback() {
+                location.href = "index.html";
+              }
+            });
           }
         }
       });

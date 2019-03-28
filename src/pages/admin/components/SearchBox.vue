@@ -34,7 +34,8 @@ export default {
         college: "学院",
         department: "部门",
         major: "专业",
-        class: "班级"
+        class: "班级",
+        authority: "权限"
       }
     };
   },
@@ -56,7 +57,6 @@ export default {
           name: ""
         });
       }
-      
     }
   }
 };

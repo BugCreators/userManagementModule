@@ -1,10 +1,12 @@
 <template>
   <div class="header">
-    <div :class="isAdmin? 'container-admin' : 'container'">
+    <div :class="isAdmin ? 'container-admin' : 'container'">
       <h1 class="logo">
-        <a :href="isAdmin? 'admin.html' : 'index.html'">
+        <a :href="isAdmin ? 'admin.html' : 'index.html'">
           <AvueImage
-            :srcImage="isAdmin? $store.state.adminLogo : $store.state.defaultLogo"
+            :srcImage="
+              isAdmin ? $store.state.adminLogo : $store.state.defaultLogo
+            "
             :replaceImage="$store.state.defaultLogo"
           />
           <!-- :srcImage="$store.state.setting.logoUri || $store.state.defaultLogo"
@@ -32,7 +34,9 @@
                 <el-dropdown-item v-if="!isAdmin" command="userManagement"
                   >用户管理</el-dropdown-item
                 >
-                <el-dropdown-item command="index" v-else>回到首页</el-dropdown-item>
+                <el-dropdown-item command="index" v-else
+                  >回到首页</el-dropdown-item
+                >
               </div>
               <el-dropdown-item command="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
@@ -61,7 +65,7 @@ export default {
   mounted() {
     if (!this.isAdmin) {
       let navHeight = document.getElementsByClassName("header")[0].offsetHeight;
-      window.onscroll = function() {
+      onscroll = function() {
         let scrolltop =
           document.documentElement.scrollTop || document.body.scrollTop;
         if (scrolltop > navHeight) {

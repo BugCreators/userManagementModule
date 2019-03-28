@@ -1,9 +1,18 @@
 <template>
   <div class="collegeList">
-    <el-table :data="collegeList" @selection-change="selectedChange">
+    <el-table
+      id="collegeList"
+      :row-style="rowStyle"
+      :data="collegeList"
+      @selection-change="selectedChange"
+    >
       <el-table-column type="selection" width="50"></el-table-column>
-      <el-table-column label="学院名" prop="name" width="200"></el-table-column>
-      <el-table-column label="英文名" prop="english_name" width="200"></el-table-column>
+      <el-table-column label="学院名" prop="name" width="100"></el-table-column>
+      <el-table-column
+        label="英文名"
+        prop="english_name"
+        width="200"
+      ></el-table-column>
       <el-table-column v-if="!isImport" label="院徽" width="150">
         <template slot-scope="scope">
           <el-popover placement="right" trigger="hover">
@@ -20,13 +29,13 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column
-        label="官网链接"
-        prop="website"
-        width="200"
-      ><template slot-scope="scope">
-        <a target="_blank" :href="scope.row.website">{{ scope.row.website }}</a>
-      </template></el-table-column>
+      <el-table-column label="官网链接" prop="website" width="200"
+        ><template slot-scope="scope">
+          <a target="_blank" :href="scope.row.website">{{
+            scope.row.website
+          }}</a>
+        </template></el-table-column
+      >
       <el-table-column label="学院描述" prop="description"></el-table-column>
       <el-table-column
         v-if="isImport"
@@ -40,7 +49,7 @@
           <i class="el-icon-edit" @click="editCollege(scope.row.id)"></i>
           <i
             class="el-icon-delete"
-            @click="collegesdel([{ id: scope.row.id }])"
+            @click="collegesDelConfirm([scope.row.id])"
           ></i>
         </template>
       </el-table-column>
@@ -63,6 +72,7 @@
 
 <script>
 import {
+  Loading,
   Message,
   MessageBox,
   Pagination,
@@ -93,9 +103,16 @@ export default {
         id: "",
         name: ""
       },
+      loadingOpts: {
+        target: "",
+        fullscreen: false
+      },
       currentCollegeId: null,
       pageSize: 6,
       pageIndex: 1,
+      rowStyle: {
+        height: "100px"
+      },
       selectedCollegeId: []
     };
   },
@@ -116,7 +133,8 @@ export default {
       this.getCollegeList();
     }
   },
-  created() {
+  mounted() {
+    this.loadingOpts.target = document.getElementById("collegeList");
     if (!this.collegeListExcel) {
       this.getCollegeList();
     }
@@ -124,6 +142,7 @@ export default {
   methods: {
     getCollegeList() {
       let that = this;
+      let loading = Loading.service(this.loadingOpts);
       return this.$store.dispatch("postItems", {
         url: that.$store.state.getCollegeListByAdmin,
         query: {
@@ -133,25 +152,35 @@ export default {
           token: that.$store.state.userInfo.token
         },
         cb(res) {
+          loading.close();
           if (res.code === 200) {
             that.collegeList = res.data.list;
             that.collegeListCount = res.data.count;
-            that.$emit("amountOfData", that.collegeListCount);
+            that.$emit("changeCount", that.collegeListCount);
           } else {
-            Message.error({
-              message: res.message || "获取列表失败，请稍后再试"
-            });
+            Message.error(res.msg);
           }
         }
       });
     },
     selectedChange(selection) {
-      this.selectedCollegeId = selection;
+      console.log(selection.map(item => item.id));
+      this.selectedCollegeId = selection.map(item => item.id);
     },
     editCollege(collegeId) {
       this.$emit("openDetailLog", collegeId);
     },
-    collegesdel(collegesId) {
+    collegeChange(data) {
+      let loading = Loading.service(this.loadingOpts);
+      for (let i = 0, len = this.collegeList.length; i < len; i++) {
+        if (this.collegeList[i].id == data.id) {
+          this.collegeList[i] = data;
+          return;
+        }
+      }
+      loading.close();
+    },
+    collegesDelConfirm(collegesId) {
       let that = this;
       if (collegesId.length <= 0) {
         Message.warning({
@@ -162,39 +191,45 @@ export default {
       MessageBox.confirm("此操作将删除所选学院的所有信息，是否继续？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          that.$store.dispatch("postArrItems", {
-            url: that.$store.state.delColleges,
-            query: {
-              collegesId,
-              username: that.$store.state.userInfo.username,
-              token: that.$store.state.userInfo.token
-            },
-            cb(res) {
-              if (res.success) {
-                Message.success({
-                  message: res.message || "删除成功！"
-                });
-              } else {
-                Message.error({
-                  message: res.message || "删除失败！"
-                });
-              }
+        type: "warning",
+        callback(action) {
+          switch (action) {
+            case "cancel":
+            case "close":
+              Message.info("取消删除");
+              break;
+            case "confirm":
+              that.collegesDel(collegesId);
+              break;
+          }
+        }
+      });
+    },
+    collegesDel(collegesId) {
+      let that = this;
+      this.$store.dispatch("postItems", {
+        url: this.$store.state.delColleges,
+        query: {
+          collegesId,
+          token: this.$store.state.userInfo.token
+        },
+        cb(res) {
+          if (res.code === 200) {
+            Message.success(res.msg);
+            if (that.collegeList.length % that.pageSize == 1) {
+              that.pageIndex--;
             }
-          });
-        })
-        .catch(() => {
-          Message.warning({
-            message: "取消删除"
-          });
-        });
+            that.getCollegeList();
+          } else {
+            Message.error(res.msg);
+          }
+        }
+      });
     },
     importListChange() {
       this.collegeList = this.collegeListExcel.slice(
-        5 * (this.pageIndex - 1),
-        5 + 5 * (this.pageIndex - 1)
+        this.pageSize * (this.pageIndex - 1),
+        this.pageSize + this.pageSize * (this.pageIndex - 1)
       );
     },
     pageChange(page) {

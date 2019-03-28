@@ -42,19 +42,18 @@ export default new Vuex.Store({
     defaultBanner: require(`../images/default/banner.png`),
     defaultNoData: require(`../images/NoData.png`),
     // 用户信息
-    userInfo: {
-      number: ``,
-      password: ``,
-      realname: ``,
-      intoBackstage: ``,
-      token: ``,
-      roleName: ``
-    },
+    userInfo: ``,
+    // number: ``,
+    // password: ``,
+    // realname: ``,
+    // intoBackstage: ``,
+    // token: ``,
+    // roleName: ``,
     // 查询权限
     selectAuthority: {
       select_admin: 0,
       select_admin_department: 0,
-      select_capabilities: 0,
+      select_authority: 0,
       select_class: 0,
       select_college: 0,
       select_department: 0,
@@ -85,9 +84,9 @@ export default new Vuex.Store({
           },
           {
             name: "authority",
-            title: "权限管理",
+            title: "权限列表",
             href: "authority",
-            show: "select_capabilities"
+            show: "select_authority"
           },
           {
             name: "administrator",
@@ -195,19 +194,22 @@ export default new Vuex.Store({
     changeUserInfoByUser: baseUrl + `/api/user/changeUserInfoByUser`,
     // 用户修改密码
     changePasswordByUser: baseUrl + `/api/user/changePasswordByUser`,
+    /**************管理员管理*****************/
+    getAuthorityList: baseUrl + `/api/authority/getAuthorityList`,
+    /*****************END********************/
     /***************学院管理*****************/
     // 学院列表
     getCollegeListByAdmin: baseUrl + `/api/college/getCollegeListByAdmin`,
     // 学院详情
     getCollegeDetailByAdmin: baseUrl + `/api/college/getCollegeDetailByAdmin`,
     // 添加学院
-    addCollege: ``,
+    addCollege: baseUrl + `/api/college/addCollege`,
     // 删除学院
-    delColleges: ``,
+    delColleges: baseUrl + `/api/college/deleteCollege`,
     // 批量添加
-    batchAddCollege: ``,
+    importcollegeList: baseUrl + `/api/college/importcollegeList`,
     // 修改学院
-    changeCollege: ``,
+    changeCollege: baseUrl + `/api/college/changeCollegeDetail`,
     /************获取权限 BEGIN**************/
     // 进入后台权限
     intoBackstage: baseUrl + `/api/user/getIntoBackstage`,
@@ -268,9 +270,11 @@ export default new Vuex.Store({
     // eslint-disable-next-line
     postItems({ commit, state }, opts) {
       return axios
-        .post(opts.url, stringify(opts.query), {
+        .post(opts.url, opts.config ? opts.query : stringify(opts.query), {
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+            "Content-Type": opts.config
+              ? opts.config.headers
+              : "application/x-www-form-urlencoded;charset=UTF-8"
           }
         })
         .then(

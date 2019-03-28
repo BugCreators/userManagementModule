@@ -1,5 +1,5 @@
 <template>
-  <div class="changePw" :class="!isAdmin? 'pdt-hh' : 'mg--20'">
+  <div class="changePw" :class="!isAdmin ? 'pdt-hh' : 'mg--20'">
     <el-breadcrumb v-if="!isAdmin" separator=">" class="bread">
       <el-breadcrumb-item to="/">首页</el-breadcrumb-item>
       <el-breadcrumb-item>修改密码</el-breadcrumb-item>
@@ -21,7 +21,16 @@
 </template>
 
 <script>
-import { Breadcrumb, BreadcrumbItem, Button, Form, FormItem, Input, Message, MessageBox } from "element-ui";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  Button,
+  Form,
+  FormItem,
+  Input,
+  Message,
+  MessageBox
+} from "element-ui";
 import md5 from "md5";
 
 export default {
@@ -58,7 +67,7 @@ export default {
           errorMsg: ""
         }
       ]
-    }
+    };
   },
   computed: {
     isAdmin() {
@@ -166,8 +175,7 @@ export default {
             Message.error(res.msg);
           }
         }
-      })
-
+      });
     }
   }
 };

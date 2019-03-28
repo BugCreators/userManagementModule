@@ -20,25 +20,31 @@
       </li>
     </el-tooltip>
     <div v-for="(item, index) in $store.state.sidebar" :key="index">
-        <el-submenu v-if="'item' in item && item.show" :index="subMenuIndex(index)">
-          <template slot="title">
-            <i :class="item.class"></i
-            ><span v-if="!isCollapse" slot="title">{{ item.title }}</span>
-          </template>
-          <div v-for="(subItem, subIndex) in item.item"
-              :key="subIndex">
-            <el-menu-item
-              v-if="$store.state.selectAuthority[subItem.show]"
-              :index="subItem.href"
-              @click="switchTab(subItem)"
-            >
-              {{ subItem.title }}
-            </el-menu-item>
-          </div>
-        </el-submenu>
-        <el-menu-item v-else-if="item.show" :index="item.href" @click="switchTab(item)">
-          <i :class="item.class"></i><span slot="title">{{ item.title }}</span>
-        </el-menu-item>
+      <el-submenu
+        v-if="'item' in item && item.show"
+        :index="subMenuIndex(index)"
+      >
+        <template slot="title">
+          <i :class="item.class"></i
+          ><span v-if="!isCollapse" slot="title">{{ item.title }}</span>
+        </template>
+        <div v-for="(subItem, subIndex) in item.item" :key="subIndex">
+          <el-menu-item
+            v-if="$store.state.selectAuthority[subItem.show]"
+            :index="subItem.href"
+            @click="switchTab(subItem)"
+          >
+            {{ subItem.title }}
+          </el-menu-item>
+        </div>
+      </el-submenu>
+      <el-menu-item
+        v-else-if="item.show"
+        :index="item.href"
+        @click="switchTab(item)"
+      >
+        <i :class="item.class"></i><span slot="title">{{ item.title }}</span>
+      </el-menu-item>
     </div>
   </el-menu>
 </template>
@@ -62,7 +68,7 @@ export default {
     return {
       isCheckAuthority: false,
       checkResult: false
-    }
+    };
   },
   created() {
     let that = this;
@@ -76,7 +82,7 @@ export default {
           that.$store.commit("setSelectAuthority", res.data);
         }
       }
-    })
+    });
   },
   methods: {
     subMenuIndex(index) {

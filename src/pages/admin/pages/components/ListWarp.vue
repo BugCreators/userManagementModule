@@ -1,9 +1,15 @@
 <template>
   <div class="listWarp">
-    <el-button type="danger" @click="batchDeletion">批量删除</el-button>
-    <el-button type="primary" @click="add">添加{{ i18n[moduleName] }}</el-button>
-    <el-button type="primary" @click="batchImport">批量添加</el-button>
-    <span class="dataSum">共有数据：{{ amount }} 条</span>
+    <el-button v-if="showDeleted" type="danger" @click="batchDeletion"
+      >批量删除</el-button
+    >
+    <el-button v-if="showAdd" type="primary" @click="add"
+      >添加{{ i18n[moduleName] }}</el-button
+    >
+    <el-button v-if="showImport" type="primary" @click="batchImport"
+      >批量添加</el-button
+    >
+    <span class="dataSum">共有数据：{{ count }} 条</span>
   </div>
 </template>
 
@@ -17,9 +23,21 @@ export default {
   },
   props: {
     addFuncName: String,
-    amount: Number,
+    count: Number,
     delFuncName: String,
-    moduleName: String
+    moduleName: String,
+    showDeleted: {
+      type: Boolean,
+      default: true
+    },
+    showAdd: {
+      type: Boolean,
+      default: true
+    },
+    showImport: {
+      type: Boolean,
+      default: true
+    }
   },
   data() {
     return {
@@ -29,7 +47,7 @@ export default {
         major: "专业",
         class: "班级"
       }
-    }
+    };
   },
   methods: {
     batchDeletion() {

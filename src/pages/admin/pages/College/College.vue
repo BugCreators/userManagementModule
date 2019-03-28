@@ -3,19 +3,27 @@
     <SearchBox :moduleName="moduleName" />
     <ListWarp
       :addFuncName="'openDetailLog'"
-      :amount="amountOfData"
-      :delFuncName="'collegesdel'"
+      :count="count"
+      :delFuncName="'collegesDelConfirm'"
       :moduleName="moduleName"
-      @collegesdel="collegesdel"
-      @openDetailLog="opendetaillog"
+      @collegesDelConfirm="collegesDel"
+      @openDetailLog="openDetailLog"
     />
     <CollegeList
       ref="colleges-list"
-      @openDetailLog="opendetaillog"
-      @amountOfData="amountofdata"
+      @openDetailLog="openDetailLog"
+      @changeCount="changeCount"
     />
-    <CollegeBatchImport v-if="showImportLog" />
-    <CollegeDetailLog v-if="showDetailLog" :collegeId="currentCollegeId" />
+    <CollegeListImport
+      @collegeListChange="collegeListChange"
+      v-if="showImportLog"
+    />
+    <CollegeDetailLog
+      v-if="showDetailLog"
+      :collegeId="currentCollegeId"
+      @collegeListChange="collegeListChange"
+      @collegeChange="collegeChange"
+    />
   </div>
 </template>
 
@@ -27,8 +35,8 @@ import ListWarp from "./../components/ListWarp";
 export default {
   name: "college",
   components: {
-    CollegeBatchImport: () =>
-      import(/* webpackChunkName: "collegeBatchImport" */ "./components/CollegeBatchImport"),
+    CollegeListImport: () =>
+      import(/* webpackChunkName: "collegeListImport" */ "./components/CollegeListImport"),
     CollegeDetailLog: () =>
       import(/* webpackChunkName: "collegeDetailLog" */ "./components/CollegeDetailLog"),
     CollegeList,
@@ -37,7 +45,7 @@ export default {
   },
   data() {
     return {
-      amountOfData: 0,
+      count: 0,
       currentCollegeId: undefined,
       moduleName: "college"
     };
@@ -59,15 +67,22 @@ export default {
       return this.$store.state.showImportLog;
     }
   },
-  created() {},
   methods: {
-    amountofdata(amount) {
-      this.amountOfData = amount;
+    changeCount(count) {
+      this.count = count;
     },
-    collegesdel() {
-      this.$refs["colleges-list"].collegesdel(this.selectedCollegeId);
+    collegeListChange() {
+      this.$refs["colleges-list"].getCollegeList();
     },
-    opendetaillog(collegeId) {
+    collegeChange(data) {
+      this.$refs["colleges-list"].collegeChange(data);
+    },
+    collegesDel() {
+      this.$refs["colleges-list"].collegesDelConfirm(
+        this.$refs["colleges-list"].selectedCollegeId
+      );
+    },
+    openDetailLog(collegeId) {
       this.currentCollegeId = collegeId;
       this.$store.commit("switchDetailLog");
     }
