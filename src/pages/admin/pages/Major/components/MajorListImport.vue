@@ -27,7 +27,7 @@
         只能上传xls/xlsx文件
       </div>
     </div>
-    <CollegeList
+    <MajorList
       v-if="listExcel"
       :listExcel="listExcel"
       :isImport="true"
@@ -43,14 +43,14 @@
 
 <script>
 import { Button, Dialog, Loading, Message, Upload } from "element-ui";
-import CollegeList from "./CollegeList";
+import MajorList from "./MajorList";
 import XLSX from "xlsx";
 import { downloadExl, changeExlHaed } from "@/assets/js/tool";
 
 export default {
-  name: "collegeBatchImport",
+  name: "majorBatchImport",
   components: {
-    CollegeList,
+    MajorList,
     elButton: Button,
     elDialog: Dialog,
     elUpload: Upload
@@ -84,7 +84,7 @@ export default {
         listHead[this.i18n[v]] = "";
       });
       listHeadArr.push(listHead);
-      downloadExl(listHeadArr, "xlsx", "批量导入学院模板");
+      downloadExl(listHeadArr, "xlsx", "专业列表模板");
     },
     readExcel(file) {
       const xls = "application/vnd.ms-excel",
@@ -112,7 +112,7 @@ export default {
           sheetArray.forEach(item => {
             that.isImport = false;
             if (!item.name) {
-              item.message = "学院名不能为空！";
+              item.message = "专业名不能为空！";
               that.isImport = true;
             }
             that.listExcel.push(item);
@@ -136,9 +136,9 @@ export default {
         text: "导入中，请稍候···"
       });
       this.$store.dispatch("postItems", {
-        url: this.$store.state.importCollegeList,
+        url: this.$store.state.importMajorList,
         query: {
-          collegeList: this.listExcel,
+          majorList: this.listExcel,
           token: this.$store.state.userInfo.token
         },
         cb(res) {

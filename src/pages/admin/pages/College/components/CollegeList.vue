@@ -245,7 +245,7 @@ export default {
     datasDelete(ids) {
       let that = this;
       this.$store.dispatch("postItems", {
-        url: this.$store.state.delColleges,
+        url: this.$store.state.delCollege,
         query: {
           collegesId: ids,
           token: this.$store.state.userInfo.token
@@ -320,22 +320,3 @@ export default {
   }
 };
 </script>
-
-<style lang="less" scoped>
-.disp-flex {
-  cursor: pointer;
-  display: inline-flex;
-}
-.errorMsg {
-  color: #dd6161 !important;
-}
-.listWarp2 {
-  display: inline-block;
-  margin: 10px 0 20px;
-  width: 100%;
-  .listPage {
-    float: right;
-    line-height: 2;
-  }
-}
-</style>

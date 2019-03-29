@@ -62,6 +62,16 @@ const router = new Router({
       }
     },
     {
+      // 专业管理
+      path: "/major",
+      name: "major",
+      component: () =>
+        import(/* webpackChunkName: "major" */ "./pages/Major/Major"),
+      meta: {
+        requireAuth: true
+      }
+    },
+    {
       // 院系管理
       path: "/department",
       name: "department",

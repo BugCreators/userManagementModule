@@ -201,7 +201,8 @@ export default new Vuex.Store({
     /**************管理员管理*****************/
     getAuthorityList: baseUrl + `/api/authority/getAuthorityList`,
     /*****************END********************/
-    /***************学院管理*****************/
+    /***************院系管理*****************/
+    // 学院管理
     // 学院列表
     getCollegeListByAdmin: baseUrl + `/api/college/getCollegeListByAdmin`,
     // 导出数据 全部学院
@@ -217,11 +218,28 @@ export default new Vuex.Store({
     // 添加学院
     addCollege: baseUrl + `/api/college/addCollege`,
     // 删除学院
-    delColleges: baseUrl + `/api/college/deleteCollege`,
+    delCollege: baseUrl + `/api/college/deleteCollege`,
     // 批量添加
     importcollegeList: baseUrl + `/api/college/importcollegeList`,
     // 修改学院
     changeCollege: baseUrl + `/api/college/changeCollegeDetail`,
+
+    // 专业管理
+    // 学院列表
+    getMajorList: baseUrl + `/api/major/getMajorList`,
+    // 导出数据 全部专业
+    getAllMajorList: baseUrl + `/api/major/getAllMajorList`,
+    // 专业详情
+    getMajorDetail: baseUrl + `/api/major/getMajorDetail`,
+    // 添加专业
+    addMajor: baseUrl + `/api/major/addMajor`,
+    // 删除专业
+    delMajor: baseUrl + `/api/major/deleteMajor`,
+    // 批量添加
+    importMajorList: baseUrl + `/api/major/importMajorList`,
+    // 修改专业
+    changeMajor: baseUrl + `/api/major/changeMajorDetail`,
+
     /************获取权限 BEGIN**************/
     // 进入后台权限
     intoBackstage: baseUrl + `/api/user/getIntoBackstage`,
