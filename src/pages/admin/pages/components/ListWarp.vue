@@ -1,13 +1,16 @@
 <template>
   <div class="listWarp">
-    <el-button v-if="showDeleted" type="danger" @click="batchDeletion"
+    <el-button v-if="showDeleted" type="danger" @click="listDeletion"
       >批量删除</el-button
     >
     <el-button v-if="showAdd" type="primary" @click="add"
       >添加{{ i18n[moduleName] }}</el-button
     >
-    <el-button v-if="showImport" type="primary" @click="batchImport"
+    <el-button v-if="showImport" type="primary" @click="listImport"
       >批量添加</el-button
+    >
+    <el-button v-if="showExport" type="primary" @click="listExport"
+      >导出数据</el-button
     >
     <span class="dataSum">共有数据：{{ count }} 条</span>
   </div>
@@ -22,9 +25,10 @@ export default {
     elButton: Button
   },
   props: {
-    addFuncName: String,
     count: Number,
+    addFuncName: String,
     delFuncName: String,
+    exportFuncName: String,
     moduleName: String,
     showDeleted: {
       type: Boolean,
@@ -35,6 +39,10 @@ export default {
       default: true
     },
     showImport: {
+      type: Boolean,
+      default: true
+    },
+    showExport: {
       type: Boolean,
       default: true
     }
@@ -50,14 +58,17 @@ export default {
     };
   },
   methods: {
-    batchDeletion() {
+    listDeletion() {
       this.$emit(this.delFuncName);
     },
     add() {
       this.$emit(this.addFuncName);
     },
-    batchImport() {
+    listImport() {
       this.$store.commit("switchImportLog");
+    },
+    listExport() {
+      this.$emit(this.exportFuncName);
     }
   }
 };

@@ -7,36 +7,38 @@
       @selection-change="selectedChange"
     >
       <el-table-column type="selection" width="50"></el-table-column>
-      <el-table-column label="学院名" prop="name" width="100"></el-table-column>
+      <el-table-column prop="name" width="100" :label="i18n['name']"></el-table-column>
       <el-table-column
-        label="英文名"
-        prop="english_name"
+        prop="en_name"
         width="200"
+        :label="i18n['en_name']"
       ></el-table-column>
-      <el-table-column v-if="!isImport" label="院徽" width="150">
+      <el-table-column v-if="!isImport" width="150" :label="i18n['logo']">
         <template slot-scope="scope">
-          <el-popover placement="right" trigger="hover">
-            <AvueImage
-              :srcImage="scope.row.logo || $store.state.defaultCollege"
-              :replaceImage="$store.state.defaultCollege"
-            />
-            <AvueImage
-              slot="reference"
-              :className="['thumbnail']"
-              :srcImage="scope.row.logo || $store.state.defaultCollege"
-              :replaceImage="$store.state.defaultCollege"
-            />
-          </el-popover>
+          <a class="disp-flex" @click="changeLogo(scope.row.id)">
+            <el-popover class="disp-flex" placement="right" trigger="hover">
+              <AvueImage
+                :srcImage="logoUrl(scope.row.logo)"
+                :replaceImage="$store.state.defaultCollege"
+              />
+              <AvueImage
+                slot="reference"
+                :className="['thumbnail']"
+                :srcImage="logoUrl(scope.row.logo)"
+                :replaceImage="$store.state.defaultCollege"
+              />
+            </el-popover>
+          </a>
         </template>
       </el-table-column>
-      <el-table-column label="官网链接" prop="website" width="200"
+      <el-table-column prop="website" width="200" :label="i18n['website']"
         ><template slot-scope="scope">
           <a target="_blank" :href="scope.row.website">{{
             scope.row.website
           }}</a>
         </template></el-table-column
       >
-      <el-table-column label="学院描述" prop="description"></el-table-column>
+      <el-table-column prop="description" :label="i18n['description']"></el-table-column>
       <el-table-column
         v-if="isImport"
         label="消息"
@@ -81,6 +83,7 @@ import {
   TableColumn
 } from "element-ui";
 import AvueImage from "@/components/AvueImage";
+import { downloadExl } from "@/assets/js/tool";
 
 export default {
   name: "collegeList",
@@ -112,6 +115,13 @@ export default {
       pageIndex: 1,
       rowStyle: {
         height: "100px"
+      },
+      i18n: {
+        name: "学院名",
+        en_name: "英文名",
+        logo: "院徽",
+        website: "学院官网",
+        description: "学院描述"
       },
       selectedCollegeId: []
     };
@@ -167,8 +177,40 @@ export default {
       console.log(selection.map(item => item.id));
       this.selectedCollegeId = selection.map(item => item.id);
     },
+    logoUrl(url) {
+      if (url == "" || url == null) {
+        return this.$store.state.defaultCollege
+      } else {
+        return this.$store.state.baseUrl + url
+      }
+    },
+    changeLogo(collegeId) {
+      this.$emit("openLogoLog", collegeId);
+    },
     editCollege(collegeId) {
       this.$emit("openDetailLog", collegeId);
+    },
+    logoChange(data) {
+      let loading = Loading.service(this.loadingOpts);
+      for (let i = 0, len = this.collegeList.length; i < len; i++) {
+        if (this.collegeList[i].id == data.id) {
+          this.collegeList[i].logo = data.url;
+          loading.close();
+          return;
+        }
+      };
+      loading.close();
+    },
+    logoDelete(data) {
+      let loading = Loading.service(this.loadingOpts);
+      for (let i = 0, len = this.collegeList.length; i < len; i++) {
+        if (this.collegeList[i].id == data) {
+          this.collegeList[i].logo = null;
+          loading.close();
+          return;
+        }
+      };
+      loading.close();
     },
     collegeChange(data) {
       let loading = Loading.service(this.loadingOpts);
@@ -177,7 +219,7 @@ export default {
           this.collegeList[i] = data;
           return;
         }
-      }
+      };
       loading.close();
     },
     collegesDelConfirm(collegesId) {
@@ -226,6 +268,46 @@ export default {
         }
       });
     },
+    listExportConfirm() {
+      let that = this;
+      MessageBox.confirm("确认导出当前列表数据？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        callback(action) {
+          switch (action) {
+            case "cancel":
+            case "close":
+              Message.info("取消导出");
+              break;
+            case "confirm":
+              that.listExport();
+              break;
+          }
+        }
+      })
+    },
+    listExport() {
+      let allCollegeList, that = this;
+      let loading = Loading.service({
+        text: "获取数据导出中，请稍候..."
+      });
+      return this.$store.dispatch("postItems", {
+        url: that.$store.state.getAllCollegeList,
+        query: {
+          token: that.$store.state.userInfo.token
+        },
+        cb(res) {
+          if (res.code === 200) {
+            allCollegeList = res.data;
+            downloadExl(allCollegeList, "xlsx", "学院列表");
+          } else {
+            Message.error(res.msg);
+          }
+          loading.close();
+        }
+      });
+    },
     importListChange() {
       this.collegeList = this.collegeListExcel.slice(
         this.pageSize * (this.pageIndex - 1),
@@ -245,6 +327,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.disp-flex {
+  cursor: pointer;
+  display: inline-flex;
+}
 .errorMsg {
   color: #dd6161 !important;
 }

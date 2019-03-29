@@ -2,21 +2,30 @@
   <div>
     <SearchBox :moduleName="moduleName" />
     <ListWarp
-      :addFuncName="'openDetailLog'"
+      :addFuncName="addFuncName"
       :count="count"
-      :delFuncName="'collegesDelConfirm'"
+      :delFuncName="delFuncName"
+      :exportFuncName="exportFuncName"
       :moduleName="moduleName"
       @collegesDelConfirm="collegesDel"
       @openDetailLog="openDetailLog"
+      @listExportConfirm="listExport"
     />
     <CollegeList
       ref="colleges-list"
+      @openLogoLog="openLogoLog"
       @openDetailLog="openDetailLog"
       @changeCount="changeCount"
     />
     <CollegeListImport
       @collegeListChange="collegeListChange"
       v-if="showImportLog"
+    />
+    <CollegeLogoLog 
+      v-if="showLogoLog"
+      :collegeId="currentCollegeId"
+      @logoDelete="logoDelete"
+      @logoChange="logoChange"
     />
     <CollegeDetailLog
       v-if="showDetailLog"
@@ -39,6 +48,8 @@ export default {
       import(/* webpackChunkName: "collegeListImport" */ "./components/CollegeListImport"),
     CollegeDetailLog: () =>
       import(/* webpackChunkName: "collegeDetailLog" */ "./components/CollegeDetailLog"),
+    CollegeLogoLog: () =>
+      import(/* webpackChunkName: "collegeLogoLog" */ "./components/CollegeLogoLog"),
     CollegeList,
     ListWarp,
     SearchBox
@@ -47,7 +58,10 @@ export default {
     return {
       count: 0,
       currentCollegeId: undefined,
-      moduleName: "college"
+      moduleName: "college",
+      addFuncName: "openDetailLog",
+      delFuncName: "collegesDelConfirm",
+      exportFuncName: "listExportConfirm"
     };
   },
   computed: {
@@ -60,6 +74,9 @@ export default {
         }
       );
     },
+    showLogoLog() {
+      return this.$store.state.showLogoLog;
+    },
     showDetailLog() {
       return this.$store.state.showDetailLog;
     },
@@ -71,6 +88,12 @@ export default {
     changeCount(count) {
       this.count = count;
     },
+    logoChange(data) {
+      this.$refs["colleges-list"].logoChange(data);
+    },
+    logoDelete(data) {
+      this.$refs["colleges-list"].logoDelete(data);
+    },
     collegeListChange() {
       this.$refs["colleges-list"].getCollegeList();
     },
@@ -81,6 +104,13 @@ export default {
       this.$refs["colleges-list"].collegesDelConfirm(
         this.$refs["colleges-list"].selectedCollegeId
       );
+    },
+    listExport() {
+      this.$refs["colleges-list"].listExportConfirm();
+    },
+    openLogoLog(collegeId) {
+      this.currentCollegeId = collegeId;
+      this.$store.commit("switchLogoLog");
     },
     openDetailLog(collegeId) {
       this.currentCollegeId = collegeId;

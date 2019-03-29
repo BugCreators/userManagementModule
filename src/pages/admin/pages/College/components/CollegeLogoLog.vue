@@ -1,0 +1,189 @@
+<template>
+  <el-dialog
+    class="logoChange"
+    :before-close="closeLogoLog"
+    :visible.sync="showLogoLog">
+    <div v-if="!fileList.length" class="logoMsg">暂无院徽~</div>
+    <el-upload
+      accept="image/jpg,image/png"
+      action="Upload"
+      list-type="picture-card"
+      ref="upload"
+      :auto-upload="false"
+      :http-request="uploadIogo"
+      :on-change="validateForm"
+      :file-list="fileList"
+      :limit="1"
+      drag
+    >
+      <i class="el-icon-upload"></i>
+      <div class="el-upload__text">将图片拖到此处<br />或<em>点击上传</em></div>
+      <div class="el-upload__tip" slot="tip">
+        这里只能上传一张,如需更换请先手动删除列表中的！
+      </div>
+      <div class="el-upload__tip" slot="tip">
+        只能上传jpg/png文件，且不超过1MB
+      </div>
+    </el-upload>
+    <div slot="footer" class="dialog-footer">
+      <el-button class="deleteBtn" type="danger" @click="deleteLogoConfirm">删除Logo</el-button>
+      <el-button @click="closeLogoLog">取 消</el-button>
+      <el-button type="primary" @click="uploadSubmit">确 定</el-button>
+    </div>
+  </el-dialog>
+</template>
+
+<script>
+import { Button, Dialog, Message, MessageBox, Upload } from "element-ui";
+
+export default {
+  name: "collegeLogoChange",
+  components: {
+    elButton: Button,
+    elDialog: Dialog,
+    elUpload: Upload
+  },
+  props: {
+    collegeId: Number
+  },
+  data() {
+    return {
+      logo: {
+        name: "",
+        url: "",
+        size: "",
+        type: ""
+      },
+      isChange: false,
+      fileList: []
+    };
+  },
+  created() {
+    this.getCollegeLogo();
+  },
+  computed: {
+    showLogoLog() {
+      return this.$store.state.showLogoLog;
+    }
+  },
+  methods: {
+    getCollegeLogo() {
+      let that = this;
+      this.$store.dispatch("getItems", {
+        url: this.$store.state.getCollegeLogo,
+        query: {
+          token: this.$store.state.userInfo.token,
+          id: this.collegeId
+        },
+        cb(res) {
+          if (res.code === 200) {
+            if (res.data.url != "" && res.data.url != null) {
+              res.data.url = that.$store.state.baseUrl + res.data.url;
+              that.fileList.push(res.data);
+            }
+          } else {}
+        }
+      })
+    },
+    uploadSubmit() {
+      this.$refs.upload.submit();
+    },
+    uploadIogo(param) {
+      let that = this;
+      let data = new FormData();
+      data.append('image', param.file);
+      data.append('id', this.collegeId);
+      data.append('token', this.$store.state.userInfo.token);
+      this.$store.dispatch("postItems", {
+        url: this.$store.state.changeCollegeLogo,
+        query: data,
+        config: {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        },
+        cb(res) {
+          if (res.code === 200) {
+            Message.success(res.msg);
+            that.$emit("logoChange", res.data);
+            that.closeLogoLog();
+          } else {
+            Message.error(res.msg)
+          }
+        }
+      })
+    },
+    handleChange() {
+      this.isChange = true;
+    },
+    validateForm(file) {
+      let that = this;
+      let fileType = file.raw.type;
+      const isJPG = fileType === "image/jpg" || fileType === "image/png";
+      const isLt1M = file.size / 1024 / 1024 < 2;
+      if (!isJPG) {
+        Message.error("只能上传jpg/png文件!");
+      }
+      if (!isLt1M) {
+        Message.error(`文件大小不能超过2MB!`);
+      }
+      return isJPG && isLt1M;
+    },
+    deleteLogoConfirm() {
+      let that = this;
+      MessageBox.confirm("确定删除该学院现在的院徽？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        callback(action) {
+          switch (action) {
+            case "cancel":
+            case "close":
+              Message.info("取消删除");
+              break;
+            case "confirm":
+              that.deleteLogo();
+              break;
+          }
+        }
+      });
+    },
+    deleteLogo() {
+      let that = this;
+      this.$store.dispatch("postItems", {
+        url: this.$store.state.deleteCollegeLogo,
+        query: {
+          id: this.collegeId,
+          token: this.$store.state.userInfo.token
+        },
+        cb(res) {
+          if (res.code === 200) {
+            Message.success(res.msg);
+            that.$emit("logoDelete", res.data);
+            that.closeLogoLog();
+          } else {
+            Message.error(res.msg)
+          }
+        }
+      })
+    },
+    closeLogoLog() {
+      this.$store.commit("switchLogoLog");
+    }
+  }
+};
+</script>
+
+<style lang="less">
+.logoMsg {
+  margin-bottom: 20px;
+}
+.logoChange {
+  .el-dialog__body {
+    text-align: center;
+  }
+}
+.deleteBtn {
+  float: left;
+}
+</style>

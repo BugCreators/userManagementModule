@@ -30,6 +30,7 @@ export default new Vuex.Store({
       class: ``,
       name: ``
     },
+    baseUrl: baseUrl,
     // 默认logo
     defaultLogo: require(`../images/default/logo.png`),
     // 管理页logo
@@ -177,6 +178,9 @@ export default new Vuex.Store({
     // 批量导入对话框
     showImportLog: false,
 
+    // 上传院徽
+    showLogoLog: false,
+
     /*******************网络接口*******************/
     // 系统设置
     getSysSetting: baseUrl + `/api/user/getSysSetting`,
@@ -200,8 +204,16 @@ export default new Vuex.Store({
     /***************学院管理*****************/
     // 学院列表
     getCollegeListByAdmin: baseUrl + `/api/college/getCollegeListByAdmin`,
+    // 导出数据 全部学院
+    getAllCollegeList: baseUrl + `/api/college/getAllCollegeList`,
     // 学院详情
     getCollegeDetailByAdmin: baseUrl + `/api/college/getCollegeDetailByAdmin`,
+    // 院徽
+    getCollegeLogo: baseUrl + `/api/college/getCollegeLogo`,
+    // 上传院徽
+    changeCollegeLogo: baseUrl + `/api/college/changeCollegeLogo`,
+    // 删除院徽
+    deleteCollegeLogo: baseUrl + `/api/college/deleteCollegeLogo`,
     // 添加学院
     addCollege: baseUrl + `/api/college/addCollege`,
     // 删除学院
@@ -243,6 +255,9 @@ export default new Vuex.Store({
           }
         }
       }
+    },
+    switchLogoLog(state) {
+      state.showLogoLog = !state.showLogoLog;
     },
     switchDetailLog(state) {
       state.showDetailLog = !state.showDetailLog;

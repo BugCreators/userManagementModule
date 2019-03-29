@@ -21,7 +21,7 @@
       </el-form-item>
       <el-form-item label="英文名" prop="name">
         <el-input
-          v-model="collegeDetail.english_name"
+          v-model="collegeDetail.en_name"
           name="collegeName"
         ></el-input>
       </el-form-item>
@@ -71,7 +71,7 @@ export default {
     return {
       collegeDetail: {
         name: "",
-        english_name: "",
+        en_name: "",
         description: "",
         website: ""
       },

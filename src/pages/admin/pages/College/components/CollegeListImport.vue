@@ -66,12 +66,12 @@ export default {
         }
       ],
       collegeListExcel: [],
-      listHead: [
-        "name", 
-        "english_name", 
-        "website", 
-        "descript"
-      ],
+      i18n: {
+        name: "学院名",
+        en_name: "英文名",
+        website: "学院官网",
+        description: "学院描述"
+      },
       title: "批量导入",
       isImport: true // 导入按钮点击状态
     };
@@ -86,7 +86,13 @@ export default {
       this.$store.commit("switchImportLog");
     },
     templateDownload() {
-      downloadExl(this.collegeListTemp, "xlsx", "批量导入学院模板");
+      let listHead = new Object,
+        listHeadArr = new Array;
+      Object.keys(this.i18n).forEach(v => {
+        listHead[this.i18n[v]] = "";
+      });
+      listHeadArr.push(listHead);
+      downloadExl(listHeadArr, "xlsx", "批量导入学院模板");
     },
     readExcel(file) {
       const xls = "application/vnd.ms-excel",
@@ -108,7 +114,7 @@ export default {
             type: "binary"
           });
           for (let sheet in workbook.Sheets) {
-            changeExlHaed(workbook.Sheets[sheet], that.listHead);
+            changeExlHaed(workbook.Sheets[sheet], Object.keys(that.i18n));
             sheetArray = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
           };
           sheetArray.forEach(item => {
