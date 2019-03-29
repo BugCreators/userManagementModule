@@ -7,7 +7,7 @@
       :delFuncName="delFuncName"
       :exportFuncName="exportFuncName"
       :moduleName="moduleName"
-      @collegesDelConfirm="collegesDel"
+      @datasDeleteConfirm="datasDelete"
       @openDetailLog="openDetailLog"
       @listExportConfirm="listExport"
     />
@@ -18,20 +18,20 @@
       @changeCount="changeCount"
     />
     <CollegeListImport
-      @collegeListChange="collegeListChange"
+      @listChange="listChange"
       v-if="showImportLog"
     />
     <CollegeLogoLog 
       v-if="showLogoLog"
-      :collegeId="currentCollegeId"
+      :collegeId="currentId"
       @logoDelete="logoDelete"
       @logoChange="logoChange"
     />
     <CollegeDetailLog
       v-if="showDetailLog"
-      :collegeId="currentCollegeId"
-      @collegeListChange="collegeListChange"
-      @collegeChange="collegeChange"
+      :dataId="currentId"
+      @listChange="listChange"
+      @dataChange="dataChange"
     />
   </div>
 </template>
@@ -57,16 +57,16 @@ export default {
   data() {
     return {
       count: 0,
-      currentCollegeId: undefined,
+      currentId: undefined,
       moduleName: "college",
       addFuncName: "openDetailLog",
-      delFuncName: "collegesDelConfirm",
+      delFuncName: "datasDeleteConfirm",
       exportFuncName: "listExportConfirm"
     };
   },
   computed: {
-    selectedCollegeId() {
-      return this.$refs["colleges-list"].selectedCollegeId.map(
+    selectedId() {
+      return this.$refs["colleges-list"].selectedId.map(
         (value, index, array) => {
           return {
             id: array[index]["id"]
@@ -94,26 +94,26 @@ export default {
     logoDelete(data) {
       this.$refs["colleges-list"].logoDelete(data);
     },
-    collegeListChange() {
-      this.$refs["colleges-list"].getCollegeList();
+    listChange() {
+      this.$refs["colleges-list"].getList();
     },
-    collegeChange(data) {
-      this.$refs["colleges-list"].collegeChange(data);
+    dataChange(data) {
+      this.$refs["colleges-list"].dataChange(data);
     },
-    collegesDel() {
-      this.$refs["colleges-list"].collegesDelConfirm(
-        this.$refs["colleges-list"].selectedCollegeId
+    datasDelete() {
+      this.$refs["colleges-list"].datasDeleteConfirm(
+        this.$refs["colleges-list"].selectedId
       );
     },
     listExport() {
       this.$refs["colleges-list"].listExportConfirm();
     },
-    openLogoLog(collegeId) {
-      this.currentCollegeId = collegeId;
+    openLogoLog(id) {
+      this.currentId = id;
       this.$store.commit("switchLogoLog");
     },
-    openDetailLog(collegeId) {
-      this.currentCollegeId = collegeId;
+    openDetailLog(id) {
+      this.currentId = id;
       this.$store.commit("switchDetailLog");
     }
   }

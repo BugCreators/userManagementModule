@@ -1,9 +1,9 @@
 <template>
   <div class="collegeList">
     <el-table
-      id="collegeList"
+      id="list"
       :row-style="rowStyle"
-      :data="collegeList"
+      :data="list"
       @selection-change="selectedChange"
     >
       <el-table-column type="selection" width="50"></el-table-column>
@@ -48,21 +48,21 @@
       ></el-table-column>
       <el-table-column v-if="!isImport" label="操作" width="100">
         <template slot-scope="scope">
-          <i class="el-icon-edit" @click="editCollege(scope.row.id)"></i>
+          <i class="el-icon-edit" @click="editData(scope.row.id)"></i>
           <i
             class="el-icon-delete"
-            @click="collegesDelConfirm([scope.row.id])"
+            @click="datasDeleteConfirm([scope.row.id])"
           ></i>
         </template>
       </el-table-column>
     </el-table>
     <div class="listWarp2">
-      <div class="collegeListPage" v-if="collegeList.length !== 0">
+      <div class="listPage" v-if="list.length !== 0">
         <el-pagination
           layout="prev, pager, next"
           :page-size="pageSize"
           :current-page="pageIndex"
-          :total="collegeListCount"
+          :total="listCount"
           @current-change="pageChange"
           background
         >
@@ -95,22 +95,18 @@ export default {
     elTableColumn: TableColumn
   },
   props: {
-    collegeListExcel: Array,
+    listExcel: Array,
     isImport: Boolean
   },
   data() {
     return {
-      collegeList: [],
-      collegeListCount: null,
-      collegeDetail: {
-        id: "",
-        name: ""
-      },
+      list: [],
+      listCount: null,
       loadingOpts: {
         target: "",
         fullscreen: false
       },
-      currentCollegeId: null,
+      currentId: null,
       pageSize: 6,
       pageIndex: 1,
       rowStyle: {
@@ -123,7 +119,7 @@ export default {
         website: "学院官网",
         description: "学院描述"
       },
-      selectedCollegeId: []
+      selectedId: []
     };
   },
   computed: {
@@ -135,22 +131,22 @@ export default {
     }
   },
   watch: {
-    collegeListExcel(newV) {
-      this.collegeListCount = newV.length;
-      this.collegeList = newV.slice(0, this.pageSize);
+    listExcel(newV) {
+      this.listCount = newV.length;
+      this.list = newV.slice(0, this.pageSize);
     },
     searchValue() {
-      this.getCollegeList();
+      this.getList();
     }
   },
   mounted() {
-    this.loadingOpts.target = document.getElementById("collegeList");
-    if (!this.collegeListExcel) {
-      this.getCollegeList();
+    this.loadingOpts.target = document.getElementById("list");
+    if (!this.listExcel) {
+      this.getList();
     }
   },
   methods: {
-    getCollegeList() {
+    getList() {
       let that = this;
       let loading = Loading.service(this.loadingOpts);
       return this.$store.dispatch("postItems", {
@@ -164,9 +160,9 @@ export default {
         cb(res) {
           loading.close();
           if (res.code === 200) {
-            that.collegeList = res.data.list;
-            that.collegeListCount = res.data.count;
-            that.$emit("changeCount", that.collegeListCount);
+            that.list = res.data.list;
+            that.listCount = res.data.count;
+            that.$emit("changeCount", that.listCount);
           } else {
             Message.error(res.msg);
           }
@@ -174,8 +170,7 @@ export default {
       });
     },
     selectedChange(selection) {
-      console.log(selection.map(item => item.id));
-      this.selectedCollegeId = selection.map(item => item.id);
+      this.selectedId = selection.map(item => item.id);
     },
     logoUrl(url) {
       if (url == "" || url == null) {
@@ -184,17 +179,17 @@ export default {
         return this.$store.state.baseUrl + url
       }
     },
-    changeLogo(collegeId) {
-      this.$emit("openLogoLog", collegeId);
+    changeLogo(id) {
+      this.$emit("openLogoLog", id);
     },
-    editCollege(collegeId) {
-      this.$emit("openDetailLog", collegeId);
+    editData(id) {
+      this.$emit("openDetailLog", id);
     },
     logoChange(data) {
       let loading = Loading.service(this.loadingOpts);
-      for (let i = 0, len = this.collegeList.length; i < len; i++) {
-        if (this.collegeList[i].id == data.id) {
-          this.collegeList[i].logo = data.url;
+      for (let i = 0, len = this.list.length; i < len; i++) {
+        if (this.list[i].id == data.id) {
+          this.list[i].logo = data.url;
           loading.close();
           return;
         }
@@ -203,28 +198,28 @@ export default {
     },
     logoDelete(data) {
       let loading = Loading.service(this.loadingOpts);
-      for (let i = 0, len = this.collegeList.length; i < len; i++) {
-        if (this.collegeList[i].id == data) {
-          this.collegeList[i].logo = null;
+      for (let i = 0, len = this.list.length; i < len; i++) {
+        if (this.list[i].id == data) {
+          this.list[i].logo = null;
           loading.close();
           return;
         }
       };
       loading.close();
     },
-    collegeChange(data) {
+    dataChange(data) {
       let loading = Loading.service(this.loadingOpts);
-      for (let i = 0, len = this.collegeList.length; i < len; i++) {
-        if (this.collegeList[i].id == data.id) {
-          this.collegeList[i] = data;
+      for (let i = 0, len = this.list.length; i < len; i++) {
+        if (this.list[i].id == data.id) {
+          this.list[i] = data;
           return;
         }
       };
       loading.close();
     },
-    collegesDelConfirm(collegesId) {
+    datasDeleteConfirm(ids) {
       let that = this;
-      if (collegesId.length <= 0) {
+      if (ids.length <= 0) {
         Message.warning({
           message: "请选择至少一个学院"
         });
@@ -241,27 +236,27 @@ export default {
               Message.info("取消删除");
               break;
             case "confirm":
-              that.collegesDel(collegesId);
+              that.datasDelete(ids);
               break;
           }
         }
       });
     },
-    collegesDel(collegesId) {
+    datasDelete(ids) {
       let that = this;
       this.$store.dispatch("postItems", {
         url: this.$store.state.delColleges,
         query: {
-          collegesId,
+          collegesId: ids,
           token: this.$store.state.userInfo.token
         },
         cb(res) {
           if (res.code === 200) {
             Message.success(res.msg);
-            if (that.collegeList.length % that.pageSize == 1) {
+            if (that.list.length % that.pageSize == ids.length) {
               that.pageIndex--;
             }
-            that.getCollegeList();
+            that.getList();
           } else {
             Message.error(res.msg);
           }
@@ -288,7 +283,7 @@ export default {
       })
     },
     listExport() {
-      let allCollegeList, that = this;
+      let allList, that = this;
       let loading = Loading.service({
         text: "获取数据导出中，请稍候..."
       });
@@ -299,8 +294,8 @@ export default {
         },
         cb(res) {
           if (res.code === 200) {
-            allCollegeList = res.data;
-            downloadExl(allCollegeList, "xlsx", "学院列表");
+            allList = res.data;
+            downloadExl(allList, "xlsx", "学院列表");
           } else {
             Message.error(res.msg);
           }
@@ -309,7 +304,7 @@ export default {
       });
     },
     importListChange() {
-      this.collegeList = this.collegeListExcel.slice(
+      this.list = this.listExcel.slice(
         this.pageSize * (this.pageIndex - 1),
         this.pageSize + this.pageSize * (this.pageIndex - 1)
       );
@@ -317,7 +312,7 @@ export default {
     pageChange(page) {
       this.pageIndex = page;
       if (!this.isImport) {
-        this.getCollegeList();
+        this.getList();
       } else {
         this.importListChange();
       }
@@ -338,7 +333,7 @@ export default {
   display: inline-block;
   margin: 10px 0 20px;
   width: 100%;
-  .collegeListPage {
+  .listPage {
     float: right;
     line-height: 2;
   }

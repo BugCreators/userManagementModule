@@ -8,12 +8,12 @@
       id="form"
       label-position="right"
       label-width="80px"
-      ref="collegeDetail"
-      :model="collegeDetail"
+      ref="info"
+      :model="info"
       :rules="rules"
     >
       <el-form-item label="学院名称" prop="name">
-        <el-input v-model="collegeDetail.name" name="collegeName">
+        <el-input v-model="info.name" name="name">
           <i class="errorMsg" slot="suffix">
             {{ errorMsg }}
           </i>
@@ -21,17 +21,17 @@
       </el-form-item>
       <el-form-item label="英文名" prop="name">
         <el-input
-          v-model="collegeDetail.en_name"
-          name="collegeName"
+          v-model="info.en_name"
+          name="name"
         ></el-input>
       </el-form-item>
       <el-form-item label="官网链接" prop="website">
-        <el-input v-model="collegeDetail.website" name="website"></el-input>
+        <el-input v-model="info.website" name="website"></el-input>
       </el-form-item>
       <el-form-item label="学院描述" prop="description">
         <el-input
           type="textarea"
-          v-model="collegeDetail.description"
+          v-model="info.description"
           name="des"
           :autosize="{ minRows: 10, maxRows: 15 }"
         ></el-input>
@@ -65,11 +65,11 @@ export default {
     elInput: Input
   },
   props: {
-    collegeId: Number
+    dataId: Number
   },
   data() {
     return {
-      collegeDetail: {
+      info: {
         name: "",
         en_name: "",
         description: "",
@@ -78,20 +78,20 @@ export default {
       errorMsg: "",
       loading: true,
       rules: {
-        collegeName: [
+        name: [
           { required: true, message: "请输入学院名称", trigger: "blur" }
         ]
       }
     };
   },
   mounted() {
-    if (this.collegeId) {
-      this.getCollegeDetail();
+    if (this.dataId) {
+      this.getInfo();
     }
   },
   computed: {
     logTitle() {
-      let title = this.collegeId ? "编辑" : "添加";
+      let title = this.dataId ? "编辑" : "添加";
       return title + "学院";
     },
     showDetailLog() {
@@ -99,19 +99,19 @@ export default {
     }
   },
   methods: {
-    getCollegeDetail() {
+    getInfo() {
       let that = this;
       let loading = Loading.service();
       this.$store.dispatch("getItems", {
         url: this.$store.state.getCollegeDetailByAdmin,
         query: {
-          id: this.collegeId,
+          id: this.dataId,
           token: this.$store.state.userInfo.token
         },
         cb(res) {
           loading.close();
           if (res.code === 200) {
-            that.collegeDetail = res.data;
+            that.info = res.data;
           } else {
             Message.error(res.msg);
             that.closeDetailLog();
@@ -122,12 +122,12 @@ export default {
     formSubmit() {
       let url,
         that = this;
-      if (this.collegeId) {
+      if (this.dataId) {
         url = this.$store.state.changeCollege;
       } else {
         url = this.$store.state.addCollege;
       }
-      if (this.collegeDetail.name === "") {
+      if (this.info.name === "") {
         this.errorMsg = "学院名不能为空！";
         return;
       }
@@ -138,16 +138,16 @@ export default {
       this.$store.dispatch("postItems", {
         url,
         query: {
-          data: this.collegeDetail,
+          data: this.info,
           token: this.$store.state.userInfo.token
         },
         cb(res) {
           loading.close();
           if (res.code === 200) {
             Message.success(res.msg);
-            this.collegeId
-              ? that.$emit("collegeChange", res.data)
-              : that.$emit("collegeListChange");
+            this.dataId
+              ? that.$emit("dataChange", res.data)
+              : that.$emit("listChange");
             that.closeDetailLog();
           } else {
             Message.error(res.msg || "添加失败，请稍后重试");

@@ -1,0 +1,1 @@
+MajorList.vue

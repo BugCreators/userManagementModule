@@ -28,8 +28,8 @@
       </div>
     </div>
     <CollegeList
-      v-if="collegeListExcel"
-      :collegeListExcel="collegeListExcel"
+      v-if="listExcel"
+      :listExcel="listExcel"
       :isImport="true"
     />
     <div class="logWarp">
@@ -57,15 +57,7 @@ export default {
   },
   data() {
     return {
-      collegeListTemp: [
-        {
-          学院名: "",
-          英文名: "",
-          学院官网: "",
-          学院描述: ""
-        }
-      ],
-      collegeListExcel: [],
+      listExcel: [],
       i18n: {
         name: "学院名",
         en_name: "英文名",
@@ -123,7 +115,7 @@ export default {
               item.message = "学院名不能为空！";
               that.isImport = true;
             }
-            that.collegeListExcel.push(item);
+            that.listExcel.push(item);
           });
         } catch (e) {
           Message.error({
@@ -135,7 +127,7 @@ export default {
       fileReader.readAsBinaryString(file.raw);
     },
     removeExcel() {
-      this.collegeListExcel = [];
+      this.listExcel = [];
       this.isImport = true;
     },
     importExcel() {
@@ -146,14 +138,14 @@ export default {
       this.$store.dispatch("postItems", {
         url: this.$store.state.importcollegeList,
         query: {
-          collegeList: this.collegeListExcel,
+          collegeList: this.listExcel,
           token: this.$store.state.userInfo.token
         },
         cb(res) {
           loading.close();
           if (res.code === 200) {
             Message.success(res.msg);
-            that.$emit("collegeListChange");
+            that.$emit("listChange");
             that.closeImportLog();
           } else {
             Message.error(res.msg);
