@@ -13,23 +13,34 @@
       :rules="rules"
     >
       <el-form-item :label="i18n['name']" prop="name">
-        <el-input v-model="info.name" name="name">
+        <el-input v-model="info.name" name="name" focus>
           <i class="errorMsg" slot="suffix">
             {{ errorMsg }}
           </i>
         </el-input>
       </el-form-item>
       <el-form-item :label="i18n['level']" prop="level">
-        <el-input
-          v-model="info.level"
-          name="level"
-        ></el-input>
+        <el-input v-model="info.level" name="level"></el-input>
+      </el-form-item>
+      <el-form-item :label="i18n['collegeName']" prop="college_id">
+        <el-select v-model="info.college_id" placeholder="请选择学院">
+          <el-option
+            v-for="item in collegeList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          >
+          </el-option>
+        </el-select>
+        <i class="errorMsg">
+          {{ errorMsg2 }}
+        </i>
       </el-form-item>
       <el-form-item :label="i18n['description']" prop="description">
         <el-input
           type="textarea"
           v-model="info.description"
-          name="des"
+          name="description"
           :autosize="{ minRows: 3, maxRows: 5 }"
         ></el-input>
       </el-form-item>
@@ -37,7 +48,7 @@
         <el-input
           type="textarea"
           v-model="info.train_objective"
-          name="des"
+          name="train_objective"
           :autosize="{ minRows: 3, maxRows: 5 }"
         ></el-input>
       </el-form-item>
@@ -45,15 +56,18 @@
         <el-input
           type="textarea"
           v-model="info.main_course"
-          name="des"
+          name="main_course"
           :autosize="{ minRows: 3, maxRows: 5 }"
         ></el-input>
       </el-form-item>
-      <el-form-item :label="i18n['employment_direction']" prop="employment_direction">
+      <el-form-item
+        :label="i18n['employment_direction']"
+        prop="employment_direction"
+      >
         <el-input
           type="textarea"
           v-model="info.employment_direction"
-          name="des"
+          name="employment_direction"
           :autosize="{ minRows: 3, maxRows: 5 }"
         ></el-input>
       </el-form-item>
@@ -73,7 +87,9 @@ import {
   FormItem,
   Input,
   Loading,
-  Message
+  Message,
+  Option,
+  Select
 } from "element-ui";
 
 export default {
@@ -83,7 +99,9 @@ export default {
     elDialog: Dialog,
     elForm: Form,
     elFormItem: FormItem,
-    elInput: Input
+    elInput: Input,
+    elOption: Option,
+    elSelect: Select
   },
   props: {
     dataId: Number
@@ -92,15 +110,19 @@ export default {
     return {
       info: {
         name: "",
-        en_name: "",
+        level: "",
+        college_id: "",
         description: "",
-        website: ""
+        train_objective: "",
+        main_course: "",
+        employment_direction: ""
       },
       errorMsg: "",
+      errorMsg2: "",
       i18n: {
         name: "专业名",
         level: "学历层次",
-        college: "所属学院",
+        collegeName: "所属学院",
         description: "专业概况",
         train_objective: "培养目标",
         main_course: "主要课程",
@@ -108,13 +130,16 @@ export default {
       },
       loading: true,
       rules: {
-        name: [
-          { required: true, message: "请输入专业名称", trigger: "blur" }
+        name: [{ required: true, message: "请输入专业名称", trigger: "blur" }],
+        college_id: [
+          { required: true, message: "请选择学院", trigger: "change" }
         ]
-      }
+      },
+      collegeList: {}
     };
   },
   mounted() {
+    this.getCollegeList();
     if (this.dataId) {
       this.getInfo();
     }
@@ -149,6 +174,19 @@ export default {
         }
       });
     },
+    getCollegeList() {
+      let that = this;
+      this.$store.dispatch("getItems", {
+        url: this.$store.state.getCollegeList,
+        cb(res) {
+          if (res.code === 200) {
+            that.collegeList = res.data;
+          } else {
+            Message.error(res.msg);
+          }
+        }
+      });
+    },
     formSubmit() {
       let url,
         that = this;
@@ -162,6 +200,12 @@ export default {
         return;
       }
       this.errorMsg = "";
+      if (this.info.college_id === "") {
+        this.errorMsg2 = "学院不能为空！";
+        return;
+      }
+      this.errorMsg2 = "";
+
       let loading = Loading.service({
         target: document.getElementById("form")
       });

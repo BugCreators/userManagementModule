@@ -17,11 +17,8 @@
       @openDetailLog="openDetailLog"
       @changeCount="changeCount"
     />
-    <CollegeListImport
-      @listChange="listChange"
-      v-if="showImportLog"
-    />
-    <CollegeLogoLog 
+    <CollegeListImport @listChange="listChange" v-if="showImportLog" />
+    <CollegeLogoLog
       v-if="showLogoLog"
       :collegeId="currentId"
       @logoDelete="logoDelete"
@@ -83,6 +80,12 @@ export default {
     showImportLog() {
       return this.$store.state.showImportLog;
     }
+  },
+  created() {
+    this.$store.commit("setSearchValue", {
+      basis: 0,
+      name: ""
+    });
   },
   methods: {
     changeCount(count) {

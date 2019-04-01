@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SearchBox :moduleName="moduleName" />
+    <SearchBox :moduleName="moduleName" :showSelect="true" />
     <ListWarp
       :addFuncName="addFuncName"
       :count="count"
@@ -17,10 +17,7 @@
       @openDetailLog="openDetailLog"
       @changeCount="changeCount"
     />
-    <MajorListImport
-      @listChange="listChange"
-      v-if="showImportLog"
-    />
+    <MajorListImport @listChange="listChange" v-if="showImportLog" />
     <MajorDetailLog
       v-if="showDetailLog"
       :dataId="currentId"
@@ -58,13 +55,11 @@ export default {
   },
   computed: {
     selectedId() {
-      return this.$refs["majors-list"].selectedId.map(
-        (value, index, array) => {
-          return {
-            id: array[index]["id"]
-          };
-        }
-      );
+      return this.$refs["majors-list"].selectedId.map((value, index, array) => {
+        return {
+          id: array[index]["id"]
+        };
+      });
     },
     showLogoLog() {
       return this.$store.state.showLogoLog;
@@ -75,6 +70,12 @@ export default {
     showImportLog() {
       return this.$store.state.showImportLog;
     }
+  },
+  created() {
+    this.$store.commit("setSearchValue", {
+      basis: 0,
+      name: ""
+    });
   },
   methods: {
     changeCount(count) {

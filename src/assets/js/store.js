@@ -25,9 +25,7 @@ export default new Vuex.Store({
     }*/
     // 搜索值
     searchValue: {
-      college: ``,
-      department: ``,
-      class: ``,
+      basis: 0,
       name: ``
     },
     baseUrl: baseUrl,
@@ -234,11 +232,11 @@ export default new Vuex.Store({
     // 添加专业
     addMajor: baseUrl + `/api/major/addMajor`,
     // 删除专业
-    delMajor: baseUrl + `/api/major/deleteMajor`,
+    delMajors: baseUrl + `/api/major/deleteMajor`,
     // 批量添加
     importMajorList: baseUrl + `/api/major/importMajorList`,
     // 修改专业
-    changeMajor: baseUrl + `/api/major/changeMajorDetail`,
+    changeMajor: baseUrl + `/api/major/changeMajor`,
 
     /************获取权限 BEGIN**************/
     // 进入后台权限

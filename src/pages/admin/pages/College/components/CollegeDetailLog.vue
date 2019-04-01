@@ -20,10 +20,7 @@
         </el-input>
       </el-form-item>
       <el-form-item label="英文名" prop="name">
-        <el-input
-          v-model="info.en_name"
-          name="name"
-        ></el-input>
+        <el-input v-model="info.en_name" name="name"></el-input>
       </el-form-item>
       <el-form-item label="官网链接" prop="website">
         <el-input v-model="info.website" name="website"></el-input>
@@ -78,9 +75,7 @@ export default {
       errorMsg: "",
       loading: true,
       rules: {
-        name: [
-          { required: true, message: "请输入学院名称", trigger: "blur" }
-        ]
+        name: [{ required: true, message: "请输入学院名称", trigger: "blur" }]
       }
     };
   },

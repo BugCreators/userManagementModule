@@ -27,11 +27,7 @@
         只能上传xls/xlsx文件
       </div>
     </div>
-    <CollegeList
-      v-if="listExcel"
-      :listExcel="listExcel"
-      :isImport="true"
-    />
+    <CollegeList v-if="listExcel" :listExcel="listExcel" :isImport="true" />
     <div class="logWarp">
       <el-button type="primary" @click="importExcel" :disabled="isImport"
         >导入</el-button
@@ -78,22 +74,20 @@ export default {
       this.$store.commit("switchImportLog");
     },
     templateDownload() {
-      let listHead = new Object,
-        listHeadArr = new Array;
+      let listHead = new Object(),
+        listHeadArr = new Array();
       Object.keys(this.i18n).forEach(v => {
         listHead[this.i18n[v]] = "";
       });
       listHeadArr.push(listHead);
-      downloadExl(listHeadArr, "xlsx", "批量导入学院模板");
+      downloadExl(listHeadArr, "xlsx", "学院列表模板");
     },
     readExcel(file) {
       const xls = "application/vnd.ms-excel",
         xlsx =
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
       if (file.raw.type !== xls && file.raw.type !== xlsx) {
-        Message.error({
-          message: "请选择Excel格式的文件！"
-        });
+        Message.error("请选择Excel格式的文件！");
         return false;
       }
       const fileReader = new FileReader();
@@ -108,7 +102,7 @@ export default {
           for (let sheet in workbook.Sheets) {
             changeExlHaed(workbook.Sheets[sheet], Object.keys(that.i18n));
             sheetArray = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
-          };
+          }
           sheetArray.forEach(item => {
             that.isImport = false;
             if (!item.name) {

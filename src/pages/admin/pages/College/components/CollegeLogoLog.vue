@@ -2,7 +2,8 @@
   <el-dialog
     class="logoChange"
     :before-close="closeLogoLog"
-    :visible.sync="showLogoLog">
+    :visible.sync="showLogoLog"
+  >
     <div v-if="!fileList.length" class="logoMsg">暂无院徽~</div>
     <el-upload
       accept="image/jpg,image/png"
@@ -26,7 +27,9 @@
       </div>
     </el-upload>
     <div slot="footer" class="dialog-footer">
-      <el-button class="deleteBtn" type="danger" @click="deleteLogoConfirm">删除Logo</el-button>
+      <el-button class="deleteBtn" type="danger" @click="deleteLogoConfirm"
+        >删除Logo</el-button
+      >
       <el-button @click="closeLogoLog">取 消</el-button>
       <el-button type="primary" @click="uploadSubmit">确 定</el-button>
     </div>
@@ -81,9 +84,10 @@ export default {
               res.data.url = that.$store.state.baseUrl + res.data.url;
               that.fileList.push(res.data);
             }
-          } else {}
+          } else {
+          }
         }
-      })
+      });
     },
     uploadSubmit() {
       this.$refs.upload.submit();
@@ -91,9 +95,9 @@ export default {
     uploadIogo(param) {
       let that = this;
       let data = new FormData();
-      data.append('image', param.file);
-      data.append('id', this.collegeId);
-      data.append('token', this.$store.state.userInfo.token);
+      data.append("image", param.file);
+      data.append("id", this.collegeId);
+      data.append("token", this.$store.state.userInfo.token);
       this.$store.dispatch("postItems", {
         url: this.$store.state.changeCollegeLogo,
         query: data,
@@ -108,10 +112,10 @@ export default {
             that.$emit("logoChange", res.data);
             that.closeLogoLog();
           } else {
-            Message.error(res.msg)
+            Message.error(res.msg);
           }
         }
-      })
+      });
     },
     handleChange() {
       this.isChange = true;
@@ -162,10 +166,10 @@ export default {
             that.$emit("logoDelete", res.data);
             that.closeLogoLog();
           } else {
-            Message.error(res.msg)
+            Message.error(res.msg);
           }
         }
-      })
+      });
     },
     closeLogoLog() {
       this.$store.commit("switchLogoLog");

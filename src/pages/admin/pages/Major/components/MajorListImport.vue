@@ -27,11 +27,7 @@
         只能上传xls/xlsx文件
       </div>
     </div>
-    <MajorList
-      v-if="listExcel"
-      :listExcel="listExcel"
-      :isImport="true"
-    />
+    <MajorList v-if="listExcel" :listExcel="listExcel" :isImport="true" />
     <div class="logWarp">
       <el-button type="primary" @click="importExcel" :disabled="isImport"
         >导入</el-button
@@ -59,10 +55,13 @@ export default {
     return {
       listExcel: [],
       i18n: {
-        name: "学院名",
-        en_name: "英文名",
-        website: "学院官网",
-        description: "学院描述"
+        name: "专业名",
+        level: "学历层次",
+        collegeName: "所属学院",
+        description: "专业概况",
+        train_objective: "培养目标",
+        main_course: "主要课程",
+        employment_direction: "就业方向"
       },
       title: "批量导入",
       isImport: true // 导入按钮点击状态
@@ -78,8 +77,8 @@ export default {
       this.$store.commit("switchImportLog");
     },
     templateDownload() {
-      let listHead = new Object,
-        listHeadArr = new Array;
+      let listHead = new Object(),
+        listHeadArr = new Array();
       Object.keys(this.i18n).forEach(v => {
         listHead[this.i18n[v]] = "";
       });
@@ -91,9 +90,7 @@ export default {
         xlsx =
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
       if (file.raw.type !== xls && file.raw.type !== xlsx) {
-        Message.error({
-          message: "请选择Excel格式的文件！"
-        });
+        Message.error("请选择Excel格式的文件！");
         return false;
       }
       const fileReader = new FileReader();
@@ -108,11 +105,16 @@ export default {
           for (let sheet in workbook.Sheets) {
             changeExlHaed(workbook.Sheets[sheet], Object.keys(that.i18n));
             sheetArray = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
-          };
+          }
           sheetArray.forEach(item => {
             that.isImport = false;
+            item.message = "";
             if (!item.name) {
               item.message = "专业名不能为空！";
+              that.isImport = true;
+            }
+            if (!item.collegeName) {
+              item.message += "学院名不能为空！";
               that.isImport = true;
             }
             that.listExcel.push(item);

@@ -130,12 +130,8 @@ function changeExlHaed(Sheets, header) {
   for (let item in Sheets) {
     if (item.charCodeAt() >= 65 && item.indexOf("1") !== -1) {
       Sheets[item].w = header[i - 1];
-    };
+    }
     i++;
   }
 }
-export { 
-  getUrlParam, 
-  downloadExl, 
-  changeExlHaed
-};
+export { getUrlParam, downloadExl, changeExlHaed };

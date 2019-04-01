@@ -7,15 +7,45 @@
       @selection-change="selectedChange"
     >
       <el-table-column type="selection" width="50"></el-table-column>
-      <el-table-column prop="name" width="100" :label="i18n['name']"></el-table-column>
-      <el-table-column prop="level" width="200" :label="i18n['level']"
+      <el-table-column
+        prop="name"
+        width="100"
+        :label="i18n['name']"
       ></el-table-column>
-      <el-table-column prop="college.name" width="200" :label="i18n['college']"
+      <el-table-column
+        prop="level"
+        width="200"
+        :label="i18n['level']"
       ></el-table-column>
-      <el-table-column prop="description" :label="i18n['description']"></el-table-column>
-      <el-table-column prop="train_objective" :label="i18n['train_objective']"></el-table-column>
-      <el-table-column prop="main_course" :label="i18n['main_course']"></el-table-column>
-      <el-table-column prop="employment_direction" :label="i18n['employment_direction']"></el-table-column>
+      <el-table-column
+        prop="collegeName"
+        width="200"
+        :label="i18n['collegeName']"
+      ></el-table-column>
+      <el-table-column
+        prop="description"
+        :label="i18n['description']"
+      ></el-table-column>
+      <el-table-column
+        prop="train_objective"
+        :label="i18n['train_objective']"
+      ></el-table-column>
+      <el-table-column
+        prop="main_course"
+        :label="i18n['main_course']"
+      ></el-table-column>
+      <el-table-column
+        prop="employment_direction"
+        :label="i18n['employment_direction']"
+      ></el-table-column>
+      <el-table-column
+        v-if="isImport"
+        fixed="right"
+        label="消息"
+        prop="message"
+        width="100"
+        :class-name="'errorMsg'"
+      ></el-table-column>
       <el-table-column v-if="!isImport" label="操作" width="100">
         <template slot-scope="scope">
           <i class="el-icon-edit" @click="editData(scope.row.id)"></i>
@@ -85,7 +115,7 @@ export default {
       i18n: {
         name: "专业名",
         level: "学历层次",
-        college: "所属学院",
+        collegeName: "所属学院",
         description: "专业概况",
         train_objective: "培养目标",
         main_course: "主要课程",
@@ -108,6 +138,7 @@ export default {
       this.list = newV.slice(0, this.pageSize);
     },
     searchValue() {
+      console.log(2222);
       this.getList();
     }
   },
@@ -158,7 +189,7 @@ export default {
           loading.close();
           return;
         }
-      };
+      }
       loading.close();
     },
     logoDelete(data) {
@@ -169,7 +200,7 @@ export default {
           loading.close();
           return;
         }
-      };
+      }
       loading.close();
     },
     dataChange(data) {
@@ -179,7 +210,7 @@ export default {
           this.list[i] = data;
           return;
         }
-      };
+      }
       loading.close();
     },
     datasDeleteConfirm(ids) {
@@ -245,10 +276,11 @@ export default {
               break;
           }
         }
-      })
+      });
     },
     listExport() {
-      let allList, that = this;
+      let allList,
+        that = this;
       let loading = Loading.service({
         text: "获取数据导出中，请稍候..."
       });

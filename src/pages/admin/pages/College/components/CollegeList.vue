@@ -7,7 +7,11 @@
       @selection-change="selectedChange"
     >
       <el-table-column type="selection" width="50"></el-table-column>
-      <el-table-column prop="name" width="100" :label="i18n['name']"></el-table-column>
+      <el-table-column
+        prop="name"
+        width="100"
+        :label="i18n['name']"
+      ></el-table-column>
       <el-table-column
         prop="en_name"
         width="200"
@@ -38,7 +42,10 @@
           }}</a>
         </template></el-table-column
       >
-      <el-table-column prop="description" :label="i18n['description']"></el-table-column>
+      <el-table-column
+        prop="description"
+        :label="i18n['description']"
+      ></el-table-column>
       <el-table-column
         v-if="isImport"
         label="消息"
@@ -174,9 +181,9 @@ export default {
     },
     logoUrl(url) {
       if (url == "" || url == null) {
-        return this.$store.state.defaultCollege
+        return this.$store.state.defaultCollege;
       } else {
-        return this.$store.state.baseUrl + url
+        return this.$store.state.baseUrl + url;
       }
     },
     changeLogo(id) {
@@ -193,7 +200,7 @@ export default {
           loading.close();
           return;
         }
-      };
+      }
       loading.close();
     },
     logoDelete(data) {
@@ -204,7 +211,7 @@ export default {
           loading.close();
           return;
         }
-      };
+      }
       loading.close();
     },
     dataChange(data) {
@@ -214,7 +221,7 @@ export default {
           this.list[i] = data;
           return;
         }
-      };
+      }
       loading.close();
     },
     datasDeleteConfirm(ids) {
@@ -280,10 +287,11 @@ export default {
               break;
           }
         }
-      })
+      });
     },
     listExport() {
-      let allList, that = this;
+      let allList,
+        that = this;
       let loading = Loading.service({
         text: "获取数据导出中，请稍候..."
       });

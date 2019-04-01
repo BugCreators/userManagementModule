@@ -13,7 +13,7 @@
         <el-col v-for="item in list" :span="3" :key="item.id">
           <a class="college-card" :href="'index.html#/college/' + item.id">
             <AvueImage
-              :srcImage="item.logo || $store.state.defaultCollege"
+              :srcImage="logoUrl(item.logo)"
               :replaceImage="$store.state.defaultCollege"
               :class="['college-cover']"
             />
@@ -45,6 +45,15 @@ export default {
   },
   data() {
     return {};
+  },
+  methods: {
+    logoUrl(url) {
+      if (url == "" || url == null) {
+        return this.$store.state.defaultCollege;
+      } else {
+        return this.$store.state.baseUrl + url;
+      }
+    }
   }
 };
 </script>

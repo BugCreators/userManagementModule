@@ -1,6 +1,17 @@
 <template>
   <div class="searchLine">
-    <el-input v-model="searchValue.name" :placeholder="placeholder"></el-input>
+    <el-select v-if="showSelect" v-model="searchValue.basis">
+      <el-option :label="options[0].label" :value="options[0].value">
+      </el-option>
+      <el-option :label="options[1].label" :value="options[1].value">
+      </el-option>
+    </el-select>
+    <el-input
+      class="input"
+      v-model="searchValue.name"
+      placeholder="请输入名称"
+      clearable
+    ></el-input>
     <el-button type="primary" @click="serchValueChange"
       ><i class="el-icon-search"></i>搜索</el-button
     >
@@ -11,23 +22,34 @@
 </template>
 
 <script>
-import { Button, Input } from "element-ui";
+import { Button, Input, Option, Select } from "element-ui";
 
 export default {
   name: "searchBox",
   components: {
     elButton: Button,
-    elInput: Input
+    elInput: Input,
+    elOption: Option,
+    elSelect: Select
   },
   props: {
-    moduleName: String
+    moduleName: String,
+    showSelect: Boolean
   },
   data() {
     return {
+      options: [
+        {
+          value: 0,
+          label: "按名字搜索"
+        },
+        {
+          value: 1,
+          label: "按学院名搜索"
+        }
+      ],
       searchValue: {
-        college: "",
-        department: "",
-        class: "",
+        basis: 0,
         name: ""
       },
       i18n: {
@@ -47,15 +69,17 @@ export default {
   methods: {
     serchValueChange() {
       this.$store.commit("setSearchValue", {
+        basis: this.searchValue.basis,
         name: this.searchValue.name
       });
     },
     serchValueClear() {
-      if (this.searchValue.name) {
-        this.searchValue.name = "";
-        this.$store.commit("setSearchValue", {
+      if (this.searchValue.name || this.searchValue.basis != 0) {
+        this.searchValue = {
+          basis: 0,
           name: ""
-        });
+        };
+        this.$store.commit("setSearchValue", this.searchValue);
       }
     }
   }
@@ -66,7 +90,7 @@ export default {
 .searchLine {
   margin-bottom: 10px;
   text-align: center;
-  .el-input {
+  .el-input.input {
     margin-right: 10px;
     width: 20%;
   }

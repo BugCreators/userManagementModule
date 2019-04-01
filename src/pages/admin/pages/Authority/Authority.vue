@@ -29,6 +29,12 @@ export default {
       moduleName: "authority"
     };
   },
+  created() {
+    this.$store.commit("setSearchValue", {
+      basis: 0,
+      name: ""
+    });
+  },
   methods: {
     changeCount(count) {
       this.count = count;
