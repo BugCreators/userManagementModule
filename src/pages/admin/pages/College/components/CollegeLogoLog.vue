@@ -84,7 +84,6 @@ export default {
               res.data.url = that.$store.state.baseUrl + res.data.url;
               that.fileList.push(res.data);
             }
-          } else {
           }
         }
       });
@@ -121,7 +120,6 @@ export default {
       this.isChange = true;
     },
     validateForm(file) {
-      let that = this;
       let fileType = file.raw.type;
       const isJPG = fileType === "image/jpg" || fileType === "image/png";
       const isLt1M = file.size / 1024 / 1024 < 2;

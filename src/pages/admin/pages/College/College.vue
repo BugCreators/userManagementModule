@@ -12,7 +12,7 @@
       @listExportConfirm="listExport"
     />
     <CollegeList
-      ref="colleges-list"
+      ref="list"
       @openLogoLog="openLogoLog"
       @openDetailLog="openDetailLog"
       @changeCount="changeCount"
@@ -63,7 +63,7 @@ export default {
   },
   computed: {
     selectedId() {
-      return this.$refs["colleges-list"].selectedId.map(
+      return this.$refs["list"].selectedId.map(
         (value, index, array) => {
           return {
             id: array[index]["id"]
@@ -92,24 +92,24 @@ export default {
       this.count = count;
     },
     logoChange(data) {
-      this.$refs["colleges-list"].logoChange(data);
+      this.$refs["list"].logoChange(data);
     },
     logoDelete(data) {
-      this.$refs["colleges-list"].logoDelete(data);
+      this.$refs["list"].logoDelete(data);
     },
     listChange() {
-      this.$refs["colleges-list"].getList();
+      this.$refs["list"].getList();
     },
     dataChange(data) {
-      this.$refs["colleges-list"].dataChange(data);
+      this.$refs["list"].dataChange(data);
     },
     datasDelete() {
-      this.$refs["colleges-list"].datasDeleteConfirm(
-        this.$refs["colleges-list"].selectedId
+      this.$refs["list"].datasDeleteConfirm(
+        this.$refs["list"].selectedId
       );
     },
     listExport() {
-      this.$refs["colleges-list"].listExportConfirm();
+      this.$refs["list"].listExportConfirm();
     },
     openLogoLog(id) {
       this.currentId = id;

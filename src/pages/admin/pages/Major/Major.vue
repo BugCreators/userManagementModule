@@ -12,7 +12,7 @@
       @listExportConfirm="listExport"
     />
     <MajorList
-      ref="majors-list"
+      ref="list"
       @openLogoLog="openLogoLog"
       @openDetailLog="openDetailLog"
       @changeCount="changeCount"
@@ -55,7 +55,7 @@ export default {
   },
   computed: {
     selectedId() {
-      return this.$refs["majors-list"].selectedId.map((value, index, array) => {
+      return this.$refs["list"].selectedId.map((value, index, array) => {
         return {
           id: array[index]["id"]
         };
@@ -82,18 +82,18 @@ export default {
       this.count = count;
     },
     listChange() {
-      this.$refs["majors-list"].getList();
+      this.$refs["list"].getList();
     },
     dataChange(data) {
-      this.$refs["majors-list"].dataChange(data);
+      this.$refs["list"].dataChange(data);
     },
     datasDelete() {
-      this.$refs["majors-list"].datasDeleteConfirm(
-        this.$refs["majors-list"].selectedId
+      this.$refs["list"].datasDeleteConfirm(
+        this.$refs["list"].selectedId
       );
     },
     listExport() {
-      this.$refs["majors-list"].listExportConfirm();
+      this.$refs["list"].listExportConfirm();
     },
     openLogoLog(id) {
       this.currentId = id;

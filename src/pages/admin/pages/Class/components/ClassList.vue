@@ -8,35 +8,25 @@
     >
       <el-table-column type="selection" width="50"></el-table-column>
       <el-table-column
-        prop="name"
+        prop="grade"
         width="100"
+        :label="i18n['grade']"
+      ></el-table-column>
+      <el-table-column
+        prop="name"
         :label="i18n['name']"
       ></el-table-column>
       <el-table-column
-        prop="level"
-        width="200"
-        :label="i18n['level']"
+        prop="majorName"
+        :label="i18n['majorName']"
       ></el-table-column>
       <el-table-column
         prop="collegeName"
-        width="200"
         :label="i18n['collegeName']"
       ></el-table-column>
       <el-table-column
-        prop="description"
-        :label="i18n['description']"
-      ></el-table-column>
-      <el-table-column
-        prop="train_objective"
-        :label="i18n['train_objective']"
-      ></el-table-column>
-      <el-table-column
-        prop="main_course"
-        :label="i18n['main_course']"
-      ></el-table-column>
-      <el-table-column
-        prop="employment_direction"
-        :label="i18n['employment_direction']"
+        prop="studentCount"
+        :label="i18n['studentCount']"
       ></el-table-column>
       <el-table-column
         v-if="isImport"
@@ -78,15 +68,19 @@ import {
   Message,
   MessageBox,
   Pagination,
+  Popover,
   Table,
   TableColumn
 } from "element-ui";
+import AvueImage from "@/components/AvueImage";
 import { downloadExl } from "@/assets/js/tool";
 
 export default {
   name: "majorList",
   components: {
+    AvueImage,
     elPagination: Pagination,
+    elPopover: Popover,
     elTable: Table,
     elTableColumn: TableColumn
   },
@@ -109,13 +103,11 @@ export default {
         height: "100px"
       },
       i18n: {
-        name: "专业名",
-        level: "学历层次",
+        grade: "年级",
+        name: "班级名",
+        majorName: "专业名",
         collegeName: "所属学院",
-        description: "专业概况",
-        train_objective: "培养目标",
-        main_course: "主要课程",
-        employment_direction: "就业方向"
+        studentCount: "学生人数"
       },
       selectedId: []
     };
@@ -134,7 +126,6 @@ export default {
       this.list = newV.slice(0, this.pageSize);
     },
     searchValue() {
-      console.log(2222);
       this.getList();
     }
   },
@@ -149,7 +140,7 @@ export default {
       let that = this;
       let loading = Loading.service(this.loadingOpts);
       return this.$store.dispatch("postItems", {
-        url: that.$store.state.getMajorList,
+        url: that.$store.state.getClassList,
         query: {
           pageSize: that.pageSize,
           pageIndex: that.pageIndex,
@@ -281,7 +272,7 @@ export default {
         text: "获取数据导出中，请稍候..."
       });
       return this.$store.dispatch("postItems", {
-        url: that.$store.state.getAllMajorList,
+        url: that.$store.state.getAllClassList,
         query: {
           token: that.$store.state.userInfo.token
         },

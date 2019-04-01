@@ -238,6 +238,22 @@ export default new Vuex.Store({
     // 修改专业
     changeMajor: baseUrl + `/api/major/changeMajor`,
 
+    // 班级管理
+    getClassList: baseUrl + `/api/vclass/getClassList`,
+    // 导出数据 全部班级
+    getAllClassList: baseUrl + `/api/vclass/getAllClassList`,
+    // 班级详情
+    getClassDetail: baseUrl + `/api/vclass/getClassDetail`,
+    // 添加班级
+    addClass: baseUrl + `/api/vclass/addClass`,
+    // 删除班级
+    delClass: baseUrl + `/api/vclass/deleteClass`,
+    // 批量添加
+    importClassList: baseUrl + `/api/vclass/importClassList`,
+    // 修改班级
+    changeClass: baseUrl + `/api/vclass/changeClass`,
+    /*****************END*******************/
+
     /************获取权限 BEGIN**************/
     // 进入后台权限
     intoBackstage: baseUrl + `/api/user/getIntoBackstage`,
