@@ -5,13 +5,11 @@
       :addFuncName="addFuncName"
       :count="count"
       :delFuncName="delFuncName"
-      :exportFuncName="exportFuncName"
       :moduleName="moduleName"
       :showImport="false"
       :showExport="false"
       @datasDeleteConfirm="datasDelete"
       @openDetailLog="openDetailLog"
-      @listExportConfirm="listExport"
     />
     <RoleList
       ref="list"
@@ -48,8 +46,7 @@ export default {
       currentId: undefined,
       moduleName: "role",
       addFuncName: "openDetailLog",
-      delFuncName: "datasDeleteConfirm",
-      exportFuncName: "listExportConfirm"
+      delFuncName: "datasDeleteConfirm"
     };
   },
   computed: {

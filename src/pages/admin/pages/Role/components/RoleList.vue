@@ -18,7 +18,7 @@
       <el-table-column
         :label="i18n['permission']"
       ><template slot-scope="scope">
-        <span v-for="item in scope.row.permission">{{ item.cn_name + '，' }}</span>
+        <span v-for="item in scope.row.permission" :key="item.index">{{ item.cn_name + '，' }}</span>
       </template>
       </el-table-column>
       <el-table-column

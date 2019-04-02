@@ -13,25 +13,8 @@
       :rules="rules"
     >
       <el-form-item :label="i18n['name']" prop="name">
-        <el-input v-model="info.name" name="name" focus>
-          <i class="errorMsg" slot="suffix">
-            {{ errorMsg }}
-          </i>
+        <el-input v-model="info.name" name="name">
         </el-input>
-      </el-form-item>
-      <el-form-item :label="i18n['collegeName']" prop="college_id">
-        <el-select v-model="info.college_id" placeholder="请选择学院">
-          <el-option
-            v-for="item in collegeList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          >
-          </el-option>
-        </el-select>
-        <i class="errorMsg">
-          {{ errorMsg2 }}
-        </i>
       </el-form-item>
       <el-form-item :label="i18n['description']" prop="description">
         <el-input
@@ -40,6 +23,23 @@
           name="description"
           :autosize="{ minRows: 3, maxRows: 5 }"
         ></el-input>
+      </el-form-item>
+      <el-form-item :label="i18n['level']" prop="level">
+        <el-input v-model.number="info.level" name="level">
+        </el-input>
+      </el-form-item>
+      <el-form-item :label="i18n['authority']">
+        <el-card v-for="item in info.module" :key="item.index" class="box-card">
+          <div slot="header" class="clearfix">
+            <span>{{ item.cn_name }}</span>
+          </div>
+          <el-checkbox-group v-model="item.ids">
+            <el-checkbox v-for="authority in item.authorityField" 
+              v-model="authority.permission"
+              :label="authority.id" 
+              :key="authority.index">{{authority.cn_name}}</el-checkbox>
+          </el-checkbox-group>
+        </el-card>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -52,26 +52,28 @@
 <script>
 import {
   Button,
+  Card,
+  Checkbox,
+  CheckboxGroup,
   Dialog,
   Form,
   FormItem,
   Input,
   Loading,
-  Message,
-  Option,
-  Select
+  Message
 } from "element-ui";
 
 export default {
-  name: "majorDetailLog",
+  name: "roleDetailLog",
   components: {
     elButton: Button,
+    elCard: Card,
+    elCheckbox: Checkbox,
+    elCheckboxGroup: CheckboxGroup,
     elDialog: Dialog,
     elForm: Form,
     elFormItem: FormItem,
-    elInput: Input,
-    elOption: Option,
-    elSelect: Select
+    elInput: Input
   },
   props: {
     dataId: Number
@@ -80,30 +82,33 @@ export default {
     return {
       info: {
         name: "",
-        college_id: "",
-        description: ""
+        description: "",
+        level: "",
+        module: []
       },
-      errorMsg: "",
-      errorMsg2: "",
+      moduleList: [],
       i18n: {
-        name: "院系名",
-        collegeName: "学院",
-        description: "简介"
+        name: "角色名",
+        description: "角色介绍",
+        level: "权限等级",
+        authority: "权限分配"
       },
       loading: true,
       rules: {
         name: [
-          { required: true, message: "请输入专业名称", trigger: "blur" }
+          { required: true, message: "请输入专业名称"}
         ],
-        college_id: [
-          { required: true, message: "请选择学院", trigger: "change" }
+        level: [
+          { required: true, message: "请输入权限等级"},
+          { type: "number", min: 0, max: 127, message: "请输入0~127的整数"}
         ]
       },
-      collegeList: {}
+      checkedActions: [],
+      checkAll: false,
+      isIndeterminate: true
     };
   },
   mounted() {
-    this.getCollegeList();
     if (this.dataId) {
       this.getInfo();
     }
@@ -111,7 +116,7 @@ export default {
   computed: {
     logTitle() {
       let title = this.dataId ? "编辑" : "添加";
-      return title + "专业";
+      return title + "角色";
     },
     showDetailLog() {
       return this.$store.state.showDetailLog;
@@ -122,7 +127,7 @@ export default {
       let that = this;
       let loading = Loading.service();
       this.$store.dispatch("getItems", {
-        url: this.$store.state.getDepartmentDetail,
+        url: this.$store.state.getRoleDetail,
         query: {
           id: this.dataId,
           token: this.$store.state.userInfo.token
@@ -131,22 +136,10 @@ export default {
           loading.close();
           if (res.code === 200) {
             that.info = res.data;
+
           } else {
             Message.error(res.msg);
             that.closeDetailLog();
-          }
-        }
-      });
-    },
-    getCollegeList() {
-      let that = this;
-      this.$store.dispatch("getItems", {
-        url: this.$store.state.getCollegeList,
-        cb(res) {
-          if (res.code === 200) {
-            that.collegeList = res.data;
-          } else {
-            Message.error(res.msg);
           }
         }
       });
@@ -155,21 +148,10 @@ export default {
       let url,
         that = this;
       if (this.dataId) {
-        url = this.$store.state.changeDepartment;
+        url = this.$store.state.changeRole;
       } else {
-        url = this.$store.state.addDepartment;
+        url = this.$store.state.addRole;
       }
-      if (this.info.name === "") {
-        this.errorMsg = "院系名不能为空！";
-        return;
-      }
-      this.errorMsg = "";
-      if (this.info.college_id === "") {
-        this.errorMsg2 = "学院不能为空！";
-        return;
-      }
-      this.errorMsg2 = "";
-
       let loading = Loading.service({
         target: document.getElementById("form")
       });

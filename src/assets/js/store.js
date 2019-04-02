@@ -73,7 +73,7 @@ export default new Vuex.Store({
             name: "branch",
             title: "部门管理",
             href: "branch",
-            show: "select_admin_department"
+            show: "select_branch"
           },
           {
             name: "role",
@@ -200,8 +200,14 @@ export default new Vuex.Store({
     // 角色管理
     // 角色列表
     getRoleList: baseUrl + `/api/role/getRoleList`,
+    // 角色详情
+    getRoleDetail: baseUrl + `/api/role/getRoleDetail`,    
+    // 修改角色
+    changeRole: baseUrl + `/api/role/changeRole`,
+
     // 权限列表
     getAuthorityList: baseUrl + `/api/authority/getAuthorityList`,
+
     /*****************END********************/
     /***************院系管理*****************/
     // 学院管理
