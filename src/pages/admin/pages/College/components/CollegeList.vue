@@ -143,6 +143,7 @@ export default {
       this.list = newV.slice(0, this.pageSize);
     },
     searchValue() {
+      this.pageIndex = 1;
       this.getList();
     }
   },

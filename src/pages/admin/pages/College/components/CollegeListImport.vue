@@ -44,7 +44,7 @@ import XLSX from "xlsx";
 import { downloadExl, changeExlHaed } from "@/assets/js/tool";
 
 export default {
-  name: "collegeBatchImport",
+  name: "collegeListImport",
   components: {
     CollegeList,
     elButton: Button,

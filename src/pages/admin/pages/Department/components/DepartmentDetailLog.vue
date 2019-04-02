@@ -19,11 +19,8 @@
           </i>
         </el-input>
       </el-form-item>
-      <el-form-item :label="i18n['level']" prop="level">
-        <el-input v-model="info.level" name="level"></el-input>
-      </el-form-item>
       <el-form-item :label="i18n['collegeName']" prop="college_id">
-        <el-select v-model="info.college_id" placeholder="请选择学院" @change="collegeChange">
+        <el-select v-model="info.college_id" placeholder="请选择学院">
           <el-option
             v-for="item in collegeList"
             :key="item.id"
@@ -36,49 +33,11 @@
           {{ errorMsg2 }}
         </i>
       </el-form-item>
-      <el-form-item :label="i18n['departmentName']" prop="department_id">
-        <el-select v-model="info.department_id" placeholder="暂无院系">
-          <el-option
-            v-for="item in departmentList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          >
-          </el-option>
-        </el-select>
-      </el-form-item>
       <el-form-item :label="i18n['description']" prop="description">
         <el-input
           type="textarea"
           v-model="info.description"
           name="description"
-          :autosize="{ minRows: 3, maxRows: 5 }"
-        ></el-input>
-      </el-form-item>
-      <el-form-item :label="i18n['train_objective']" prop="train_objective">
-        <el-input
-          type="textarea"
-          v-model="info.train_objective"
-          name="train_objective"
-          :autosize="{ minRows: 3, maxRows: 5 }"
-        ></el-input>
-      </el-form-item>
-      <el-form-item :label="i18n['main_course']" prop="main_course">
-        <el-input
-          type="textarea"
-          v-model="info.main_course"
-          name="main_course"
-          :autosize="{ minRows: 3, maxRows: 5 }"
-        ></el-input>
-      </el-form-item>
-      <el-form-item
-        :label="i18n['employment_direction']"
-        prop="employment_direction"
-      >
-        <el-input
-          type="textarea"
-          v-model="info.employment_direction"
-          name="employment_direction"
           :autosize="{ minRows: 3, maxRows: 5 }"
         ></el-input>
       </el-form-item>
@@ -121,39 +80,25 @@ export default {
     return {
       info: {
         name: "",
-        level: "",
         college_id: "",
-        department_id: "",
-        description: "",
-        train_objective: "",
-        main_course: "",
-        employment_direction: ""
+        description: ""
       },
       errorMsg: "",
       errorMsg2: "",
       i18n: {
-        name: "专业名",
-        level: "学历层次",
-        departmentName: "教学系",
+        name: "院系名",
         collegeName: "学院",
-        description: "专业概况",
-        train_objective: "培养目标",
-        main_course: "主要课程",
-        employment_direction: "就业方向"
+        description: "简介"
       },
       loading: true,
       rules: {
         name: [
           { required: true, message: "请输入专业名称", trigger: "blur" }
         ],
-        level: [
-          { required: true, min: 2, max: 4, message: '长度在 2 到 4 个字符', trigger: 'blur' }
-        ],
         college_id: [
           { required: true, message: "请选择学院", trigger: "change" }
         ]
       },
-      departmentList: {},
       collegeList: {}
     };
   },
@@ -177,7 +122,7 @@ export default {
       let that = this;
       let loading = Loading.service();
       this.$store.dispatch("getItems", {
-        url: this.$store.state.getMajorDetail,
+        url: this.$store.state.getDepartmentDetail,
         query: {
           id: this.dataId,
           token: this.$store.state.userInfo.token
@@ -186,7 +131,6 @@ export default {
           loading.close();
           if (res.code === 200) {
             that.info = res.data;
-            that.getDepartmentList();
           } else {
             Message.error(res.msg);
             that.closeDetailLog();
@@ -207,42 +151,16 @@ export default {
         }
       });
     },
-    getDepartmentList(isChange) {
-      let that = this;
-      this.$store.dispatch("getItems", {
-        url: this.$store.state.getDepartmentListByCollegeId,
-        query: {
-          id: this.info.college_id,
-          token: this.$store.state.userInfo.token
-        },
-        cb(res) {
-          if (res.code === 200) {
-            if (res.data.length > 0) {
-              that.departmentList = res.data;
-              isChange? that.info.department_id = that.departmentList[0].id : "";
-            } else {
-              that.departmentList = {};
-              that.info.department_id = "";
-            }        
-          } else {
-            Message.error(res.msg);
-          }
-        }
-      });
-    },
-    collegeChange() {
-      this.getDepartmentList(true);
-    },
     formSubmit() {
       let url,
         that = this;
       if (this.dataId) {
-        url = this.$store.state.changeMajor;
+        url = this.$store.state.changeDepartment;
       } else {
-        url = this.$store.state.addMajor;
+        url = this.$store.state.addDepartment;
       }
       if (this.info.name === "") {
-        this.errorMsg = "专业名不能为空！";
+        this.errorMsg = "院系名不能为空！";
         return;
       }
       this.errorMsg = "";

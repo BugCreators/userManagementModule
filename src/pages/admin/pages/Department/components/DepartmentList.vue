@@ -1,5 +1,5 @@
 <template>
-  <div class="majorList">
+  <div class="departmentList">
     <el-table
       id="list"
       :row-style="rowStyle"
@@ -9,40 +9,15 @@
       <el-table-column type="selection" width="50"></el-table-column>
       <el-table-column
         prop="name"
-        width="100"
         :label="i18n['name']"
       ></el-table-column>
       <el-table-column
-        prop="level"
-        width="200"
-        :label="i18n['level']"
-      ></el-table-column>
-      <el-table-column
-        v-if="!isImport"
-        prop="departmentName"
-        width="200"
-        :label="i18n['departmentName']"
-      ></el-table-column>
-      <el-table-column
         prop="collegeName"
-        width="200"
         :label="i18n['collegeName']"
       ></el-table-column>
       <el-table-column
         prop="description"
         :label="i18n['description']"
-      ></el-table-column>
-      <el-table-column
-        prop="train_objective"
-        :label="i18n['train_objective']"
-      ></el-table-column>
-      <el-table-column
-        prop="main_course"
-        :label="i18n['main_course']"
-      ></el-table-column>
-      <el-table-column
-        prop="employment_direction"
-        :label="i18n['employment_direction']"
       ></el-table-column>
       <el-table-column
         v-if="isImport"
@@ -90,7 +65,7 @@ import {
 import { downloadExl } from "@/assets/js/tool";
 
 export default {
-  name: "majorList",
+  name: "departmentList",
   components: {
     elPagination: Pagination,
     elTable: Table,
@@ -115,14 +90,9 @@ export default {
         height: "100px"
       },
       i18n: {
-        name: "专业名",
-        level: "学历层次",
-        departmentName: "教学系",
+        name: "教学系名",
         collegeName: "学院",
-        description: "专业概况",
-        train_objective: "培养目标",
-        main_course: "主要课程",
-        employment_direction: "就业方向"
+        description: "简介"
       },
       selectedId: []
     };
@@ -156,7 +126,7 @@ export default {
       let that = this;
       let loading = Loading.service(this.loadingOpts);
       return this.$store.dispatch("postItems", {
-        url: that.$store.state.getMajorList,
+        url: that.$store.state.getDepartmentList,
         query: {
           pageSize: that.pageSize,
           pageIndex: that.pageIndex,
@@ -195,11 +165,11 @@ export default {
       let that = this;
       if (ids.length <= 0) {
         Message.warning({
-          message: "请选择至少一个专业"
+          message: "请选择至少一个教学系"
         });
         return;
       }
-      MessageBox.confirm("此操作将删除所选专业的所有信息，是否继续？", "提示", {
+      MessageBox.confirm("此操作将删除所选教学系，是否继续？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -219,9 +189,9 @@ export default {
     datasDelete(ids) {
       let that = this;
       this.$store.dispatch("postItems", {
-        url: this.$store.state.delMajors,
+        url: this.$store.state.delDepartments,
         query: {
-          majorsId: ids,
+          departmentsId: ids,
           token: this.$store.state.userInfo.token
         },
         cb(res) {
@@ -263,14 +233,14 @@ export default {
         text: "获取数据导出中，请稍候..."
       });
       return this.$store.dispatch("postItems", {
-        url: that.$store.state.getAllMajorList,
+        url: that.$store.state.getAllDepartmentList,
         query: {
           token: that.$store.state.userInfo.token
         },
         cb(res) {
           if (res.code === 200) {
             allList = res.data;
-            downloadExl(allList, "xlsx", "专业列表");
+            downloadExl(allList, "xlsx", "院系列表");
           } else {
             Message.error(res.msg);
           }

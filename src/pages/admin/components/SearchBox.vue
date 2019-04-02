@@ -5,6 +5,8 @@
       </el-option>
       <el-option :label="options[1].label" :value="options[1].value">
       </el-option>
+      <el-option v-if="basisOfGrade" :label="options[2].label" :value="options[2].value">
+      </el-option>
     </el-select>
     <el-input
       class="input"
@@ -34,7 +36,8 @@ export default {
   },
   props: {
     moduleName: String,
-    showSelect: Boolean
+    showSelect: Boolean,
+    basisOfGrade: Boolean
   },
   data() {
     return {
@@ -46,6 +49,10 @@ export default {
         {
           value: 1,
           label: "按学院名搜索"
+        },
+        {
+          value: 2,
+          label: "按年级搜索"
         }
       ],
       searchValue: {
@@ -54,7 +61,7 @@ export default {
       },
       i18n: {
         college: "学院",
-        department: "部门",
+        department: "院系",
         major: "专业",
         class: "班级",
         authority: "权限"

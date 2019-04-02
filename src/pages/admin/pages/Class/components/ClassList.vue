@@ -12,15 +12,13 @@
         width="100"
         :label="i18n['grade']"
       ></el-table-column>
-      <el-table-column
-        prop="name"
-        :label="i18n['name']"
-      ></el-table-column>
+      <el-table-column prop="name" :label="i18n['name']"></el-table-column>
       <el-table-column
         prop="majorName"
         :label="i18n['majorName']"
       ></el-table-column>
       <el-table-column
+        v-if="!isImport"
         prop="collegeName"
         :label="i18n['collegeName']"
       ></el-table-column>
@@ -68,19 +66,15 @@ import {
   Message,
   MessageBox,
   Pagination,
-  Popover,
   Table,
   TableColumn
 } from "element-ui";
-import AvueImage from "@/components/AvueImage";
 import { downloadExl } from "@/assets/js/tool";
 
 export default {
-  name: "majorList",
+  name: "classList",
   components: {
-    AvueImage,
     elPagination: Pagination,
-    elPopover: Popover,
     elTable: Table,
     elTableColumn: TableColumn
   },
@@ -106,8 +100,7 @@ export default {
         grade: "年级",
         name: "班级名",
         majorName: "专业名",
-        collegeName: "所属学院",
-        studentCount: "学生人数"
+        collegeName: "学院"
       },
       selectedId: []
     };
@@ -126,6 +119,7 @@ export default {
       this.list = newV.slice(0, this.pageSize);
     },
     searchValue() {
+      this.pageIndex = 1;
       this.getList();
     }
   },
@@ -162,33 +156,8 @@ export default {
     selectedChange(selection) {
       this.selectedId = selection.map(item => item.id);
     },
-    changeLogo(id) {
-      this.$emit("openLogoLog", id);
-    },
     editData(id) {
       this.$emit("openDetailLog", id);
-    },
-    logoChange(data) {
-      let loading = Loading.service(this.loadingOpts);
-      for (let i = 0, len = this.list.length; i < len; i++) {
-        if (this.list[i].id == data.id) {
-          this.list[i].logo = data.url;
-          loading.close();
-          return;
-        }
-      }
-      loading.close();
-    },
-    logoDelete(data) {
-      let loading = Loading.service(this.loadingOpts);
-      for (let i = 0, len = this.list.length; i < len; i++) {
-        if (this.list[i].id == data) {
-          this.list[i].logo = null;
-          loading.close();
-          return;
-        }
-      }
-      loading.close();
     },
     dataChange(data) {
       let loading = Loading.service(this.loadingOpts);
@@ -204,11 +173,11 @@ export default {
       let that = this;
       if (ids.length <= 0) {
         Message.warning({
-          message: "请选择至少一个学院"
+          message: "请选择至少一个班级"
         });
         return;
       }
-      MessageBox.confirm("此操作将删除所选学院的所有信息，是否继续？", "提示", {
+      MessageBox.confirm("此操作将删除所选班级，是否继续？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -228,9 +197,9 @@ export default {
     datasDelete(ids) {
       let that = this;
       this.$store.dispatch("postItems", {
-        url: this.$store.state.delMajors,
+        url: this.$store.state.delClass,
         query: {
-          majorsId: ids,
+          classId: ids,
           token: this.$store.state.userInfo.token
         },
         cb(res) {
@@ -279,7 +248,7 @@ export default {
         cb(res) {
           if (res.code === 200) {
             allList = res.data;
-            downloadExl(allList, "xlsx", "专业列表");
+            downloadExl(allList, "xlsx", "班级列表");
           } else {
             Message.error(res.msg);
           }

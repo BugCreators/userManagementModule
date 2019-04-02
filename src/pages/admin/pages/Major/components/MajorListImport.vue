@@ -44,7 +44,7 @@ import XLSX from "xlsx";
 import { downloadExl, changeExlHaed } from "@/assets/js/tool";
 
 export default {
-  name: "majorBatchImport",
+  name: "majorListImport",
   components: {
     MajorList,
     elButton: Button,
@@ -57,7 +57,7 @@ export default {
       i18n: {
         name: "专业名",
         level: "学历层次",
-        collegeName: "所属学院",
+        collegeName: "学院",
         description: "专业概况",
         train_objective: "培养目标",
         main_course: "主要课程",

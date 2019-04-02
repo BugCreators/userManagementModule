@@ -12,6 +12,20 @@
       :model="info"
       :rules="rules"
     >
+      <el-form-item :label="i18n['grade']" prop="grade">
+        <el-select v-model="info.grade" placeholder="请选择年级">
+          <el-option
+            v-for="value, index in gradeList"
+            :key="index"
+            :label="value"
+            :value="value"
+          >
+          </el-option>
+        </el-select>
+        <i class="errorMsg">
+          {{ errorMsg4 }}
+        </i>
+      </el-form-item>
       <el-form-item :label="i18n['name']" prop="name">
         <el-input v-model="info.name" name="name" focus>
           <i class="errorMsg" slot="suffix">
@@ -19,11 +33,8 @@
           </i>
         </el-input>
       </el-form-item>
-      <el-form-item :label="i18n['level']" prop="level">
-        <el-input v-model="info.level" name="level"></el-input>
-      </el-form-item>
       <el-form-item :label="i18n['collegeName']" prop="college_id">
-        <el-select v-model="info.college_id" placeholder="请选择学院">
+        <el-select v-model="info.college_id" @change="collegeChange" placeholder="请选择学院">
           <el-option
             v-for="item in collegeList"
             :key="item.id"
@@ -36,40 +47,19 @@
           {{ errorMsg2 }}
         </i>
       </el-form-item>
-      <el-form-item :label="i18n['description']" prop="description">
-        <el-input
-          type="textarea"
-          v-model="info.description"
-          name="description"
-          :autosize="{ minRows: 3, maxRows: 5 }"
-        ></el-input>
-      </el-form-item>
-      <el-form-item :label="i18n['train_objective']" prop="train_objective">
-        <el-input
-          type="textarea"
-          v-model="info.train_objective"
-          name="train_objective"
-          :autosize="{ minRows: 3, maxRows: 5 }"
-        ></el-input>
-      </el-form-item>
-      <el-form-item :label="i18n['main_course']" prop="main_course">
-        <el-input
-          type="textarea"
-          v-model="info.main_course"
-          name="main_course"
-          :autosize="{ minRows: 3, maxRows: 5 }"
-        ></el-input>
-      </el-form-item>
-      <el-form-item
-        :label="i18n['employment_direction']"
-        prop="employment_direction"
-      >
-        <el-input
-          type="textarea"
-          v-model="info.employment_direction"
-          name="employment_direction"
-          :autosize="{ minRows: 3, maxRows: 5 }"
-        ></el-input>
+      <el-form-item :label="i18n['majorName']" prop="major_id">
+        <el-select v-model="info.major_id" placeholder="请选择专业">
+          <el-option
+            v-for="item in majorList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          >
+          </el-option>
+        </el-select>
+        <i class="errorMsg">
+          {{ errorMsg3 }}
+        </i>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -109,36 +99,43 @@ export default {
   data() {
     return {
       info: {
+        grade: "",
         name: "",
-        level: "",
-        college_id: "",
-        description: "",
-        train_objective: "",
-        main_course: "",
-        employment_direction: ""
+        major_id: "",
+        college_id: ""
       },
       errorMsg: "",
       errorMsg2: "",
+      errorMsg3: "",
+      errorMsg4: "",
       i18n: {
-        name: "专业名",
-        level: "学历层次",
-        collegeName: "所属学院",
-        description: "专业概况",
-        train_objective: "培养目标",
-        main_course: "主要课程",
-        employment_direction: "就业方向"
+        grade: "年级",
+        name: "班级名",
+        majorName: "专业名",
+        collegeName: "学院"
       },
       loading: true,
       rules: {
-        name: [{ required: true, message: "请输入专业名称", trigger: "blur" }],
+        grade: [
+          { required: true, message: "请选择年级", trigger: "change" }
+        ],
+        name: [
+          { required: true, message: "请输入专业名称", trigger: "blur" }
+        ],
         college_id: [
           { required: true, message: "请选择学院", trigger: "change" }
+        ],
+        major_id: [
+          { required: true, message: "请选择专业", trigger: "change" }
         ]
       },
-      collegeList: {}
+      gradeList: {},
+      collegeList: {},
+      majorList: {}
     };
   },
   mounted() {
+    this.getGradeList();
     this.getCollegeList();
     if (this.dataId) {
       this.getInfo();
@@ -147,7 +144,7 @@ export default {
   computed: {
     logTitle() {
       let title = this.dataId ? "编辑" : "添加";
-      return title + "专业";
+      return title + "班级";
     },
     showDetailLog() {
       return this.$store.state.showDetailLog;
@@ -158,7 +155,7 @@ export default {
       let that = this;
       let loading = Loading.service();
       this.$store.dispatch("getItems", {
-        url: this.$store.state.getMajorDetail,
+        url: this.$store.state.getClassDetail,
         query: {
           id: this.dataId,
           token: this.$store.state.userInfo.token
@@ -167,9 +164,23 @@ export default {
           loading.close();
           if (res.code === 200) {
             that.info = res.data;
+            that.getMajorList();
           } else {
             Message.error(res.msg);
             that.closeDetailLog();
+          }
+        }
+      });
+    },
+    getGradeList() {
+      let that = this;
+      this.$store.dispatch("getItems", {
+        url: this.$store.state.getGradeList,
+        cb(res) {
+          if (res.code === 200) {
+            that.gradeList = res.data;
+          } else {
+            Message.error(res.msg);
           }
         }
       });
@@ -187,16 +198,44 @@ export default {
         }
       });
     },
+    getMajorList(isChange) {
+      let that = this;
+      this.$store.dispatch("getItems", {
+        url: this.$store.state.getMajorListBycollegeId,
+        query: {
+          id: this.info.college_id,
+          token: this.$store.state.userInfo.token
+        },
+        cb(res) {
+          if (res.code === 200) {
+            that.majorList = res.data;
+            if (isChange) {
+              that.info.major_id = that.majorList[0].id
+            }
+          } else {
+            Message.error(res.msg);
+          }
+        }
+      });
+    },
+    collegeChange() {
+      this.getMajorList(true);
+    },
     formSubmit() {
       let url,
         that = this;
       if (this.dataId) {
-        url = this.$store.state.changeMajor;
+        url = this.$store.state.changeClass;
       } else {
-        url = this.$store.state.addMajor;
+        url = this.$store.state.addClass;
       }
+      if (this.info.grade === "") {
+        this.errorMsg4 = "年级不能为空！"
+        return;
+      }
+      this.errorMsg4 = "";
       if (this.info.name === "") {
-        this.errorMsg = "专业名不能为空！";
+        this.errorMsg = "班级名不能为空！";
         return;
       }
       this.errorMsg = "";
@@ -205,6 +244,11 @@ export default {
         return;
       }
       this.errorMsg2 = "";
+      if (this.info.major_id === "") {
+        this.errorMsg3 = "专业不能为空！";
+        return;
+      }
+      this.errorMsg3 = "";
 
       let loading = Loading.service({
         target: document.getElementById("form")

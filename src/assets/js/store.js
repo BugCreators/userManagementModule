@@ -109,7 +109,7 @@ export default new Vuex.Store({
           },
           {
             name: "department",
-            title: "院系机构",
+            title: "学系机构",
             href: "department",
             show: "select_department"
           },
@@ -218,9 +218,27 @@ export default new Vuex.Store({
     // 删除学院
     delCollege: baseUrl + `/api/college/deleteCollege`,
     // 批量添加
-    importcollegeList: baseUrl + `/api/college/importcollegeList`,
+    importCollegeList: baseUrl + `/api/college/importCollegeList`,
     // 修改学院
     changeCollege: baseUrl + `/api/college/changeCollegeDetail`,
+
+    // 院系管理
+    // 院系列表
+    getDepartmentList: baseUrl + `/api/department/getDepartmentList`,
+    // 导出数据 全部院系
+    getAllDepartmentList: baseUrl + `/api/department/getAllDepartmentList`,
+    // 院系详情
+    getDepartmentDetail: baseUrl + `/api/department/getDepartmentDetail`,
+    // 修改院系
+    changeDepartment: baseUrl + `/api/department/changeDepartment`,
+    // 添加院系
+    addDepartment: baseUrl + `/api/department/addDepartment`,
+    // 删除学院:
+    delDepartments: baseUrl + `/api/department/deleteDepartments`,
+    // 批量添加
+    importDepartmentList: baseUrl + `/api/department/importDepartmentList`,
+    // 获取院系列表（根据学院ID）
+    getDepartmentListByCollegeId: baseUrl + `/api/department/getDepartmentListByCollegeId`,
 
     // 专业管理
     // 学院列表
@@ -237,11 +255,15 @@ export default new Vuex.Store({
     importMajorList: baseUrl + `/api/major/importMajorList`,
     // 修改专业
     changeMajor: baseUrl + `/api/major/changeMajor`,
+    // 获取专业列表（根据学院ID）
+    getMajorListBycollegeId: baseUrl + `/api/major/getMajorListByCollegeId`,
 
     // 班级管理
     getClassList: baseUrl + `/api/vclass/getClassList`,
     // 导出数据 全部班级
     getAllClassList: baseUrl + `/api/vclass/getAllClassList`,
+    // 获取年级
+    getGradeList: baseUrl + `/api/user/getGradeList`,
     // 班级详情
     getClassDetail: baseUrl + `/api/vclass/getClassDetail`,
     // 添加班级

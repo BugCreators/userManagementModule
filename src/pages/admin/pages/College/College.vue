@@ -63,13 +63,11 @@ export default {
   },
   computed: {
     selectedId() {
-      return this.$refs["list"].selectedId.map(
-        (value, index, array) => {
-          return {
-            id: array[index]["id"]
-          };
-        }
-      );
+      return this.$refs["list"].selectedId.map((value, index, array) => {
+        return {
+          id: array[index]["id"]
+        };
+      });
     },
     showLogoLog() {
       return this.$store.state.showLogoLog;
@@ -104,9 +102,7 @@ export default {
       this.$refs["list"].dataChange(data);
     },
     datasDelete() {
-      this.$refs["list"].datasDeleteConfirm(
-        this.$refs["list"].selectedId
-      );
+      this.$refs["list"].datasDeleteConfirm(this.$refs["list"].selectedId);
     },
     listExport() {
       this.$refs["list"].listExportConfirm();

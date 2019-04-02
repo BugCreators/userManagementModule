@@ -51,7 +51,7 @@ export default {
     return {
       i18n: {
         college: "学院",
-        department: "部门",
+        department: "院系",
         major: "专业",
         class: "班级"
       }

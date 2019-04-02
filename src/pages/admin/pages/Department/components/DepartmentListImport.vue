@@ -27,7 +27,7 @@
         只能上传xls/xlsx文件
       </div>
     </div>
-    <ClassList v-if="listExcel" :listExcel="listExcel" :isImport="true" />
+    <DepartmentList v-if="listExcel" :listExcel="listExcel" :isImport="true" />
     <div class="logWarp">
       <el-button type="primary" @click="importExcel" :disabled="isImport"
         >导入</el-button
@@ -39,14 +39,14 @@
 
 <script>
 import { Button, Dialog, Loading, Message, Upload } from "element-ui";
-import ClassList from "./ClassList";
+import DepartmentList from "./DepartmentList";
 import XLSX from "xlsx";
 import { downloadExl, changeExlHaed } from "@/assets/js/tool";
 
 export default {
-  name: "classListImport",
+  name: "departmentListImport",
   components: {
-    ClassList,
+    DepartmentList,
     elButton: Button,
     elDialog: Dialog,
     elUpload: Upload
@@ -55,9 +55,9 @@ export default {
     return {
       listExcel: [],
       i18n: {
-        grade: "年级",
-        name: "班级名",
-        majorName: "专业名"
+        name: "专业名",
+        collegeName: "学院",
+        description: "简介"
       },
       title: "批量导入",
       isImport: true // 导入按钮点击状态
@@ -79,7 +79,7 @@ export default {
         listHead[this.i18n[v]] = "";
       });
       listHeadArr.push(listHead);
-      downloadExl(listHeadArr, "xlsx", "班级列表模板");
+      downloadExl(listHeadArr, "xlsx", "院系列表模板");
     },
     readExcel(file) {
       const xls = "application/vnd.ms-excel",
@@ -105,16 +105,12 @@ export default {
           sheetArray.forEach(item => {
             that.isImport = false;
             item.message = "";
-            if (!item.grade) {
-              item.message = "年级不能为空！";
-              that.isImport = true;
-            }
             if (!item.name) {
-              item.message += "班级名不能为空！";
+              item.message = "院系名不能为空！";
               that.isImport = true;
             }
-            if (!item.majorName) {
-              item.message += "专业名不能为空！";
+            if (!item.collegeName) {
+              item.message += "学院名不能为空！";
               that.isImport = true;
             }
             that.listExcel.push(item);
@@ -138,9 +134,9 @@ export default {
         text: "导入中，请稍候···"
       });
       this.$store.dispatch("postItems", {
-        url: this.$store.state.importClassList,
+        url: this.$store.state.importDepartmentList,
         query: {
-          classList: this.listExcel,
+          departmentList: this.listExcel,
           token: this.$store.state.userInfo.token
         },
         cb(res) {

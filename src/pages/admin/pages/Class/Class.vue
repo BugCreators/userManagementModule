@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SearchBox :moduleName="moduleName" :showSelect="true" />
+    <SearchBox :moduleName="moduleName" :showSelect="true" :basisOfGrade="true" />
     <ListWarp
       :addFuncName="addFuncName"
       :count="count"
@@ -88,9 +88,7 @@ export default {
       this.$refs["list"].dataChange(data);
     },
     datasDelete() {
-      this.$refs["list"].datasDeleteConfirm(
-        this.$refs["list"].selectedId
-      );
+      this.$refs["list"].datasDeleteConfirm(this.$refs["list"].selectedId);
     },
     listExport() {
       this.$refs["list"].listExportConfirm();
