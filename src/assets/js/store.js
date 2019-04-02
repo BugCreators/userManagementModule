@@ -197,6 +197,10 @@ export default new Vuex.Store({
     // 用户修改密码
     changePasswordByUser: baseUrl + `/api/user/changePasswordByUser`,
     /**************管理员管理*****************/
+    // 角色管理
+    // 角色列表
+    getRoleList: baseUrl + `/api/role/getRoleList`,
+    // 权限列表
     getAuthorityList: baseUrl + `/api/authority/getAuthorityList`,
     /*****************END********************/
     /***************院系管理*****************/

@@ -3,9 +3,11 @@
     <el-select v-if="showSelect" v-model="searchValue.basis">
       <el-option :label="options[0].label" :value="options[0].value">
       </el-option>
-      <el-option :label="options[1].label" :value="options[1].value">
+      <el-option v-if="basisOfCollege" :label="options[1].label" :value="options[1].value">
       </el-option>
       <el-option v-if="basisOfGrade" :label="options[2].label" :value="options[2].value">
+      </el-option>
+      <el-option v-if="basisOfModule" :label="options[3].label" :value="options[3].value">
       </el-option>
     </el-select>
     <el-input
@@ -37,7 +39,18 @@ export default {
   props: {
     moduleName: String,
     showSelect: Boolean,
-    basisOfGrade: Boolean
+    basisOfCollege: {
+      type: Boolean,
+      default: true
+    },
+    basisOfGrade: {
+      type: Boolean,
+      default: false
+    },
+    basisOfModule: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -53,6 +66,10 @@ export default {
         {
           value: 2,
           label: "按年级搜索"
+        },
+        {
+          value: 3,
+          label: "按模块搜索"
         }
       ],
       searchValue: {

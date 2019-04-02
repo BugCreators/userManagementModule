@@ -1,5 +1,5 @@
 <template>
-  <div class="classList">
+  <div class="rolementList">
     <el-table
       id="list"
       :row-style="rowStyle"
@@ -8,23 +8,22 @@
     >
       <el-table-column type="selection" width="50"></el-table-column>
       <el-table-column
-        prop="grade"
-        width="100"
-        :label="i18n['grade']"
-      ></el-table-column>
-      <el-table-column prop="name" :label="i18n['name']"></el-table-column>
-      <el-table-column
-        prop="majorName"
-        :label="i18n['majorName']"
+        prop="name"
+        :label="i18n['name']"
       ></el-table-column>
       <el-table-column
-        v-if="!isImport"
-        prop="collegeName"
-        :label="i18n['collegeName']"
+        prop="description"
+        :label="i18n['description']"
       ></el-table-column>
       <el-table-column
-        prop="studentCount"
-        :label="i18n['studentCount']"
+        :label="i18n['permission']"
+      ><template slot-scope="scope">
+        <span v-for="item in scope.row.permission">{{ item.cn_name + '，' }}</span>
+      </template>
+      </el-table-column>
+      <el-table-column
+        prop="level"
+        :label="i18n['level']"
       ></el-table-column>
       <el-table-column
         v-if="isImport"
@@ -72,7 +71,7 @@ import {
 import { downloadExl } from "@/assets/js/tool";
 
 export default {
-  name: "classList",
+  name: "roleList",
   components: {
     elPagination: Pagination,
     elTable: Table,
@@ -97,10 +96,10 @@ export default {
         height: "100px"
       },
       i18n: {
-        grade: "年级",
-        name: "班级名",
-        majorName: "专业名",
-        collegeName: "学院"
+        name: "角色名",
+        description: "角色介绍",
+        permission: "拥有权限",
+        level: "权限等级"
       },
       selectedId: []
     };
@@ -134,7 +133,7 @@ export default {
       let that = this;
       let loading = Loading.service(this.loadingOpts);
       return this.$store.dispatch("postItems", {
-        url: that.$store.state.getClassList,
+        url: that.$store.state.getRoleList,
         query: {
           pageSize: that.pageSize,
           pageIndex: that.pageIndex,
@@ -173,11 +172,11 @@ export default {
       let that = this;
       if (ids.length <= 0) {
         Message.warning({
-          message: "请选择至少一个班级"
+          message: "请选择至少一个角色"
         });
         return;
       }
-      MessageBox.confirm("此操作将删除所选班级，是否继续？", "提示", {
+      MessageBox.confirm("此操作将删除所选角色，是否继续？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -197,9 +196,9 @@ export default {
     datasDelete(ids) {
       let that = this;
       this.$store.dispatch("postItems", {
-        url: this.$store.state.delClass,
+        url: this.$store.state.delDepartments,
         query: {
-          classId: ids,
+          departmentsId: ids,
           token: this.$store.state.userInfo.token
         },
         cb(res) {
@@ -212,47 +211,6 @@ export default {
           } else {
             Message.error(res.msg);
           }
-        }
-      });
-    },
-    listExportConfirm() {
-      let that = this;
-      MessageBox.confirm("确认导出当前列表数据？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-        callback(action) {
-          switch (action) {
-            case "cancel":
-            case "close":
-              Message.info("取消导出");
-              break;
-            case "confirm":
-              that.listExport();
-              break;
-          }
-        }
-      });
-    },
-    listExport() {
-      let allList,
-        that = this;
-      let loading = Loading.service({
-        text: "获取数据导出中，请稍候..."
-      });
-      return this.$store.dispatch("postItems", {
-        url: that.$store.state.getAllClassList,
-        query: {
-          token: that.$store.state.userInfo.token
-        },
-        cb(res) {
-          if (res.code === 200) {
-            allList = res.data;
-            downloadExl(allList, "xlsx", "班级列表");
-          } else {
-            Message.error(res.msg);
-          }
-          loading.close();
         }
       });
     },

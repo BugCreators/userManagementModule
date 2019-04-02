@@ -63,7 +63,7 @@ import {
 } from "element-ui";
 
 export default {
-  name: "departmentDetailLog",
+  name: "majorDetailLog",
   components: {
     elButton: Button,
     elDialog: Dialog,
