@@ -27,6 +27,12 @@
         :value="options[4].value"
       >
       </el-option>
+      <el-option
+        v-if="basisOfClass"
+        :label="options[5].label"
+        :value="options[5].value"
+      >
+      </el-option>
     </el-select>
     <el-input
       class="input"
@@ -56,7 +62,10 @@ export default {
   },
   props: {
     moduleName: String,
-    showSelect: Boolean,
+    showSelect: {
+      type: Boolean,
+      default: true
+    },
     basisOfCollege: {
       type: Boolean,
       default: true
@@ -72,6 +81,10 @@ export default {
     basisOfLevel: {
       type: Boolean,
       default: false
+    },
+    basisOfClass: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -83,7 +96,7 @@ export default {
         },
         {
           value: 1,
-          label: "按学院名搜索"
+          label: "按学院搜索"
         },
         {
           value: 2,
@@ -96,6 +109,10 @@ export default {
         {
           value: 4,
           label: "按等级搜索"
+        },
+        {
+          value: 5,
+          label: "按班级搜素"
         }
       ],
       searchValue: {

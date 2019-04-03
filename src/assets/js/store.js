@@ -109,7 +109,7 @@ export default new Vuex.Store({
           },
           {
             name: "department",
-            title: "学系机构",
+            title: "教学系别",
             href: "department",
             show: "select_department"
           },
@@ -274,7 +274,7 @@ export default new Vuex.Store({
       baseUrl + `/api/department/getDepartmentListByCollegeId`,
 
     // 专业管理
-    // 学院列表
+    // 专业列表
     getMajorList: baseUrl + `/api/major/getMajorList`,
     // 导出数据 全部专业
     getAllMajorList: baseUrl + `/api/major/getAllMajorList`,
@@ -308,7 +308,27 @@ export default new Vuex.Store({
     // 修改班级
     changeClass: baseUrl + `/api/vclass/changeClass`,
     /*****************END*******************/
-
+    /************账号管理 BEGIN**************/
+    // 学生列表
+    // 学生列表
+    getStudentList: baseUrl + `/api/student/getStudentList`,
+    // 导出数据 全部专业
+    getAllStudentList: baseUrl + `/api/student/getAllStudentList`,
+    // 专业详情
+    getStudentDetail: baseUrl + `/api/student/getStudentDetail`,
+    // 添加专业
+    addStudent: baseUrl + `/api/student/addStudent`,
+    // 删除专业
+    delStudents: baseUrl + `/api/student/deleteStudent`,
+    // 批量添加
+    importStudentList: baseUrl + `/api/student/importStudentList`,
+    // 重置密码
+    resetPw: baseUrl + `/api/student/resetPw`,
+    // 修改专业
+    changeStudent: baseUrl + `/api/student/changeStudent`,
+    // 获取专业列表（根据学院ID）
+    getMajorListBycollegeId: baseUrl + `/api/major/getMajorListByCollegeId`,
+    /*****************END*******************/
     /************获取权限 BEGIN**************/
     // 进入后台权限
     intoBackstage: baseUrl + `/api/user/getIntoBackstage`,
