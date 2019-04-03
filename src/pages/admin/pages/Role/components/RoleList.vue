@@ -7,24 +7,19 @@
       @selection-change="selectedChange"
     >
       <el-table-column type="selection" width="50"></el-table-column>
-      <el-table-column
-        prop="name"
-        :label="i18n['name']"
-      ></el-table-column>
+      <el-table-column prop="name" :label="i18n['name']"></el-table-column>
       <el-table-column
         prop="description"
         :label="i18n['description']"
       ></el-table-column>
-      <el-table-column
-        :label="i18n['permission']"
-      ><template slot-scope="scope">
-        <span v-for="item in scope.row.permission" :key="item.index">{{ item.cn_name + '，' }}</span>
-      </template>
+      <el-table-column :label="i18n['permission']"
+        ><template slot-scope="scope">
+          <span v-for="item in scope.row.permission" :key="item.index">{{
+            item.cn_name + "，"
+          }}</span>
+        </template>
       </el-table-column>
-      <el-table-column
-        prop="level"
-        :label="i18n['level']"
-      ></el-table-column>
+      <el-table-column prop="level" :label="i18n['level']"></el-table-column>
       <el-table-column
         v-if="isImport"
         fixed="right"
@@ -68,7 +63,6 @@ import {
   Table,
   TableColumn
 } from "element-ui";
-import { downloadExl } from "@/assets/js/tool";
 
 export default {
   name: "roleList",
@@ -78,7 +72,6 @@ export default {
     elTableColumn: TableColumn
   },
   props: {
-    listExcel: Array,
     isImport: Boolean
   },
   data() {
@@ -113,10 +106,6 @@ export default {
     }
   },
   watch: {
-    listExcel(newV) {
-      this.listCount = newV.length;
-      this.list = newV.slice(0, this.pageSize);
-    },
     searchValue() {
       this.pageIndex = 1;
       this.getList();
@@ -124,9 +113,7 @@ export default {
   },
   mounted() {
     this.loadingOpts.target = document.getElementById("list");
-    if (!this.listExcel) {
-      this.getList();
-    }
+    this.getList();
   },
   methods: {
     getList() {
@@ -213,12 +200,6 @@ export default {
           }
         }
       });
-    },
-    importListChange() {
-      this.list = this.listExcel.slice(
-        this.pageSize * (this.pageIndex - 1),
-        this.pageSize + this.pageSize * (this.pageIndex - 1)
-      );
     },
     pageChange(page) {
       this.pageIndex = page;

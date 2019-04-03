@@ -13,14 +13,21 @@
       :rules="rules"
     >
       <el-form-item :label="i18n['name']" prop="name">
-        <el-input v-model="info.name" name="name" focus>
+        <el-input
+          v-model="info.name"
+          name="name"
+          :placeholder="'请输入' + i18n['name']"
+        >
           <i class="errorMsg" slot="suffix">
             {{ errorMsg }}
           </i>
         </el-input>
       </el-form-item>
       <el-form-item :label="i18n['collegeName']" prop="college_id">
-        <el-select v-model="info.college_id" placeholder="请选择学院">
+        <el-select
+          v-model="info.college_id"
+          :placeholder="'请选择' + i18n['name']"
+        >
           <el-option
             v-for="item in collegeList"
             :key="item.id"
@@ -39,6 +46,7 @@
           v-model="info.description"
           name="description"
           :autosize="{ minRows: 3, maxRows: 5 }"
+          :placeholder="'请输入' + i18n['description']"
         ></el-input>
       </el-form-item>
     </el-form>
@@ -92,9 +100,7 @@ export default {
       },
       loading: true,
       rules: {
-        name: [
-          { required: true, message: "请输入专业名称", trigger: "blur" }
-        ],
+        name: [{ required: true, message: "请输入专业名称", trigger: "blur" }],
         college_id: [
           { required: true, message: "请选择学院", trigger: "change" }
         ]

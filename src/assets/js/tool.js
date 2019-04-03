@@ -55,6 +55,7 @@ function downloadExl(json, type, fileName) {
     )
     .reduce((prev, next) => prev.concat(next))
     .forEach(
+      // eslint-disable-next-line
       (v, i) =>
         (tmpdata[v.position] = {
           v: v.v
@@ -101,6 +102,7 @@ function downloadExl(json, type, fileName) {
 }
 // 获取26个英文字母用来表示excel的列
 function getCharCol(n) {
+  // eslint-disable-next-line
   let temCol = "",
     s = "",
     m = 0;

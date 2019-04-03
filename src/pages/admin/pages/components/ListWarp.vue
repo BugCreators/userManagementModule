@@ -50,6 +50,7 @@ export default {
   data() {
     return {
       i18n: {
+        branch: "部门",
         role: "角色",
         college: "学院",
         department: "院系",

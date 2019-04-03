@@ -13,7 +13,11 @@
       :rules="rules"
     >
       <el-form-item :label="i18n['name']" prop="name">
-        <el-input v-model="info.name" name="name" placeholder="请输入角色名">
+        <el-input
+          v-model="info.name"
+          name="name"
+          :placeholder="'请输入' + i18n['name']"
+        >
           <i class="errorMsg" slot="suffix">
             {{ errorMsg }}
           </i>
@@ -25,12 +29,15 @@
           v-model="info.description"
           name="description"
           :autosize="{ minRows: 3, maxRows: 5 }"
+          :placeholder="'请输入' + i18n['description']"
         ></el-input>
       </el-form-item>
       <el-form-item :label="i18n['level']" prop="level">
-        <el-input v-model.number="info.level" 
-          name="level" 
-          placeholder="请输入0~127的整数，数字越小权限等级越大">
+        <el-input
+          v-model.number="info.level"
+          name="level"
+          placeholder="请输入0~127的整数，数字越小权限等级越大"
+        >
           <i class="errorMsg" slot="suffix">
             {{ errorMsg2 }}
           </i>
@@ -38,28 +45,42 @@
       </el-form-item>
       <el-form-item :label="i18n['authority']">
         <div v-if="info.module.length">
-          <el-card v-for="item in info.module" :key="item.index" class="box-card">
+          <el-card
+            v-for="item in info.module"
+            :key="item.index"
+            class="box-card"
+          >
             <div slot="header" class="clearfix">
               <span>{{ item.cn_name }}</span>
             </div>
             <el-checkbox-group v-model="item.ids">
-              <el-checkbox v-for="authority in item.authorityField" 
+              <el-checkbox
+                v-for="authority in item.authorityField"
                 v-model="authority.permission"
-                :label="authority.id" 
-                :key="authority.index">{{authority.cn_name}}</el-checkbox>
+                :label="authority.id"
+                :key="authority.index"
+                >{{ authority.cn_name }}</el-checkbox
+              >
             </el-checkbox-group>
           </el-card>
         </div>
         <div v-else>
-          <el-card v-for="item in moduleList" :key="item.index" class="box-card">
+          <el-card
+            v-for="item in moduleList"
+            :key="item.index"
+            class="box-card"
+          >
             <div slot="header" class="clearfix">
               <span>{{ item.cn_name }}</span>
             </div>
             <el-checkbox-group v-model="item.ids">
-              <el-checkbox v-for="authority in item.authorityField" 
+              <el-checkbox
+                v-for="authority in item.authorityField"
                 v-model="authority.permission"
-                :label="authority.id" 
-                :key="authority.index">{{authority.cn_name}}</el-checkbox>
+                :label="authority.id"
+                :key="authority.index"
+                >{{ authority.cn_name }}</el-checkbox
+              >
             </el-checkbox-group>
           </el-card>
         </div>
@@ -120,12 +141,10 @@ export default {
       },
       loading: true,
       rules: {
-        name: [
-          { required: true, message: "请输入角色名" }
-        ],
+        name: [{ required: true, message: "请输入角色名" }],
         level: [
           { required: true, message: "请输入权限等级" },
-          { type: "number", min: 0, max: 127, message: "请输入0~127的整数"}
+          { type: "number", min: 0, max: 127, message: "请输入0~127的整数" }
         ]
       },
       checkedActions: [],
@@ -163,7 +182,6 @@ export default {
           loading.close();
           if (res.code === 200) {
             that.info = res.data;
-
           } else {
             Message.error(res.msg);
             that.closeDetailLog();
@@ -176,7 +194,7 @@ export default {
       let loading = Loading.service({
         target: document.getElementById("form")
       });
-      this.$store.dispatch('postItems', {
+      this.$store.dispatch("postItems", {
         url: this.$store.state.getModuleList,
         query: {
           token: this.$store.state.userInfo.token
@@ -189,7 +207,7 @@ export default {
             Message.error(res.msg);
           }
         }
-      })
+      });
     },
     formSubmit() {
       let url,

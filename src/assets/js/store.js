@@ -197,11 +197,27 @@ export default new Vuex.Store({
     // 用户修改密码
     changePasswordByUser: baseUrl + `/api/user/changePasswordByUser`,
     /**************管理员管理*****************/
+    // 部门管理
+    // 部门列表
+    getBranchList: baseUrl + `/api/branch/getBranchList`,
+    // 导出数据 全部部门
+    getAllBranchList: baseUrl + `/api/branch/getAllBranchList`,
+    // 部门详情
+    getBranchDetail: baseUrl + `/api/branch/getBranchDetail`,
+    // 添加部门
+    addBranch: baseUrl + `/api/branch/addBranch`,
+    // 删除部门
+    delBranch: baseUrl + `/api/branch/deleteBranch`,
+    // 批量添加
+    importBranchList: baseUrl + `/api/branch/importBranchList`,
+    // 修改部门
+    changeBranch: baseUrl + `/api/branch/changeBranch`,
+
     // 角色管理
     // 角色列表
     getRoleList: baseUrl + `/api/role/getRoleList`,
     // 角色详情
-    getRoleDetail: baseUrl + `/api/role/getRoleDetail`,    
+    getRoleDetail: baseUrl + `/api/role/getRoleDetail`,
     // 修改角色
     changeRole: baseUrl + `/api/role/changeRole`,
     // 获取模块列表
@@ -254,7 +270,8 @@ export default new Vuex.Store({
     // 批量添加
     importDepartmentList: baseUrl + `/api/department/importDepartmentList`,
     // 获取院系列表（根据学院ID）
-    getDepartmentListByCollegeId: baseUrl + `/api/department/getDepartmentListByCollegeId`,
+    getDepartmentListByCollegeId:
+      baseUrl + `/api/department/getDepartmentListByCollegeId`,
 
     // 专业管理
     // 学院列表

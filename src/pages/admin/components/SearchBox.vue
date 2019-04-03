@@ -3,13 +3,29 @@
     <el-select v-if="showSelect" v-model="searchValue.basis">
       <el-option :label="options[0].label" :value="options[0].value">
       </el-option>
-      <el-option v-if="basisOfCollege" :label="options[1].label" :value="options[1].value">
+      <el-option
+        v-if="basisOfCollege"
+        :label="options[1].label"
+        :value="options[1].value"
+      >
       </el-option>
-      <el-option v-if="basisOfGrade" :label="options[2].label" :value="options[2].value">
+      <el-option
+        v-if="basisOfGrade"
+        :label="options[2].label"
+        :value="options[2].value"
+      >
       </el-option>
-      <el-option v-if="basisOfModule" :label="options[3].label" :value="options[3].value">
+      <el-option
+        v-if="basisOfModule"
+        :label="options[3].label"
+        :value="options[3].value"
+      >
       </el-option>
-      <el-option v-if="basisOfLevel" :label="options[4].label" :value="options[4].value">
+      <el-option
+        v-if="basisOfLevel"
+        :label="options[4].label"
+        :value="options[4].value"
+      >
       </el-option>
     </el-select>
     <el-input
@@ -79,7 +95,7 @@ export default {
         },
         {
           value: 4,
-          label: "按权限等级搜索"
+          label: "按等级搜索"
         }
       ],
       searchValue: {

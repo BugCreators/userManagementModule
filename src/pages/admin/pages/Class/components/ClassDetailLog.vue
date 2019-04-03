@@ -13,9 +13,9 @@
       :rules="rules"
     >
       <el-form-item :label="i18n['grade']" prop="grade">
-        <el-select v-model="info.grade" placeholder="请选择年级">
+        <el-select v-model="info.grade" :placeholder="'请选择' + i18n['grade']">
           <el-option
-            v-for="value, index in gradeList"
+            v-for="(value, index) in gradeList"
             :key="index"
             :label="value"
             :value="value"
@@ -27,14 +27,22 @@
         </i>
       </el-form-item>
       <el-form-item :label="i18n['name']" prop="name">
-        <el-input v-model="info.name" name="name" focus>
+        <el-input
+          v-model="info.name"
+          name="name"
+          :placeholder="'请输入' + i18n['name']"
+        >
           <i class="errorMsg" slot="suffix">
             {{ errorMsg }}
           </i>
         </el-input>
       </el-form-item>
       <el-form-item :label="i18n['collegeName']" prop="college_id">
-        <el-select v-model="info.college_id" @change="collegeChange" placeholder="请选择学院">
+        <el-select
+          v-model="info.college_id"
+          @change="collegeChange"
+          :placeholder="'请选择' + i18n['collegeName']"
+        >
           <el-option
             v-for="item in collegeList"
             :key="item.id"
@@ -48,7 +56,10 @@
         </i>
       </el-form-item>
       <el-form-item :label="i18n['majorName']" prop="major_id">
-        <el-select v-model="info.major_id" placeholder="请选择专业">
+        <el-select
+          v-model="info.major_id"
+          :placeholder="'请选择' + i18n['majorName']"
+        >
           <el-option
             v-for="item in majorList"
             :key="item.id"
@@ -111,23 +122,15 @@ export default {
       i18n: {
         grade: "年级",
         name: "班级名",
-        majorName: "专业名",
+        majorName: "专业",
         collegeName: "学院"
       },
       loading: true,
       rules: {
-        grade: [
-          { required: true, message: "请选择年级", trigger: "change" }
-        ],
-        name: [
-          { required: true, message: "请输入专业名称", trigger: "blur" }
-        ],
-        college_id: [
-          { required: true, message: "请选择学院", trigger: "change" }
-        ],
-        major_id: [
-          { required: true, message: "请选择专业", trigger: "change" }
-        ]
+        grade: [{ required: true, message: "请选择年级" }],
+        name: [{ required: true, message: "请输入专业名称" }],
+        college_id: [{ required: true, message: "请选择学院" }],
+        major_id: [{ required: true, message: "请选择专业" }]
       },
       gradeList: {},
       collegeList: {},
@@ -208,9 +211,12 @@ export default {
         },
         cb(res) {
           if (res.code === 200) {
-            that.majorList = res.data;
-            if (isChange) {
-              that.info.major_id = that.majorList[0].id
+            if (res.data.length > 0) {
+              that.majorList = res.data;
+              isChange ? (that.info.major_id = that.majorList[0].id) : "";
+            } else {
+              that.majorList = {};
+              that.info.major_id = "";
             }
           } else {
             Message.error(res.msg);
@@ -230,7 +236,7 @@ export default {
         url = this.$store.state.addClass;
       }
       if (this.info.grade === "") {
-        this.errorMsg4 = "年级不能为空！"
+        this.errorMsg4 = "年级不能为空！";
         return;
       }
       this.errorMsg4 = "";

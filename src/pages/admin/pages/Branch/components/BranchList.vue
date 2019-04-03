@@ -1,5 +1,5 @@
 <template>
-  <div class="departmentList">
+  <div class="branchList">
     <el-table
       id="list"
       :row-style="rowStyle"
@@ -7,22 +7,41 @@
       @selection-change="selectedChange"
     >
       <el-table-column type="selection" width="50"></el-table-column>
-      <el-table-column prop="name" :label="i18n['name']"></el-table-column>
       <el-table-column
-        prop="collegeName"
-        :label="i18n['collegeName']"
+        prop="name"
+        width="200"
+        :label="i18n['name']"
+      ></el-table-column>
+      <el-table-column prop="website" width="200" :label="i18n['website']"
+        ><template slot-scope="scope">
+          <a target="_blank" :href="scope.row.website">{{
+            scope.row.website
+          }}</a>
+        </template></el-table-column
+      >
+      <el-table-column
+        prop="operating_duty"
+        :label="i18n['operating_duty']"
       ></el-table-column>
       <el-table-column
         prop="description"
         :label="i18n['description']"
       ></el-table-column>
+      <el-table-column prop="level" width="100" :label="i18n['level']"
+        ><template slot-scope="scope">
+          <span v-if="!isImport">{{
+            scope.row.level == 0 ? "校级" : "院级"
+          }}</span>
+          <span v-else>{{ scope.row.level }}</span>
+        </template></el-table-column
+      >
       <el-table-column
         v-if="isImport"
         fixed="right"
-        label="消息"
         prop="message"
         width="100"
         :class-name="'errorMsg'"
+        :label="i18n['message']"
       ></el-table-column>
       <el-table-column v-if="!isImport" label="操作" width="100">
         <template slot-scope="scope">
@@ -62,7 +81,7 @@ import {
 import { downloadExl } from "@/assets/js/tool";
 
 export default {
-  name: "departmentList",
+  name: "branchList",
   components: {
     elPagination: Pagination,
     elTable: Table,
@@ -87,9 +106,12 @@ export default {
         height: "100px"
       },
       i18n: {
-        name: "教学系名",
-        collegeName: "学院",
-        description: "简介"
+        name: "部门名",
+        website: "官网链接",
+        description: "概述",
+        operating_duty: "主要职能",
+        level: "等级",
+        message: "消息"
       },
       selectedId: []
     };
@@ -123,7 +145,7 @@ export default {
       let that = this;
       let loading = Loading.service(this.loadingOpts);
       return this.$store.dispatch("postItems", {
-        url: that.$store.state.getDepartmentList,
+        url: that.$store.state.getBranchList,
         query: {
           pageSize: that.pageSize,
           pageIndex: that.pageIndex,
@@ -162,11 +184,11 @@ export default {
       let that = this;
       if (ids.length <= 0) {
         Message.warning({
-          message: "请选择至少一个教学系"
+          message: "请选择至少一个部门"
         });
         return;
       }
-      MessageBox.confirm("此操作将删除所选教学系，是否继续？", "提示", {
+      MessageBox.confirm("此操作将删除所选部门的所有信息，是否继续？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -186,9 +208,9 @@ export default {
     datasDelete(ids) {
       let that = this;
       this.$store.dispatch("postItems", {
-        url: this.$store.state.delDepartments,
+        url: this.$store.state.delBranch,
         query: {
-          departmentsId: ids,
+          branchsId: ids,
           token: this.$store.state.userInfo.token
         },
         cb(res) {
@@ -230,14 +252,21 @@ export default {
         text: "获取数据导出中，请稍候..."
       });
       return this.$store.dispatch("postItems", {
-        url: that.$store.state.getAllDepartmentList,
+        url: that.$store.state.getAllBranchList,
         query: {
           token: that.$store.state.userInfo.token
         },
         cb(res) {
           if (res.code === 200) {
-            allList = res.data;
-            downloadExl(allList, "xlsx", "院系列表");
+            allList = res.data.map(item => {
+              if (item["等级"] == 0) {
+                item["等级"] = "校级";
+              } else {
+                item["等级"] = "院级";
+              }
+              return item;
+            });
+            downloadExl(allList, "xlsx", "部门列表");
           } else {
             Message.error(res.msg);
           }

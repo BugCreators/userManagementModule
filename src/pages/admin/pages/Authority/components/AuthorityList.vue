@@ -5,7 +5,11 @@
       :data="authorityList"
       @selection-change="selectedChange"
     >
-      <el-table-column label="权限名" prop="cn_name" width="200"></el-table-column>
+      <el-table-column
+        label="权限名"
+        prop="cn_name"
+        width="200"
+      ></el-table-column>
       <el-table-column label="英文名" prop="name" width="200"></el-table-column>
       <el-table-column label="权限描述" prop="description"></el-table-column>
       <el-table-column label="所属模块" prop="moduleName"></el-table-column>

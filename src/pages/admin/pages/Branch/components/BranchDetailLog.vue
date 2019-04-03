@@ -23,18 +23,26 @@
           </i>
         </el-input>
       </el-form-item>
-      <el-form-item :label="i18n['en_name']" prop="en_name">
-        <el-input
-          v-model="info.en_name"
-          name="en_name"
-          :placeholder="'请输入' + i18n['en_name']"
-        ></el-input>
-      </el-form-item>
-      <el-form-item :label="i18n['website']" prop="website">
+      <el-form-item prop="website" :label="i18n['website']">
         <el-input
           v-model="info.website"
           name="website"
           :placeholder="'请输入' + i18n['website']"
+        ></el-input>
+      </el-form-item>
+      <el-form-item :label="i18n['level']">
+        <el-radio-group v-model="info.level">
+          <el-radio :label="0">校级</el-radio>
+          <el-radio :label="1">院级</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item :label="i18n['operating_duty']" prop="operating_duty">
+        <el-input
+          type="textarea"
+          v-model="info.operating_duty"
+          name="operating_duty"
+          :autosize="{ minRows: 10, maxRows: 15 }"
+          :placeholder="'请输入' + i18n['operating_duty']"
         ></el-input>
       </el-form-item>
       <el-form-item :label="i18n['description']" prop="description">
@@ -62,17 +70,21 @@ import {
   FormItem,
   Input,
   Loading,
-  Message
+  Message,
+  Radio,
+  RadioGroup
 } from "element-ui";
 
 export default {
-  name: "collegeDetailLog",
+  name: "branchDetailLog",
   components: {
     elButton: Button,
     elDialog: Dialog,
     elForm: Form,
     elFormItem: FormItem,
-    elInput: Input
+    elInput: Input,
+    elRadio: Radio,
+    elRadioGroup: RadioGroup
   },
   props: {
     dataId: Number
@@ -81,20 +93,22 @@ export default {
     return {
       info: {
         name: "",
-        en_name: "",
+        operating_duty: "",
+        level: 1,
         description: "",
         website: ""
       },
       i18n: {
-        name: "学院名",
-        en_name: "英文名",
+        name: "部门名",
         website: "官网链接",
+        level: "等级",
+        operating_duty: "主要职能",
         description: "概述"
       },
       errorMsg: "",
       loading: true,
       rules: {
-        name: [{ required: true, message: "请输入学院名称" }]
+        name: [{ required: true, message: "请输入部门名称" }]
       }
     };
   },
@@ -106,7 +120,7 @@ export default {
   computed: {
     logTitle() {
       let title = this.dataId ? "编辑" : "添加";
-      return title + "学院";
+      return title + "部门";
     },
     showDetailLog() {
       return this.$store.state.showDetailLog;
@@ -117,7 +131,7 @@ export default {
       let that = this;
       let loading = Loading.service();
       this.$store.dispatch("getItems", {
-        url: this.$store.state.getCollegeDetailByAdmin,
+        url: this.$store.state.getBranchDetail,
         query: {
           id: this.dataId,
           token: this.$store.state.userInfo.token
@@ -137,9 +151,9 @@ export default {
       let url,
         that = this;
       if (this.dataId) {
-        url = this.$store.state.changeCollege;
+        url = this.$store.state.changeBranch;
       } else {
-        url = this.$store.state.addCollege;
+        url = this.$store.state.addBranch;
       }
       if (this.info.name === "") {
         this.errorMsg = "学院名不能为空！";
