@@ -10,21 +10,21 @@
       :moduleName="moduleName"
       @datasDeleteConfirm="datasDelete"
       @openDetailLog="openDetailLog"
-      @listExportConfirm="listExport"
+      @switchExportLog="switchExportLog"
     />
     <StudentList
       ref="list"
-      @openLogoLog="openLogoLog"
       @openDetailLog="openDetailLog"
       @changeCount="changeCount"
     />
     <StudentListImport @listChange="listChange" v-if="showImportLog" />
-    <MajorDetailLog
+    <StudentDetailLog
       v-if="showDetailLog"
       :dataId="currentId"
       @listChange="listChange"
       @dataChange="dataChange"
     />
+    <StudentListExport v-if="showExportLog" :showExportLog="showExportLog" @switchExportLog="switchExportLog"/>
   </div>
 </template>
 
@@ -40,6 +40,8 @@ export default {
       import(/* webpackChunkName: "studentListImport" */ "./components/StudentListImport"),
     StudentDetailLog: () =>
       import(/* webpackChunkName: "studentDetailLog" */ "./components/StudentDetailLog"),
+    StudentListExport: () =>
+      import(/* webpackChunkName: "studentListExport" */ "./components/StudentListExport"),
     StudentList,
     ListWarp,
     SearchBox
@@ -51,7 +53,8 @@ export default {
       moduleName: "student",
       addFuncName: "openDetailLog",
       delFuncName: "datasDeleteConfirm",
-      exportFuncName: "listExportConfirm"
+      exportFuncName: "switchExportLog",
+      showExportLog: false
     };
   },
   computed: {
@@ -61,9 +64,6 @@ export default {
           id: array[index]["id"]
         };
       });
-    },
-    showLogoLog() {
-      return this.$store.state.showLogoLog;
     },
     showDetailLog() {
       return this.$store.state.showDetailLog;
@@ -91,12 +91,8 @@ export default {
     datasDelete() {
       this.$refs["list"].datasDeleteConfirm(this.$refs["list"].selectedId);
     },
-    listExport() {
-      this.$refs["list"].listExportConfirm();
-    },
-    openLogoLog(id) {
-      this.currentId = id;
-      this.$store.commit("switchLogoLog");
+    switchExportLog() {
+      this.showExportLog = !this.showExportLog;
     },
     openDetailLog(id) {
       this.currentId = id;

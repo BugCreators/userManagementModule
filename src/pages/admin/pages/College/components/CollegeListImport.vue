@@ -150,26 +150,3 @@ export default {
   }
 };
 </script>
-
-<style lang="less">
-.excelUpload {
-  display: inline-block;
-  margin-left: 10px;
-  .el-upload-list {
-    float: right;
-  }
-}
-.importTip {
-  bottom: 0;
-  display: inline-block;
-  margin-left: 10px;
-  position: absolute;
-}
-.logWarp {
-  overflow: hidden;
-  button {
-    float: right;
-    margin-left: 10px;
-  }
-}
-</style>

@@ -8,10 +8,28 @@
     >
       <el-table-column type="selection" width="50"></el-table-column>
       <el-table-column
+        v-if="!isImport"
+        prop="collegeName"
+        label="学院"
+      ></el-table-column
+      ><el-table-column
+        v-if="!isImport"
+        prop="className"
+        label="班级"
+      ></el-table-column>
+      <el-table-column
         v-for="(value, key, index) in i18n"
         :prop="key"
         :key="index"
         :label="value"
+      ></el-table-column>
+      <el-table-column
+        v-if="isImport"
+        fixed="right"
+        label="消息"
+        prop="message"
+        width="100"
+        :class-name="'errorMsg'"
       ></el-table-column>
       <el-table-column v-if="!isImport" label="操作" width="100">
         <template slot-scope="scope">
@@ -79,8 +97,6 @@ export default {
       i18n: {
         realname: "姓名",
         number: "学号",
-        className: "班级",
-        collegeName: "学院",
         sex: "性别",
         phone: "电话",
         address: "地址",
@@ -130,9 +146,9 @@ export default {
           loading.close();
           if (res.code === 200) {
             let listTemp = res.data.list.map(item => {
-              if (item.sex = 1) {
+              if (item.sex) {
                 item.sex = "男";
-              } else if (item.sex = 0) {
+              } else {
                 item.sex = "女";
               };
               return item;
@@ -150,6 +166,7 @@ export default {
       this.selectedId = selection.map(item => item.id);
     },
     resetPwConfirm(id) {
+      let that = this;
       MessageBox.confirm("此操作将重置该用户密码为学号，是否继续？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -158,7 +175,7 @@ export default {
           switch (action) {
             case "cancel":
             case "close":
-              Message.info("取消删除");
+              Message.info("取消重置");
               break;
             case "confirm":
               that.resetPw(id);
@@ -168,9 +185,10 @@ export default {
       });
     },
     resetPw(id) {
-      this.$store.dispatch('getItem', {
+      this.$store.dispatch('getItems', {
         url: this.$store.state.resetPw,
         query: {
+          id: id,
           token: this.$store.state.userInfo.token
         },
         cb(res) {
@@ -199,11 +217,11 @@ export default {
       let that = this;
       if (ids.length <= 0) {
         Message.warning({
-          message: "请选择至少一个专业"
+          message: "请选择至少一个学生"
         });
         return;
       }
-      MessageBox.confirm("此操作将删除所选专业的所有信息，是否继续？", "提示", {
+      MessageBox.confirm("此操作将删除所选学生的所有信息，是否继续？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -238,47 +256,6 @@ export default {
           } else {
             Message.error(res.msg);
           }
-        }
-      });
-    },
-    listExportConfirm() {
-      let that = this;
-      MessageBox.confirm("确认导出当前列表数据？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-        callback(action) {
-          switch (action) {
-            case "cancel":
-            case "close":
-              Message.info("取消导出");
-              break;
-            case "confirm":
-              that.listExport();
-              break;
-          }
-        }
-      });
-    },
-    listExport() {
-      let allList,
-        that = this;
-      let loading = Loading.service({
-        text: "获取数据导出中，请稍候..."
-      });
-      return this.$store.dispatch("postItems", {
-        url: that.$store.state.getAllStudentList,
-        query: {
-          token: that.$store.state.userInfo.token
-        },
-        cb(res) {
-          if (res.code === 200) {
-            allList = res.data;
-            downloadExl(allList, "xlsx", "专业列表");
-          } else {
-            Message.error(res.msg);
-          }
-          loading.close();
         }
       });
     },

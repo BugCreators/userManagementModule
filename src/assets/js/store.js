@@ -312,22 +312,22 @@ export default new Vuex.Store({
     // 学生列表
     // 学生列表
     getStudentList: baseUrl + `/api/student/getStudentList`,
-    // 导出数据 全部专业
+    // 导出数据 全部学生
     getAllStudentList: baseUrl + `/api/student/getAllStudentList`,
-    // 专业详情
+    // 学生详情
     getStudentDetail: baseUrl + `/api/student/getStudentDetail`,
-    // 添加专业
+    // 添加学生
     addStudent: baseUrl + `/api/student/addStudent`,
-    // 删除专业
+    // 删除学生
     delStudents: baseUrl + `/api/student/deleteStudent`,
     // 批量添加
     importStudentList: baseUrl + `/api/student/importStudentList`,
     // 重置密码
-    resetPw: baseUrl + `/api/student/resetPw`,
-    // 修改专业
+    resetPw: baseUrl + `/api/student/resetPassword`,
+    // 修改学生
     changeStudent: baseUrl + `/api/student/changeStudent`,
-    // 获取专业列表（根据学院ID）
-    getMajorListBycollegeId: baseUrl + `/api/major/getMajorListByCollegeId`,
+    // 获取班级列表（根据专业ID）
+    getClassListByMajorId: baseUrl + `/api/vclass/getClassListByMajorId`,
     /*****************END*******************/
     /************获取权限 BEGIN**************/
     // 进入后台权限

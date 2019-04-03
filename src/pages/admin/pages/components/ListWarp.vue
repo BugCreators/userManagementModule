@@ -55,7 +55,8 @@ export default {
         college: "学院",
         department: "院系",
         major: "专业",
-        class: "班级"
+        class: "班级",
+        student: "学生"
       }
     };
   },

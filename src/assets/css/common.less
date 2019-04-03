@@ -37,6 +37,10 @@ select, input, textarea, button {
   margin: -20px;
 }
 
+.mgtb-10 {
+  margin: 10px 0;
+}
+
 // 缩略图
 .thumbnail{
   width: 50px;
@@ -194,6 +198,36 @@ select, input, textarea, button {
   .listPage {
     float: right;
     line-height: 2;
+  }
+}
+
+// 导入数据模板
+.el-form {
+  &.studentImport{
+    .el-form-item {
+      display: inline-block;
+      margin-right: 25px;
+    }
+  }
+}
+.excelUpload {
+  display: inline-block;
+  margin-left: 10px;
+  .el-upload-list {
+    float: right;
+  }
+}
+.importTip {
+  bottom: 0;
+  display: inline-block;
+  margin-left: 10px;
+  position: absolute;
+}
+.logWarp {
+  overflow: hidden;
+  button {
+    float: right;
+    margin-left: 10px;
   }
 }
 
