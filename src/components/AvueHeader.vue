@@ -21,7 +21,7 @@
           >{{ buttonInfo.text }}</a
         >
         <div v-else>
-          欢迎您！{{ $store.state.userInfo.roleName }}
+          欢迎您！{{ $store.state.userInfo.roleName || "游客" }}
           <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
               {{ $store.state.userInfo.realname

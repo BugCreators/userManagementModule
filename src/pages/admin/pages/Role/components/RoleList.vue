@@ -196,9 +196,9 @@ export default {
     datasDelete(ids) {
       let that = this;
       this.$store.dispatch("postItems", {
-        url: this.$store.state.delDepartments,
+        url: this.$store.state.delRoles,
         query: {
-          departmentsId: ids,
+          rolesId: ids,
           token: this.$store.state.userInfo.token
         },
         cb(res) {

@@ -13,7 +13,10 @@
       :rules="rules"
     >
       <el-form-item :label="i18n['name']" prop="name">
-        <el-input v-model="info.name" name="name">
+        <el-input v-model="info.name" name="name" placeholder="请输入角色名">
+          <i class="errorMsg" slot="suffix">
+            {{ errorMsg }}
+          </i>
         </el-input>
       </el-form-item>
       <el-form-item :label="i18n['description']" prop="description">
@@ -25,21 +28,41 @@
         ></el-input>
       </el-form-item>
       <el-form-item :label="i18n['level']" prop="level">
-        <el-input v-model.number="info.level" name="level">
+        <el-input v-model.number="info.level" 
+          name="level" 
+          placeholder="请输入0~127的整数，数字越小权限等级越大">
+          <i class="errorMsg" slot="suffix">
+            {{ errorMsg2 }}
+          </i>
         </el-input>
       </el-form-item>
       <el-form-item :label="i18n['authority']">
-        <el-card v-for="item in info.module" :key="item.index" class="box-card">
-          <div slot="header" class="clearfix">
-            <span>{{ item.cn_name }}</span>
-          </div>
-          <el-checkbox-group v-model="item.ids">
-            <el-checkbox v-for="authority in item.authorityField" 
-              v-model="authority.permission"
-              :label="authority.id" 
-              :key="authority.index">{{authority.cn_name}}</el-checkbox>
-          </el-checkbox-group>
-        </el-card>
+        <div v-if="info.module.length">
+          <el-card v-for="item in info.module" :key="item.index" class="box-card">
+            <div slot="header" class="clearfix">
+              <span>{{ item.cn_name }}</span>
+            </div>
+            <el-checkbox-group v-model="item.ids">
+              <el-checkbox v-for="authority in item.authorityField" 
+                v-model="authority.permission"
+                :label="authority.id" 
+                :key="authority.index">{{authority.cn_name}}</el-checkbox>
+            </el-checkbox-group>
+          </el-card>
+        </div>
+        <div v-else>
+          <el-card v-for="item in moduleList" :key="item.index" class="box-card">
+            <div slot="header" class="clearfix">
+              <span>{{ item.cn_name }}</span>
+            </div>
+            <el-checkbox-group v-model="item.ids">
+              <el-checkbox v-for="authority in item.authorityField" 
+                v-model="authority.permission"
+                :label="authority.id" 
+                :key="authority.index">{{authority.cn_name}}</el-checkbox>
+            </el-checkbox-group>
+          </el-card>
+        </div>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -87,6 +110,8 @@ export default {
         module: []
       },
       moduleList: [],
+      errorMsg: "",
+      errorMsg2: "",
       i18n: {
         name: "角色名",
         description: "角色介绍",
@@ -96,10 +121,10 @@ export default {
       loading: true,
       rules: {
         name: [
-          { required: true, message: "请输入专业名称"}
+          { required: true, message: "请输入角色名" }
         ],
         level: [
-          { required: true, message: "请输入权限等级"},
+          { required: true, message: "请输入权限等级" },
           { type: "number", min: 0, max: 127, message: "请输入0~127的整数"}
         ]
       },
@@ -111,6 +136,8 @@ export default {
   mounted() {
     if (this.dataId) {
       this.getInfo();
+    } else {
+      this.getModuleList();
     }
   },
   computed: {
@@ -144,6 +171,26 @@ export default {
         }
       });
     },
+    getModuleList() {
+      let that = this;
+      let loading = Loading.service({
+        target: document.getElementById("form")
+      });
+      this.$store.dispatch('postItems', {
+        url: this.$store.state.getModuleList,
+        query: {
+          token: this.$store.state.userInfo.token
+        },
+        cb(res) {
+          loading.close();
+          if (res.code === 200) {
+            that.moduleList = res.data;
+          } else {
+            Message.error(res.msg);
+          }
+        }
+      })
+    },
     formSubmit() {
       let url,
         that = this;
@@ -152,6 +199,16 @@ export default {
       } else {
         url = this.$store.state.addRole;
       }
+      if (this.info.name === "") {
+        this.errorMsg = "角色名不能为空！";
+        return;
+      }
+      this.errorMsg = "";
+      if (this.info.level === "") {
+        this.errorMsg2 = "权限等级不能为空！";
+        return;
+      }
+      this.errorMsg2 = "";
       let loading = Loading.service({
         target: document.getElementById("form")
       });
@@ -159,6 +216,7 @@ export default {
         url,
         query: {
           data: this.info,
+          moduleList: this.moduleList,
           token: this.$store.state.userInfo.token
         },
         cb(res) {

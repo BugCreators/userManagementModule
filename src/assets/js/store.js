@@ -204,6 +204,12 @@ export default new Vuex.Store({
     getRoleDetail: baseUrl + `/api/role/getRoleDetail`,    
     // 修改角色
     changeRole: baseUrl + `/api/role/changeRole`,
+    // 获取模块列表
+    getModuleList: baseUrl + `/api/role/getModuleList`,
+    // 添加角色
+    addRole: baseUrl + `/api/role/addRole`,
+    // 删除角色
+    delRoles: baseUrl + `/api/role/deleteRole`,
 
     // 权限列表
     getAuthorityList: baseUrl + `/api/authority/getAuthorityList`,
@@ -413,7 +419,6 @@ export default new Vuex.Store({
     },
     clearUserInfo() {
       document.cookie = "avueUser=" + "null";
-      localStorage.token = ``;
     }
   }
 });

@@ -123,8 +123,8 @@ export default {
         name: "学院名",
         en_name: "英文名",
         logo: "院徽",
-        website: "学院官网",
-        description: "学院描述"
+        website: "官网链接",
+        description: "概述"
       },
       selectedId: []
     };

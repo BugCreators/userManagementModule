@@ -9,6 +9,8 @@
       </el-option>
       <el-option v-if="basisOfModule" :label="options[3].label" :value="options[3].value">
       </el-option>
+      <el-option v-if="basisOfLevel" :label="options[4].label" :value="options[4].value">
+      </el-option>
     </el-select>
     <el-input
       class="input"
@@ -50,6 +52,10 @@ export default {
     basisOfModule: {
       type: Boolean,
       default: false
+    },
+    basisOfLevel: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -70,6 +76,10 @@ export default {
         {
           value: 3,
           label: "按模块搜索"
+        },
+        {
+          value: 4,
+          label: "按权限等级搜索"
         }
       ],
       searchValue: {

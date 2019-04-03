@@ -12,20 +12,20 @@
       :model="info"
       :rules="rules"
     >
-      <el-form-item label="学院名称" prop="name">
+      <el-form-item :label="i18n['name']" prop="name">
         <el-input v-model="info.name" name="name">
           <i class="errorMsg" slot="suffix">
             {{ errorMsg }}
           </i>
         </el-input>
       </el-form-item>
-      <el-form-item label="英文名" prop="name">
-        <el-input v-model="info.en_name" name="name"></el-input>
+      <el-form-item :label="i18n['en_name']" prop="en_name">
+        <el-input v-model="info.en_name" name="en_name"></el-input>
       </el-form-item>
-      <el-form-item label="官网链接" prop="website">
+      <el-form-item :label="i18n['website']" prop="website">
         <el-input v-model="info.website" name="website"></el-input>
       </el-form-item>
-      <el-form-item label="学院描述" prop="description">
+      <el-form-item :label="i18n['description']" prop="description">
         <el-input
           type="textarea"
           v-model="info.description"
@@ -72,10 +72,16 @@ export default {
         description: "",
         website: ""
       },
+      i18n: {
+        name: "学院名",
+        en_name: "英文名",
+        website: "官网链接",
+        description: "概述"
+      },
       errorMsg: "",
       loading: true,
       rules: {
-        name: [{ required: true, message: "请输入学院名称", trigger: "blur" }]
+        name: [{ required: true, message: "请输入学院名称"}]
       }
     };
   },
