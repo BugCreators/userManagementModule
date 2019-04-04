@@ -1,5 +1,5 @@
 <template>
-  <div class="studentList">
+  <div class="administratorList">
     <el-table
       id="list"
       :row-style="rowStyle"
@@ -9,14 +9,15 @@
       <el-table-column type="selection" width="50"></el-table-column>
       <el-table-column
         v-if="!isImport"
-        prop="collegeName"
-        label="学院"
+        prop="branchName"
+        label="部门"
       ></el-table-column
       ><el-table-column
         v-if="!isImport"
-        prop="className"
-        label="班级"
-      ></el-table-column>
+        prop="roleName"
+        label="身份"
+      ></el-table-column
+      >
       <el-table-column
         v-for="(value, key, index) in i18n"
         :prop="key"
@@ -67,17 +68,15 @@ import {
   Table,
   TableColumn
 } from "element-ui";
-import { downloadExl } from "@/assets/js/tool";
 
 export default {
-  name: "studentList",
+  name: "administratorList",
   components: {
     elPagination: Pagination,
     elTable: Table,
     elTableColumn: TableColumn
   },
   props: {
-    listExcel: Array,
     isImport: Boolean
   },
   data() {
@@ -96,7 +95,7 @@ export default {
       },
       i18n: {
         realname: "姓名",
-        number: "学号",
+        number: "职工号",
         sex: "性别",
         phone: "电话",
         address: "地址",
@@ -115,10 +114,6 @@ export default {
     }
   },
   watch: {
-    listExcel(newV) {
-      this.listCount = newV.length;
-      this.list = newV.slice(0, this.pageSize);
-    },
     searchValue() {
       this.pageIndex = 1;
       this.getList();
@@ -126,16 +121,14 @@ export default {
   },
   mounted() {
     this.loadingOpts.target = document.getElementById("list");
-    if (!this.listExcel) {
-      this.getList();
-    }
+    this.getList();
   },
   methods: {
     getList() {
       let that = this;
       let loading = Loading.service(this.loadingOpts);
       return this.$store.dispatch("postItems", {
-        url: that.$store.state.getStudentList,
+        url: that.$store.state.getAdministratorList,
         query: {
           pageSize: that.pageSize,
           pageIndex: that.pageIndex,
@@ -145,15 +138,7 @@ export default {
         cb(res) {
           loading.close();
           if (res.code === 200) {
-            let listTemp = res.data.list.map(item => {
-              if (item.sex) {
-                item.sex = "男";
-              } else {
-                item.sex = "女";
-              };
-              return item;
-            });
-            that.list = listTemp;
+            that.list = res.data.list;
             that.listCount = res.data.count;
             that.$emit("changeCount", that.listCount);
           } else {
@@ -167,7 +152,7 @@ export default {
     },
     resetPwConfirm(id) {
       let that = this;
-      MessageBox.confirm("此操作将重置该用户密码为学号，是否继续？", "提示", {
+      MessageBox.confirm("此操作将重置该管理员密码为职工号，是否继续？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -185,8 +170,9 @@ export default {
       });
     },
     resetPw(id) {
+      let that = this;
       this.$store.dispatch('getItems', {
-        url: this.$store.state.resetPwStudent,
+        url: this.$store.state.resetPwAdmin,
         query: {
           id: id,
           token: this.$store.state.userInfo.token
@@ -194,6 +180,27 @@ export default {
         cb(res) {
           if (res.code === 200) {
             Message.success(res.msg);
+            if (res.data.changeByOwn) {
+              that.$store.dispatch("clearUserInfo").then(() => {
+                that.$store.commit("clearUserInfo");
+              });
+              MessageBox.confirm("当前用户密码已重置，请重新登录", "密码重置", {
+                cancelButtonText: "回到首页",
+                confirmButtonText: "登录",
+                type: "warning",
+                callback(action) {
+                  switch (action) {
+                    case "cancel":
+                    case "close":
+                      location.href = "index.html";
+                      break;
+                    case "confirm":
+                      location.href = "login.html";
+                      break;
+                  }
+                }
+              })
+            }
           } else {
             Message.error(res.msg);
           }
@@ -207,11 +214,11 @@ export default {
       let that = this;
       if (ids.length <= 0) {
         Message.warning({
-          message: "请选择至少一个学生"
+          message: "请选择至少一个管理员"
         });
         return;
       }
-      MessageBox.confirm("此操作将删除所选学生的所有信息，是否继续？", "提示", {
+      MessageBox.confirm("此操作将删除所选管理员，是否继续？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -231,9 +238,9 @@ export default {
     datasDelete(ids) {
       let that = this;
       this.$store.dispatch("postItems", {
-        url: this.$store.state.delStudents,
+        url: this.$store.state.delAdministrators,
         query: {
-          studentsId: ids,
+          adminsId: ids,
           token: this.$store.state.userInfo.token
         },
         cb(res) {
@@ -248,12 +255,6 @@ export default {
           }
         }
       });
-    },
-    importListChange() {
-      this.list = this.listExcel.slice(
-        this.pageSize * (this.pageIndex - 1),
-        this.pageSize + this.pageSize * (this.pageIndex - 1)
-      );
     },
     pageChange(page) {
       this.pageIndex = page;

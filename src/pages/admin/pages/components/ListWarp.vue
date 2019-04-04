@@ -52,6 +52,7 @@ export default {
       i18n: {
         branch: "部门",
         role: "角色",
+        administrator: "管理员",
         college: "学院",
         department: "院系",
         major: "专业",

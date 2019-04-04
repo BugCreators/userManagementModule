@@ -1,5 +1,5 @@
 <template>
-  <div class="rolementList">
+  <div class="roleList">
     <el-table
       id="list"
       :row-style="rowStyle"

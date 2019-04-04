@@ -230,6 +230,24 @@ export default new Vuex.Store({
     // 权限列表
     getAuthorityList: baseUrl + `/api/authority/getAuthorityList`,
 
+    // 管理员列表
+    // 管理员列表
+    getAdministratorList: baseUrl + `/api/admin/getAdminList`,
+    // 管理员详情
+    getAdministratorDetail: baseUrl + `/api/admin/getAdminDetail`,
+    // 重置密码
+    resetPwAdmin: baseUrl + `/api/admin/resetPassword`,
+    // 修改管理员
+    changeAdministrator: baseUrl + `/api/admin/changeAdmin`,
+    // 添加管理员
+    addAdministrator: baseUrl + `/api/admin/addAdmin`,
+    // 删除管理员
+    delAdministrators: baseUrl + `/api/admin/deleteAdmin`,
+    // 获取部门名、ID列表
+    getBranchListByAdminDetail: baseUrl + `/api/branch/getBranchListByAdminDetail`,
+    // 获取角色名、ID列表
+    getRoleListByAdminDetail: baseUrl + `/api/role/getRoleListByAdminDetail`,
+
     /*****************END********************/
     /***************院系管理*****************/
     // 学院管理
@@ -323,7 +341,7 @@ export default new Vuex.Store({
     // 批量添加
     importStudentList: baseUrl + `/api/student/importStudentList`,
     // 重置密码
-    resetPw: baseUrl + `/api/student/resetPassword`,
+    resetPwStudent: baseUrl + `/api/student/resetPassword`,
     // 修改学生
     changeStudent: baseUrl + `/api/student/changeStudent`,
     // 获取班级列表（根据专业ID）

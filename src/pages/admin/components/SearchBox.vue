@@ -33,11 +33,24 @@
         :value="options[5].value"
       >
       </el-option>
+      <el-option
+        v-if="basisOfBranch"
+        :label="options[6].label"
+        :value="options[6].value"
+      >
+      </el-option>
+      <el-option
+        v-if="basisOfRole"
+        :label="options[7].label"
+        :value="options[7].value"
+      >
+      </el-option>
     </el-select>
     <el-input
       class="input"
       v-model="searchValue.name"
       placeholder="请输入名称"
+      @keyup.enter.native="serchValueChange"
       clearable
     ></el-input>
     <el-button type="primary" @click="serchValueChange"
@@ -85,6 +98,14 @@ export default {
     basisOfClass: {
       type: Boolean,
       default: false
+    },
+    basisOfBranch: {
+      type: Boolean,
+      default: false
+    },
+    basisOfRole: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -113,6 +134,14 @@ export default {
         {
           value: 5,
           label: "按班级搜素"
+        },
+        {
+          value: 6,
+          label: "按部门搜素"
+        },
+        {
+          value: 7,
+          label: "按身份搜素"
         }
       ],
       searchValue: {
