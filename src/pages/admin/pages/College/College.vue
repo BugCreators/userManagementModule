@@ -28,7 +28,6 @@
       v-if="showDetailLog"
       :dataId="currentId"
       @listChange="listChange"
-      @dataChange="dataChange"
     />
   </div>
 </template>
@@ -97,9 +96,6 @@ export default {
     },
     listChange() {
       this.$refs["list"].getList();
-    },
-    dataChange(data) {
-      this.$refs["list"].dataChange(data);
     },
     datasDelete() {
       this.$refs["list"].datasDeleteConfirm(this.$refs["list"].selectedId);

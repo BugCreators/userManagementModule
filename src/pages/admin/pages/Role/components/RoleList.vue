@@ -145,16 +145,6 @@ export default {
     editData(id) {
       this.$emit("openDetailLog", id);
     },
-    dataChange(data) {
-      let loading = Loading.service(this.loadingOpts);
-      for (let i = 0, len = this.list.length; i < len; i++) {
-        if (this.list[i].id == data.id) {
-          this.list[i] = data;
-          return;
-        }
-      }
-      loading.close();
-    },
     datasDeleteConfirm(ids) {
       let that = this;
       if (ids.length <= 0) {

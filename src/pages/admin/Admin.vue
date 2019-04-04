@@ -76,6 +76,7 @@ export default {
     }
   },
   created() {
+    let that = this;
     if (document.cookie.indexOf("avueUser=null") !== -1) {
       MessageBox.confirm("请先登录！", "提示", {
         cancelButtonText: "回到首页",
@@ -112,6 +113,9 @@ export default {
               });
             }
           } else {
+            that.$store.dispatch("clearUserInfo").then(() => {
+              that.$store.commit("clearUserInfo");
+            });
             MessageBox.alert(res.msg, "提示", {
               confirmButtonText: "确定",
               type: "warning",

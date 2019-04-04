@@ -22,7 +22,6 @@
       v-if="showDetailLog"
       :dataId="currentId"
       @listChange="listChange"
-      @dataChange="dataChange"
     />
     <StudentListExport v-if="showExportLog" :showExportLog="showExportLog" @switchExportLog="switchExportLog"/>
   </div>
@@ -84,9 +83,6 @@ export default {
     },
     listChange() {
       this.$refs["list"].getList();
-    },
-    dataChange(data) {
-      this.$refs["list"].dataChange(data);
     },
     datasDelete() {
       this.$refs["list"].datasDeleteConfirm(this.$refs["list"].selectedId);

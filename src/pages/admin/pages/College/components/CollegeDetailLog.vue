@@ -159,9 +159,7 @@ export default {
           loading.close();
           if (res.code === 200) {
             Message.success(res.msg);
-            this.dataId
-              ? that.$emit("dataChange", res.data)
-              : that.$emit("listChange");
+            that.$emit("listChange");
             that.closeDetailLog();
           } else {
             Message.error(res.msg || "添加失败，请稍后重试");

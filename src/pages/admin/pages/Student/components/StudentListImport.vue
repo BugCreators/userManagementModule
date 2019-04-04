@@ -118,6 +118,10 @@ export default {
       message: "",
       title: "批量导入",
       isImport: true, // 导入按钮点击状态
+      sex: {
+        男: 1,
+        女: 0
+      },
       rules:{
         college_id: [{ require: true, message: "请选择学院" }],
         major_id: [{ required: true, message: "请选择专业" }],
@@ -167,6 +171,7 @@ export default {
               that.majorList = {};
               that.data.major_id = "";
             }
+            that.getClassList();
           } else {
             Message.error(res.msg);
           }
@@ -239,9 +244,15 @@ export default {
               item.message = "姓名不能为空！";
               that.isImport = true;
             }
-            if (item.number.toString().length < 0) {
+            if (item.number.toString().length != 11) {
               item.message += "学号格式错误：11位数字";
               that.isImport = true;
+            }
+            if (item.sex) {
+              if(item.sex != "男" && item.sex != "女") {
+                item.message = "性别错误！例：男";
+                that.isImport = true;
+              }
             }
             that.listExcel.push(item);
           });
@@ -275,10 +286,20 @@ export default {
       let loading = Loading.service({
         text: "导入中，请稍候···"
       });
+      let listCopy = JSON.parse(JSON.stringify(this.listExcel));
+      let newList = listCopy.map(item => {
+        let sex = item.sex;
+        item.sex = this.sex[sex];
+        item.role_id = 2;
+        item.college_id = this.data.college_id;
+        item.class_id = this.data.class_id;
+        return item;
+      });
       this.$store.dispatch("postItems", {
         url: this.$store.state.importStudentList,
         query: {
-          studentList: this.listExcel,
+          data: this.data,
+          studentList: newList,
           token: this.$store.state.userInfo.token
         },
         cb(res) {
