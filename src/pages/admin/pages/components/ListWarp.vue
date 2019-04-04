@@ -57,7 +57,8 @@ export default {
         department: "院系",
         major: "专业",
         class: "班级",
-        student: "学生"
+        student: "学生",
+        teacher: "教师"
       }
     };
   },

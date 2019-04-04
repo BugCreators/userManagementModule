@@ -8,6 +8,7 @@
     >
       <el-table-column type="selection" width="50"></el-table-column>
       <el-table-column prop="name" :label="i18n['name']"></el-table-column>
+      <el-table-column prop="branchName" :label="i18n['branchName']"></el-table-column>
       <el-table-column
         prop="description"
         :label="i18n['description']"
@@ -89,6 +90,7 @@ export default {
         height: "100px"
       },
       i18n: {
+        branchName: "部门",
         name: "角色名",
         description: "角色介绍",
         permission: "拥有权限",

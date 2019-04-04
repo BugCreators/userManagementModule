@@ -1,5 +1,5 @@
 <template>
-  <div class="studentList">
+  <div class="teacherList">
     <el-table
       id="list"
       :row-style="rowStyle"
@@ -13,11 +13,6 @@
         label="学院"
       ></el-table-column
       ><el-table-column
-        v-if="!isImport"
-        prop="className"
-        label="班级"
-      ></el-table-column>
-      <el-table-column
         v-for="(value, key, index) in i18n"
         :prop="key"
         :key="index"
@@ -67,9 +62,10 @@ import {
   Table,
   TableColumn
 } from "element-ui";
+import { downloadExl } from "@/assets/js/tool";
 
 export default {
-  name: "studentList",
+  name: "teacherList",
   components: {
     elPagination: Pagination,
     elTable: Table,
@@ -95,7 +91,7 @@ export default {
       },
       i18n: {
         realname: "姓名",
-        number: "学号",
+        number: "职工号",
         sex: "性别",
         phone: "电话",
         address: "地址",
@@ -134,7 +130,7 @@ export default {
       let that = this;
       let loading = Loading.service(this.loadingOpts);
       return this.$store.dispatch("postItems", {
-        url: that.$store.state.getStudentList,
+        url: that.$store.state.getTeacherList,
         query: {
           pageSize: that.pageSize,
           pageIndex: that.pageIndex,
@@ -166,7 +162,7 @@ export default {
     },
     resetPwConfirm(id) {
       let that = this;
-      MessageBox.confirm("此操作将重置该用户密码为学号，是否继续？", "提示", {
+      MessageBox.confirm("此操作将重置该用户密码为职工号，是否继续？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -185,7 +181,7 @@ export default {
     },
     resetPw(id) {
       this.$store.dispatch('getItems', {
-        url: this.$store.state.resetPwStudent,
+        url: this.$store.state.resetPwTeacher,
         query: {
           id: id,
           token: this.$store.state.userInfo.token
@@ -193,6 +189,27 @@ export default {
         cb(res) {
           if (res.code === 200) {
             Message.success(res.msg);
+            if (res.data.changeByOwn) {
+              that.$store.dispatch("clearUserInfo").then(() => {
+                that.$store.commit("clearUserInfo");
+              });
+              MessageBox.confirm("当前用户密码已重置，请重新登录", "密码重置", {
+                cancelButtonText: "回到首页",
+                confirmButtonText: "登录",
+                type: "warning",
+                callback(action) {
+                  switch (action) {
+                    case "cancel":
+                    case "close":
+                      location.href = "index.html";
+                      break;
+                    case "confirm":
+                      location.href = "login.html";
+                      break;
+                  }
+                }
+              })
+            }
           } else {
             Message.error(res.msg);
           }
@@ -206,11 +223,11 @@ export default {
       let that = this;
       if (ids.length <= 0) {
         Message.warning({
-          message: "请选择至少一个学生"
+          message: "请选择至少一个教师"
         });
         return;
       }
-      MessageBox.confirm("此操作将删除所选学生的所有信息，是否继续？", "提示", {
+      MessageBox.confirm("此操作将删除所选教师的所有信息，是否继续？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -230,9 +247,9 @@ export default {
     datasDelete(ids) {
       let that = this;
       this.$store.dispatch("postItems", {
-        url: this.$store.state.delStudents,
+        url: this.$store.state.delTeachers,
         query: {
-          studentsId: ids,
+          teachersId: ids,
           token: this.$store.state.userInfo.token
         },
         cb(res) {
@@ -245,6 +262,59 @@ export default {
           } else {
             Message.error(res.msg);
           }
+        }
+      });
+    },
+    listExportConfirm() {
+      let that = this;
+      MessageBox.confirm("确认导出当前列表数据？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        callback(action) {
+          switch (action) {
+            case "cancel":
+            case "close":
+              Message.info("取消导出");
+              break;
+            case "confirm":
+              that.listExport();
+              break;
+          }
+        }
+      });
+    },
+    listExport() {
+      let allList,
+        that = this;
+      let loading = Loading.service({
+        text: "获取数据导出中，请稍候..."
+      });
+      return this.$store.dispatch("postItems", {
+        url: that.$store.state.getAllTeacherList,
+        query: {
+          token: that.$store.state.userInfo.token
+        },
+        cb(res) {
+          if (res.code === 200) {
+            if (res.data.length) {
+              let listTemp = res.data;
+              allList = listTemp.map(item => {
+                if (item[that.i18n['sex']] == 1) {
+                  item[that.i18n['sex']] = "男";
+                } else {
+                  item[that.i18n['sex']] = "女";
+                };
+                return item;
+              });
+              downloadExl(allList, "xlsx", "教师列表");
+            } else {
+              Message.info("暂无教师信息");
+            }
+          } else {
+            Message.error(res.msg);
+          }
+          loading.close();
         }
       });
     },

@@ -89,10 +89,6 @@ export default {
     listExport() {
       this.$refs["list"].listExportConfirm();
     },
-    openLogoLog(id) {
-      this.currentId = id;
-      this.$store.commit("switchLogoLog");
-    },
     openDetailLog(id) {
       this.currentId = id;
       this.$store.commit("switchDetailLog");

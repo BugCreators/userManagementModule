@@ -207,16 +207,20 @@ export default {
         },
         cb(res) {
           if (res.code === 200) {
-            let listTemp = res.data;
-            allList = listTemp.map(item => {
-              if (item[that.i18n['sex']] == 1) {
-                item[that.i18n['sex']] = "男";
-              } else {
-                item[that.i18n['sex']] = "女";
-              };
-              return item;
-            });
-            downloadExl(allList, "xlsx", "学生列表");
+            if (res.data.length) {
+              let listTemp = res.data;
+              allList = listTemp.map(item => {
+                if (item[that.i18n['sex']] == 1) {
+                  item[that.i18n['sex']] = "男";
+                } else {
+                  item[that.i18n['sex']] = "女";
+                };
+                return item;
+              });
+              downloadExl(allList, "xlsx", "学生列表");
+            } else {
+              Message.info("暂无学生信息")
+            }
           } else {
             Message.error(res.msg);
           }

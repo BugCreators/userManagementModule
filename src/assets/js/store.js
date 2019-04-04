@@ -222,6 +222,8 @@ export default new Vuex.Store({
     changeRole: baseUrl + `/api/role/changeRole`,
     // 获取模块列表
     getModuleList: baseUrl + `/api/role/getModuleList`,
+    // 获取部门名、ID
+    getBranchListByRoleDetail: baseUrl + `/api/branch/getBranchListByRoleDetail`,
     // 添加角色
     addRole: baseUrl + `/api/role/addRole`,
     // 删除角色
@@ -246,7 +248,7 @@ export default new Vuex.Store({
     // 获取部门名、ID列表
     getBranchListByAdminDetail: baseUrl + `/api/branch/getBranchListByAdminDetail`,
     // 获取角色名、ID列表
-    getRoleListByAdminDetail: baseUrl + `/api/role/getRoleListByAdminDetail`,
+    getRoleListByBranchId: baseUrl + `/api/role/getRoleListByBranchId`,
 
     /*****************END********************/
     /***************院系管理*****************/
@@ -346,6 +348,24 @@ export default new Vuex.Store({
     changeStudent: baseUrl + `/api/student/changeStudent`,
     // 获取班级列表（根据专业ID）
     getClassListByMajorId: baseUrl + `/api/vclass/getClassListByMajorId`,
+
+    // 教师列表
+    // 教师列表
+    getTeacherList: baseUrl + `/api/teacher/getTeacherList`,
+    // 导出数据 全部教师
+    getAllTeacherList: baseUrl + `/api/teacher/getAllTeacherList`,
+    // 教师详情
+    getTeacherDetail: baseUrl + `/api/teacher/getTeacherDetail`,
+    // 添加教师
+    addTeacher: baseUrl + `/api/teacher/addTeacher`,
+    // 删除教师
+    delTeachers: baseUrl + `/api/teacher/deleteTeacher`,
+    // 批量添加
+    importTeacherList: baseUrl + `/api/teacher/importTeacherList`,
+    // 重置密码
+    resetPwTeacher: baseUrl + `/api/teacher/resetPassword`,
+    // 修改教师
+    changeTeacher: baseUrl + `/api/teacher/changeTeacher`,
     /*****************END*******************/
     /************获取权限 BEGIN**************/
     // 进入后台权限

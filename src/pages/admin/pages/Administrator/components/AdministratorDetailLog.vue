@@ -43,6 +43,7 @@
       <el-form-item :label="i18n['branch']" prop="branch_id">
         <el-select
           v-model="info.branch_id"
+          @change="branchChange"
           :placeholder="'请选择' + i18n['branch']"
         >
           <el-option
@@ -148,7 +149,7 @@ export default {
       info: {
         realname: "",
         number: "",
-        brach_id: "",
+        branch_id: 0,
         role_id: "",
         sex: 1,
         phone: "",
@@ -156,7 +157,12 @@ export default {
         email: "",
         description: ""
       },
-      branchList: [],
+      branchList: [
+        {
+          "id": 0,
+          "name": "无"
+        }
+      ],
       roleList: [],
       errorMsg: "", // 姓名错误信息
       errorMsg2: "", // 职工号错误信息
@@ -190,7 +196,6 @@ export default {
   },
   mounted() {
     this.getBranchList();
-    this.getRoleList();
     if (this.dataId) {
       this.getInfo();
     }
@@ -239,7 +244,8 @@ export default {
         cb(res) {
           loading.close();
           if (res.code === 200) {
-            that.branchList = res.data;
+            that.branchList = that.branchList.concat(res.data);
+            that.getRoleList();
           } else {
             Message.error(res.msg);
           }
@@ -251,9 +257,11 @@ export default {
       let loading = Loading.service({
         target: document.getElementById("form")
       });
+      console.log(this.info.branch_id);
       this.$store.dispatch("getItems", {
-        url: this.$store.state.getRoleListByAdminDetail,
+        url: this.$store.state.getRoleListByBranchId,
         query: {
+          branchId: this.info.branch_id,
           token: this.$store.state.userInfo.token
         },
         cb(res) {
@@ -265,6 +273,9 @@ export default {
           }
         }
       });
+    },
+    branchChange() {
+      this.getRoleList();
     },
     formSubmit() {
       let url,

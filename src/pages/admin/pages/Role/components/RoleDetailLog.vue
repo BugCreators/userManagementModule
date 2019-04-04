@@ -23,6 +23,20 @@
           </i>
         </el-input>
       </el-form-item>
+      <el-form-item :label="i18n['branchName']" prop="branch_id">
+        <el-select
+          v-model="info.branch_id"
+          :placeholder="'请选择' + i18n['branchName']"
+        >
+          <el-option
+            v-for="item in branchList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          >
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item :label="i18n['description']" prop="description">
         <el-input
           type="textarea"
@@ -104,7 +118,9 @@ import {
   FormItem,
   Input,
   Loading,
-  Message
+  Message,
+  Option,
+  Select
 } from "element-ui";
 
 export default {
@@ -117,7 +133,9 @@ export default {
     elDialog: Dialog,
     elForm: Form,
     elFormItem: FormItem,
-    elInput: Input
+    elInput: Input,
+    elOption: Option,
+    elSelect: Select
   },
   props: {
     dataId: Number
@@ -126,6 +144,7 @@ export default {
     return {
       info: {
         name: "",
+        branch_id: 0,
         description: "",
         level: "",
         module: []
@@ -135,11 +154,15 @@ export default {
       errorMsg2: "",
       i18n: {
         name: "角色名",
+        branchName: "部门",
         description: "角色介绍",
         level: "权限等级",
         authority: "权限分配"
       },
-      loading: true,
+      loadingOpts: {
+        target: "",
+        fullscreen: false
+      },
       rules: {
         name: [{ required: true, message: "请输入角色名" }],
         level: [
@@ -147,12 +170,20 @@ export default {
           { type: "number", min: 0, max: 127, message: "请输入0~127的整数" }
         ]
       },
+      branchList: [
+        {
+          id: 0,
+          name: "无"
+        }
+      ],
       checkedActions: [],
       checkAll: false,
       isIndeterminate: true
     };
   },
   mounted() {
+    this.loadingOpts.target = document.getElementById("form");
+    this.getBranchList();
     if (this.dataId) {
       this.getInfo();
     } else {
@@ -185,6 +216,24 @@ export default {
           } else {
             Message.error(res.msg);
             that.closeDetailLog();
+          }
+        }
+      });
+    },
+    getBranchList() {
+      let that = this;
+      let loading = Loading.service(this.loadingOpts);
+      this.$store.dispatch("getItems", {
+        url: this.$store.state.getBranchListByRoleDetail,
+        query: {
+          token: this.$store.state.userInfo.token
+        },
+        cb(res) {
+          loading.close();
+          if (res.code === 200) {
+            that.branchList = that.branchList.concat(res.data);
+          } else {
+            Message.error(res.msg);
           }
         }
       });

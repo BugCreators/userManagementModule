@@ -12,21 +12,32 @@
       :model="info"
       :rules="rules"
     >
-      <el-form-item :label="i18n['name']" prop="name">
+      <el-form-item :label="i18n['realname']" prop="realname">
         <el-input
-          v-model="info.name"
-          name="name"
-          :placeholder="'请输入' + i18n['name']"
+          v-model="info.realname"
+          name="realname"
+          :placeholder="'请输入' + i18n['realname']"
         >
           <i class="errorMsg" slot="suffix">
             {{ errorMsg }}
           </i>
         </el-input>
       </el-form-item>
-      <el-form-item :label="i18n['collegeName']" prop="college_id">
+      <el-form-item :label="i18n['number']" prop="number">
+        <el-input
+          v-model.number="info.number"
+          name="number"
+          placeholder="请输入11位职工号"
+        >
+          <i class="errorMsg" slot="suffix">
+            {{ errorMsg3 }}
+          </i>
+        </el-input>
+      </el-form-item>
+      <el-form-item :label="i18n['college']" prop="college_id">
         <el-select
           v-model="info.college_id"
-          :placeholder="'请选择' + i18n['collegeName']"
+          :placeholder="'请选择' + i18n['college']"
         >
           <el-option
             v-for="item in collegeList"
@@ -39,6 +50,38 @@
         <i class="errorMsg">
           {{ errorMsg2 }}
         </i>
+      </el-form-item>
+      <el-form-item :label="i18n['sex']">
+        <el-radio-group v-model="info.sex">
+          <el-radio :label="0">女</el-radio>
+          <el-radio :label="1">男</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      
+      </el-form-item>
+      <el-form-item :label="i18n['phone']" prop="phone">
+        <el-input
+          v-model="info.phone"
+          name="phone"
+          :placeholder="'请输入' + i18n['phone']"
+        ></el-input>
+      </el-form-item>
+      <el-form-item :label="i18n['address']" prop="address">
+        <el-input
+          v-model="info.address"
+          name="address"
+          :placeholder="'请输入' + i18n['address']"
+        ></el-input>
+      </el-form-item>
+      <el-form-item
+        :label="i18n['email']"
+        prop="email"
+      >
+        <el-input
+          v-model="info.email"
+          name="email"
+          :placeholder="'请输入' + i18n['email']"
+        ></el-input>
       </el-form-item>
       <el-form-item :label="i18n['description']" prop="description">
         <el-input
@@ -67,11 +110,13 @@ import {
   Loading,
   Message,
   Option,
-  Select
+  Select,
+  Radio,
+  RadioGroup
 } from "element-ui";
 
 export default {
-  name: "departmentDetailLog",
+  name: "teacherDetailLog",
   components: {
     elButton: Button,
     elDialog: Dialog,
@@ -79,7 +124,9 @@ export default {
     elFormItem: FormItem,
     elInput: Input,
     elOption: Option,
-    elSelect: Select
+    elSelect: Select,
+    elRadio: Radio,
+    elRadioGroup: RadioGroup
   },
   props: {
     dataId: Number
@@ -87,23 +134,36 @@ export default {
   data() {
     return {
       info: {
-        name: "",
+        realname: "",
+        number: "",
         college_id: "",
+        sex: 1,
+        phone: "",
+        address: "",
+        email: "",
         description: ""
       },
       errorMsg: "",
       errorMsg2: "",
+      errorMsg3: "",
       i18n: {
-        name: "院系名",
-        collegeName: "学院",
-        description: "简介"
+        realname: "姓名",
+        number: "职工号",
+        college: "学院",
+        sex: "性别",
+        phone: "电话",
+        address: "地址",
+        email: "邮箱",
+        description: "个人描述"
       },
       loading: true,
       rules: {
-        name: [{ required: true, message: "请输入专业名称", trigger: "blur" }],
-        college_id: [
-          { required: true, message: "请选择学院", trigger: "change" }
-        ]
+        realname: [{ required: true, message: "请输入姓名" }],
+        number: [
+          { required: true, message: "职工号不能为空" },
+          { type: "number", min: 10000000000, max: 99999999999, message: "请输入11位的数字" }
+        ],
+        college_id: [{ required: true, message: "请选择学院" }],
       },
       collegeList: {}
     };
@@ -117,7 +177,7 @@ export default {
   computed: {
     logTitle() {
       let title = this.dataId ? "编辑" : "添加";
-      return title + "专业";
+      return title + "教师";
     },
     showDetailLog() {
       return this.$store.state.showDetailLog;
@@ -128,7 +188,7 @@ export default {
       let that = this;
       let loading = Loading.service();
       this.$store.dispatch("getItems", {
-        url: this.$store.state.getDepartmentDetail,
+        url: this.$store.state.getTeacherDetail,
         query: {
           id: this.dataId,
           token: this.$store.state.userInfo.token
@@ -137,6 +197,7 @@ export default {
           loading.close();
           if (res.code === 200) {
             that.info = res.data;
+            that.info.number = Number(that.info.number);
           } else {
             Message.error(res.msg);
             that.closeDetailLog();
@@ -161,15 +222,20 @@ export default {
       let url,
         that = this;
       if (this.dataId) {
-        url = this.$store.state.changeDepartment;
+        url = this.$store.state.changeTeacher;
       } else {
-        url = this.$store.state.addDepartment;
+        url = this.$store.state.addTeacher;
       }
-      if (this.info.name === "") {
-        this.errorMsg = "院系名不能为空！";
+      if (this.info.realname === "") {
+        this.errorMsg = "姓名不能为空！";
         return;
       }
       this.errorMsg = "";
+      if (this.info.number.toString().length < 11) {
+        this.errorMsg3 = "请输入11位的职工号！";
+        return;
+      }
+      this.errorMsg3 = "";
       if (this.info.college_id === "") {
         this.errorMsg2 = "学院不能为空！";
         return;
