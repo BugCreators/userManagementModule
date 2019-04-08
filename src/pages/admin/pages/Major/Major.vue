@@ -13,7 +13,6 @@
     />
     <MajorList
       ref="list"
-      @openLogoLog="openLogoLog"
       @openDetailLog="openDetailLog"
       @changeCount="changeCount"
     />
