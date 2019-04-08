@@ -2,7 +2,7 @@
   <div class="content">
     <div class="twoLoginMethods">
       <div class="logo-login">
-        <img src="../../../assets/images/logo_home.png" />
+        <img src="../../../assets/images/default/logo.png" />
       </div>
       <div class="loginBox">
         <div class="loginAccount">
@@ -178,7 +178,6 @@ export default {
     .loginBox {
       background: #fff;
       border-radius: 6px;
-      left: 39px;
       overflow: hidden;
       padding: 24px 24px 30px 24px;
       position: relative;

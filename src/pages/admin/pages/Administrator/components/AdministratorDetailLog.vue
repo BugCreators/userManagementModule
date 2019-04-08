@@ -257,7 +257,6 @@ export default {
       let loading = Loading.service({
         target: document.getElementById("form")
       });
-      console.log(this.info.branch_id);
       this.$store.dispatch("getItems", {
         url: this.$store.state.getRoleListByBranchId,
         query: {
