@@ -224,7 +224,8 @@ export default new Vuex.Store({
     // 获取模块列表
     getModuleList: baseUrl + `/api/role/getModuleList`,
     // 获取部门名、ID
-    getBranchListByRoleDetail: baseUrl + `/api/branch/getBranchListByRoleDetail`,
+    getBranchListByRoleDetail:
+      baseUrl + `/api/branch/getBranchListByRoleDetail`,
     // 添加角色
     addRole: baseUrl + `/api/role/addRole`,
     // 删除角色
@@ -247,7 +248,8 @@ export default new Vuex.Store({
     // 删除管理员
     delAdministrators: baseUrl + `/api/admin/deleteAdmin`,
     // 获取部门名、ID列表
-    getBranchListByAdminDetail: baseUrl + `/api/branch/getBranchListByAdminDetail`,
+    getBranchListByAdminDetail:
+      baseUrl + `/api/branch/getBranchListByAdminDetail`,
     // 获取角色名、ID列表
     getRoleListByBranchId: baseUrl + `/api/role/getRoleListByBranchId`,
 

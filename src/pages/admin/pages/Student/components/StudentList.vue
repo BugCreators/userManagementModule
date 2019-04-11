@@ -149,7 +149,7 @@ export default {
                 item.sex = "男";
               } else {
                 item.sex = "女";
-              };
+              }
               return item;
             });
             that.list = listTemp;
@@ -184,7 +184,7 @@ export default {
       });
     },
     resetPw(id) {
-      this.$store.dispatch('getItems', {
+      this.$store.dispatch("getItems", {
         url: this.$store.state.resetPwStudent,
         query: {
           id: id,
@@ -197,7 +197,7 @@ export default {
             Message.error(res.msg);
           }
         }
-      })
+      });
     },
     editData(id) {
       this.$emit("openDetailLog", id);

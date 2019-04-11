@@ -1,9 +1,11 @@
 <template>
   <div>
-    <SearchBox :moduleName="moduleName" 
+    <SearchBox
+      :moduleName="moduleName"
       :showSelect="true"
       :basisOfCollege="false"
-      :basisOfLevel="true" />
+      :basisOfLevel="true"
+    />
     <ListWarp
       :addFuncName="addFuncName"
       :count="count"

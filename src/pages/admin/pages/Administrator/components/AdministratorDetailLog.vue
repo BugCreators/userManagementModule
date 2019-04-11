@@ -59,7 +59,10 @@
         </i>
       </el-form-item>
       <el-form-item :label="i18n['role']" prop="role_id">
-        <el-select v-model="info.role_id" :placeholder="'请选择' + i18n['role']">
+        <el-select
+          v-model="info.role_id"
+          :placeholder="'请选择' + i18n['role']"
+        >
           <el-option
             v-for="item in roleList"
             :key="item.id"
@@ -86,10 +89,7 @@
           :placeholder="'请输入' + i18n['address']"
         ></el-input>
       </el-form-item>
-      <el-form-item
-        :label="i18n['email']"
-        prop="email"
-      >
+      <el-form-item :label="i18n['email']" prop="email">
         <el-input
           v-model="info.email"
           name="email"
@@ -125,7 +125,7 @@ import {
   Option,
   Radio,
   RadioGroup,
-  Select,
+  Select
 } from "element-ui";
 
 export default {
@@ -159,8 +159,8 @@ export default {
       },
       branchList: [
         {
-          "id": 0,
-          "name": "无"
+          id: 0,
+          name: "无"
         }
       ],
       roleList: [],
@@ -184,10 +184,15 @@ export default {
         realname: [{ required: true, message: "请输入姓名" }],
         number: [
           { required: true, message: "职工号不能为空" },
-          { type: "number", min: 10000000000, max: 99999999999, message: "请输入11位的数字" }
+          {
+            type: "number",
+            min: 10000000000,
+            max: 99999999999,
+            message: "请输入11位的数字"
+          }
         ],
         branch_id: [{ required: true, message: "请选择部门" }],
-        role_id: [{ required: true, message: "请选择角色" }],
+        role_id: [{ required: true, message: "请选择角色" }]
       },
       checkedActions: [],
       checkAll: false,

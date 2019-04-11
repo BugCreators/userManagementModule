@@ -69,7 +69,7 @@ export default {
       sex: {
         男: 1,
         女: 0
-      },
+      }
     };
   },
   computed: {
@@ -123,7 +123,7 @@ export default {
               that.isImport = true;
             }
             if (item.sex) {
-              if(item.sex != "男" && item.sex != "女") {
+              if (item.sex != "男" && item.sex != "女") {
                 item.message = "性别错误！例：男";
                 that.isImport = true;
               }

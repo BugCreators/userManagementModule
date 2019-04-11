@@ -13,8 +13,8 @@ module.exports = {
   publicPath:
     // process.env.NODE_ENV === "production"
     //   ? "Project/user-management-module/dist"
-    //   : 
-      "/", // 项目部署的基础路径 baseUrl
+    //   :
+    "/", // 项目部署的基础路径 baseUrl
 
   /* 注意目标目录在构建之前会被清除 (构建时传入 --no-clean 可关闭该行为) */
 

@@ -8,7 +8,10 @@
     >
       <el-table-column type="selection" width="50"></el-table-column>
       <el-table-column prop="name" :label="i18n['name']"></el-table-column>
-      <el-table-column prop="branchName" :label="i18n['branchName']"></el-table-column>
+      <el-table-column
+        prop="branchName"
+        :label="i18n['branchName']"
+      ></el-table-column>
       <el-table-column
         prop="description"
         :label="i18n['description']"

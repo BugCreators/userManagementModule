@@ -59,7 +59,11 @@
         </i>
       </el-form-item>
       <el-form-item :label="i18n['major']" prop="major_id">
-        <el-select v-model="info.major_id" placeholder="暂无专业" @change="majorChange">
+        <el-select
+          v-model="info.major_id"
+          placeholder="暂无专业"
+          @change="majorChange"
+        >
           <el-option
             v-for="item in majorList"
             :key="item.id"
@@ -94,10 +98,7 @@
           :placeholder="'请输入' + i18n['address']"
         ></el-input>
       </el-form-item>
-      <el-form-item
-        :label="i18n['email']"
-        prop="email"
-      >
+      <el-form-item :label="i18n['email']" prop="email">
         <el-input
           v-model="info.email"
           name="email"
@@ -186,7 +187,12 @@ export default {
         realname: [{ required: true, message: "请输入姓名" }],
         number: [
           { required: true, message: "学号不能为空" },
-          { type: "number", min: 10000000000, max: 99999999999, message: "请输入11位的数字" }
+          {
+            type: "number",
+            min: 10000000000,
+            max: 99999999999,
+            message: "请输入11位的数字"
+          }
         ],
         college_id: [{ required: true, message: "请选择学院" }],
         major_id: [{ required: true, message: "请选择专业" }],
@@ -260,9 +266,7 @@ export default {
           if (res.code === 200) {
             if (res.data.length > 0) {
               that.majorList = res.data;
-              isChange
-                ? (that.info.major_id = that.majorList[0].id)
-                : "";
+              isChange ? (that.info.major_id = that.majorList[0].id) : "";
             } else {
               that.majorList = {};
               that.info.major_id = "";
@@ -286,9 +290,7 @@ export default {
           if (res.code === 200) {
             if (res.data.length > 0) {
               that.classList = res.data;
-              isChange
-                ? (that.info.class_id = that.classList[0].id)
-                : "";
+              isChange ? (that.info.class_id = that.classList[0].id) : "";
             } else {
               that.classList = {};
               that.info.class_id = "";

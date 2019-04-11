@@ -1,7 +1,6 @@
 <template>
   <div>
-    <SearchBox :moduleName="moduleName" 
-      :basisOfClass="true" />
+    <SearchBox :moduleName="moduleName" :basisOfClass="true" />
     <ListWarp
       :addFuncName="addFuncName"
       :count="count"
@@ -23,7 +22,11 @@
       :dataId="currentId"
       @listChange="listChange"
     />
-    <StudentListExport v-if="showExportLog" :showExportLog="showExportLog" @switchExportLog="switchExportLog"/>
+    <StudentListExport
+      v-if="showExportLog"
+      :showExportLog="showExportLog"
+      @switchExportLog="switchExportLog"
+    />
   </div>
 </template>
 

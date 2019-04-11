@@ -57,8 +57,6 @@
           <el-radio :label="1">男</el-radio>
         </el-radio-group>
       </el-form-item>
-      
-      </el-form-item>
       <el-form-item :label="i18n['phone']" prop="phone">
         <el-input
           v-model="info.phone"
@@ -73,10 +71,7 @@
           :placeholder="'请输入' + i18n['address']"
         ></el-input>
       </el-form-item>
-      <el-form-item
-        :label="i18n['email']"
-        prop="email"
-      >
+      <el-form-item :label="i18n['email']" prop="email">
         <el-input
           v-model="info.email"
           name="email"
@@ -161,9 +156,14 @@ export default {
         realname: [{ required: true, message: "请输入姓名" }],
         number: [
           { required: true, message: "职工号不能为空" },
-          { type: "number", min: 10000000000, max: 99999999999, message: "请输入11位的数字" }
+          {
+            type: "number",
+            min: 10000000000,
+            max: 99999999999,
+            message: "请输入11位的数字"
+          }
         ],
-        college_id: [{ required: true, message: "请选择学院" }],
+        college_id: [{ required: true, message: "请选择学院" }]
       },
       collegeList: {}
     };

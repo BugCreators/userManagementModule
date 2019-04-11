@@ -145,7 +145,7 @@ export default {
                 item.sex = "男";
               } else {
                 item.sex = "女";
-              };
+              }
               return item;
             });
             that.list = listTemp;
@@ -180,7 +180,8 @@ export default {
       });
     },
     resetPw(id) {
-      this.$store.dispatch('getItems', {
+      let that = this;
+      this.$store.dispatch("getItems", {
         url: this.$store.state.resetPwTeacher,
         query: {
           id: id,
@@ -208,13 +209,13 @@ export default {
                       break;
                   }
                 }
-              })
+              });
             }
           } else {
             Message.error(res.msg);
           }
         }
-      })
+      });
     },
     editData(id) {
       this.$emit("openDetailLog", id);
@@ -300,11 +301,11 @@ export default {
             if (res.data.length) {
               let listTemp = res.data;
               allList = listTemp.map(item => {
-                if (item[that.i18n['sex']] == 1) {
-                  item[that.i18n['sex']] = "男";
+                if (item[that.i18n["sex"]] == 1) {
+                  item[that.i18n["sex"]] = "男";
                 } else {
-                  item[that.i18n['sex']] = "女";
-                };
+                  item[that.i18n["sex"]] = "女";
+                }
                 return item;
               });
               downloadExl(allList, "xlsx", "教师列表");

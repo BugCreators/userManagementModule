@@ -16,8 +16,7 @@
         v-if="!isImport"
         prop="roleName"
         label="身份"
-      ></el-table-column
-      >
+      ></el-table-column>
       <el-table-column
         v-for="(value, key, index) in i18n"
         :prop="key"
@@ -152,26 +151,30 @@ export default {
     },
     resetPwConfirm(id) {
       let that = this;
-      MessageBox.confirm("此操作将重置该管理员密码为职工号，是否继续？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-        callback(action) {
-          switch (action) {
-            case "cancel":
-            case "close":
-              Message.info("取消重置");
-              break;
-            case "confirm":
-              that.resetPw(id);
-              break;
+      MessageBox.confirm(
+        "此操作将重置该管理员密码为职工号，是否继续？",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+          callback(action) {
+            switch (action) {
+              case "cancel":
+              case "close":
+                Message.info("取消重置");
+                break;
+              case "confirm":
+                that.resetPw(id);
+                break;
+            }
           }
         }
-      });
+      );
     },
     resetPw(id) {
       let that = this;
-      this.$store.dispatch('getItems', {
+      this.$store.dispatch("getItems", {
         url: this.$store.state.resetPwAdmin,
         query: {
           id: id,
@@ -199,13 +202,13 @@ export default {
                       break;
                   }
                 }
-              })
+              });
             }
           } else {
             Message.error(res.msg);
           }
         }
-      })
+      });
     },
     editData(id) {
       this.$emit("openDetailLog", id);

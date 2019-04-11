@@ -21,7 +21,11 @@
         </el-select>
       </el-form-item>
       <el-form-item :label="i18n['major']" prop="major_id">
-        <el-select v-model="data.major_id" placeholder="暂无专业" @change="majorChange">
+        <el-select
+          v-model="data.major_id"
+          placeholder="暂无专业"
+          @change="majorChange"
+        >
           <el-option
             v-for="item in majorList"
             :key="item.id"
@@ -78,7 +82,17 @@
 </template>
 
 <script>
-import { Button, Dialog, Form, FormItem, Loading, Message, Select, Option, Upload } from "element-ui";
+import {
+  Button,
+  Dialog,
+  Form,
+  FormItem,
+  Loading,
+  Message,
+  Select,
+  Option,
+  Upload
+} from "element-ui";
 import StudentList from "./StudentList";
 import XLSX from "xlsx";
 import { downloadExl, changeExlHaed } from "@/assets/js/tool";
@@ -122,7 +136,7 @@ export default {
         男: 1,
         女: 0
       },
-      rules:{
+      rules: {
         college_id: [{ require: true, message: "请选择学院" }],
         major_id: [{ required: true, message: "请选择专业" }],
         class_id: [{ required: true, message: "请选择班级" }]
@@ -249,7 +263,7 @@ export default {
               that.isImport = true;
             }
             if (item.sex) {
-              if(item.sex != "男" && item.sex != "女") {
+              if (item.sex != "男" && item.sex != "女") {
                 item.message = "性别错误！例：男";
                 that.isImport = true;
               }
@@ -272,15 +286,15 @@ export default {
     importExcel() {
       let that = this;
       if (this.data.college_id == "") {
-        this.message = "学院不能为空！"
+        this.message = "学院不能为空！";
         return;
       }
       if (this.data.major_id == "") {
-        this.message = "专业不能为空！"
+        this.message = "专业不能为空！";
         return;
       }
       if (this.data.class_id == "") {
-        this.message = "班级不能为空！"
+        this.message = "班级不能为空！";
         return;
       }
       let loading = Loading.service({
