@@ -8,7 +8,7 @@
       <div class="detail">
         <div class="basis">
           <AvueImage
-            :srcImage="info.logo || $store.state.defaultCollege"
+            :srcImage="logoUrl(info.logo)"
             :replaceImage="$store.state.defaultCollege"
             :class="['college-img']"
           />
@@ -107,6 +107,13 @@ export default {
       } else {
         el.style.display = `block`;
         this.isShowMore = true;
+      }
+    },
+    logoUrl(url) {
+      if (url == "" || url == null) {
+        return this.$store.state.defaultCollege;
+      } else {
+        return this.$store.state.baseUrl + url;
       }
     }
   }
