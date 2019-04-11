@@ -12,7 +12,7 @@ module.exports = {
 
   publicPath:
     // process.env.NODE_ENV === "production"
-    //   ? "Project/user-management-module/dist"
+    //   ? "MyProject/user-management-module/dist"
     //   :
     "/", // 项目部署的基础路径 baseUrl
 
@@ -78,14 +78,22 @@ module.exports = {
   // https://cli.vuejs.org/zh/guide/webpack.html#%E9%93%BE%E5%BC%8F%E6%93%8D%E4%BD%9C-%E9%AB%98%E7%BA%A7
   // https://github.com/neutrinojs/webpack-chain#getting-started
 
-  // chainWebpack: config => {
+  chainWebpack: config => {
   // 对内部的 webpack 配置进行更细粒度的修改
   // if (process.env.NODE_ENV === 'production') {
-  //   // 为生产环境修改配置
+    // 为生产环境修改配置
+    config.module
+        .rule('images')
+        .use('image-webpack-loader')
+        .loader('image-webpack-loader')
+        .options({
+          bypassOnDebug: true
+        })
+        .end();
   // } else {
-  //   // 为开发环境修改配置
+    // 为开发环境修改配置
   // }
-  // },
+  },
 
   /* 
     如果这个值是一个对象，则会通过 webpack-merge 合并到最终的配置中
@@ -103,7 +111,8 @@ module.exports = {
         algorithm: "gzip",
         test: new RegExp("\\.(" + ["js", "css"].join("|") + ")$"),
         threshold: 8192,
-        minRatio: 0.8
+        minRatio: 0.8,
+        // deleteOriginalAssets: true // 是否删除源文件
       })
     ];
     let pluginsDev = [
@@ -112,10 +121,17 @@ module.exports = {
     if (process.env.NODE_ENV) {
       // 为生产环境修改配置
       config.plugins = [...config.plugins, ...pluginsPro];
+      config.externals = {
+        "axios": "axios",
+        "element-ui": 'ELEMENT',
+        "vue": "Vue",
+        "vuex": "Vuex",
+        "vue-router": "VueRouter"
+      }
     } else {
       // 为开发环境修改配置
       config.plugins = [...config.plugins, ...pluginsDev];
-    }
+    };
   },
   /*******************************************************************************************************************/
 

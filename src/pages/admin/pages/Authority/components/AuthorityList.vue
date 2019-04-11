@@ -15,7 +15,7 @@
       <el-table-column label="所属模块" prop="moduleName"></el-table-column>
     </el-table>
     <div class="listWarp2">
-      <div class="authorityListPage" v-if="authorityList.length !== 0">
+      <div class="listPage" v-if="authorityList.length !== 0">
         <el-pagination
           layout="prev, pager, next"
           :page-size="pageSize"
@@ -106,18 +106,3 @@ export default {
   }
 };
 </script>
-
-<style lang="less" scoped>
-.errorMsg {
-  color: #dd6161 !important;
-}
-.listWarp2 {
-  display: inline-block;
-  margin: 10px 0 20px;
-  width: 100%;
-  .authorityListPage {
-    float: right;
-    line-height: 2;
-  }
-}
-</style>
