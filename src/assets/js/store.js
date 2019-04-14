@@ -24,6 +24,17 @@ export default new Vuex.Store({
       copyright,
       icp
     }*/
+    // 其它系统链接
+    systemWebsite: [
+      {
+        name: "mis系统",
+        website: "http://mis.sgu.edu.cn/"
+      },
+      {
+        name: "校园卡服务平台",
+        website: "http://card.sgu.edu.cn/"
+      }
+    ],
     // 搜索值
     searchValue: {
       basis: 0,

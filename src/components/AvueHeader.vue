@@ -9,40 +9,49 @@
             "
             :replaceImage="$store.state.defaultLogo"
           />
-          <!-- :srcImage="$store.state.setting.logoUri || $store.state.defaultLogo"
-            :replaceImage="$store.state.defaultLogo"/> -->
         </a>
       </h1>
-      <div class="userInfo">
-        <a
-          class="loginButton"
-          :href="buttonInfo.href"
-          v-if="!$store.state.userInfo"
-          >{{ buttonInfo.text }}</a
-        >
-        <div v-else>
-          欢迎您！{{ $store.state.userInfo.roleName || "游客" }}
-          <el-dropdown @command="handleCommand">
-            <span class="el-dropdown-link">
-              {{ $store.state.userInfo.realname
-              }}<i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="userInfo">个人信息</el-dropdown-item>
-              <el-dropdown-item command="changePw">修改密码</el-dropdown-item>
-              <div v-if="$store.state.userInfo.intoBackstage">
-                <el-dropdown-item v-if="!isAdmin" command="userManagement"
-                  >用户管理</el-dropdown-item
-                >
-                <el-dropdown-item command="index" v-else
-                  >回到首页</el-dropdown-item
-                >
-              </div>
-              <el-dropdown-item command="logout">退出登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+      <div class="header-right">
+        <div class="otherSystem">
+          <div v-for="(item, index) in $store.state.systemWebsite" :key="index">
+            <a target="_blank" :href="item.website">
+              <span>{{ item.name}}</span>
+            </a>
+            <span v-if="index + 1 != $store.state.systemWebsite.length">|</span>
+          </div>
+        </div>
+        <div class="userInfo">
+          <a
+            class="loginButton"
+            :href="buttonInfo.href"
+            v-if="!$store.state.userInfo"
+            >{{ buttonInfo.text }}</a
+          >
+          <div v-else>
+            欢迎您！{{ $store.state.userInfo.roleName || "游客" }}
+            <el-dropdown @command="handleCommand">
+              <span class="el-dropdown-link">
+                {{ $store.state.userInfo.realname
+                }}<i class="el-icon-arrow-down el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="userInfo">个人信息</el-dropdown-item>
+                <el-dropdown-item command="changePw">修改密码</el-dropdown-item>
+                <div v-if="$store.state.userInfo.intoBackstage">
+                  <el-dropdown-item v-if="!isAdmin" command="userManagement"
+                    >用户管理</el-dropdown-item
+                  >
+                  <el-dropdown-item command="index" v-else
+                    >回到首页</el-dropdown-item
+                  >
+                </div>
+                <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
         </div>
       </div>
+      
     </div>
   </div>
 </template>
@@ -118,16 +127,7 @@ export default {
       this.$store.dispatch("clearUserInfo").then(() => {
         that.$store.commit("clearUserInfo");
       });
-      // if (this.$store.state.setting.thirdpartylogout) {
-      //   var ref = location.href;
-      //   window.location.href =
-      //     this.$store.state.setting.thirdpartylogout +
-      //     "?ref=" +
-      //     encodeURIComponent(ref);
-      // } else {
-      // debugger
       location.href = "index.html";
-      // }
     }
   }
 };
@@ -155,8 +155,25 @@ export default {
       width: auto;
     }
   }
-  .userInfo {
+  .header-right {
     float: right;
+    color: white;
+    a {
+      color: white;
+    }
+    div {
+      display: inline-block;
+    }
+  }
+  .otherSystem {
+    display: inline-block;
+    margin-right: 20px;
+    span {
+      margin-right: 10px;
+    }
+  }
+  .userInfo {
+    display: inline-block;
     &,
     .el-dropdown,
     .loginButton {

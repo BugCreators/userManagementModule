@@ -80,8 +80,8 @@ module.exports = {
 
   chainWebpack: config => {
   // 对内部的 webpack 配置进行更细粒度的修改
-  // if (process.env.NODE_ENV === 'production') {
-    // 为生产环境修改配置
+  if (process.env.NODE_ENV === 'production') {
+    //为生产环境修改配置
     config.module
         .rule('images')
         .use('image-webpack-loader')
@@ -90,9 +90,9 @@ module.exports = {
           bypassOnDebug: true
         })
         .end();
-  // } else {
-    // 为开发环境修改配置
-  // }
+  } else {
+    //为开发环境修改配置
+  }
   },
 
   /* 
