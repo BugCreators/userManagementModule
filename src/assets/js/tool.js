@@ -136,4 +136,4 @@ function changeExlHaed(Sheets, header) {
     i++;
   }
 }
-export { getUrlParam, downloadExl, changeExlHaed };
+export { getUrlParam, downloadExl, changeExlHaed, XLSX };

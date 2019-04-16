@@ -40,8 +40,7 @@
 <script>
 import { Button, Dialog, Loading, Message, Upload } from "element-ui";
 import TeacherList from "./TeacherList";
-import XLSX from "xlsx";
-import { downloadExl, changeExlHaed } from "@/assets/js/tool";
+import { downloadExl, changeExlHaed, XLSX } from "@/assets/js/tool";
 
 export default {
   name: "teacherListImport",

@@ -13,28 +13,20 @@ export default new Vuex.Store({
   state: {
     /*******************基础数据********************/
     // 设置
-    setting: ``,
+    setting: {
+      schoolAddr: ``,
+      schoolName: ``,
+      // 走马灯图片
+      carousel: [],
+      // 其它系统链接
+      systemWebsite: []
+    },
     /*{
-      schoolAddr,
-      schoolName,
-      bannerHref,
-      bannerUri,
       logoUri,
       // 网站备案
       copyright,
       icp
     }*/
-    // 其它系统链接
-    systemWebsite: [
-      {
-        name: "mis系统",
-        website: "http://mis.sgu.edu.cn/"
-      },
-      {
-        name: "校园卡服务平台",
-        website: "http://card.sgu.edu.cn/"
-      }
-    ],
     // 搜索值
     searchValue: {
       basis: 0,
@@ -470,23 +462,6 @@ export default new Vuex.Store({
         })
       );
     },
-    // postArrItems({ commit, state }, opts) {
-    //   axios
-    //     .post(
-    //       opts.url,
-    //       stringify(opts.query, {
-    //         indices: false
-    //       })
-    //     )
-    //     .then(
-    //       res => {
-    //         opts.cb(res);
-    //       },
-    //       err => {
-    //         console.log(err);
-    //       }
-    //     );
-    // },
     // eslint-disable-next-line
     getUserInfo({ commit, state }) {
       let c_start, c_end;

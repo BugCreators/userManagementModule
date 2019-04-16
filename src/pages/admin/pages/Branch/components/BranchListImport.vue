@@ -40,8 +40,7 @@
 <script>
 import { Button, Dialog, Loading, Message, Upload } from "element-ui";
 import BranchList from "./BranchList";
-import XLSX from "xlsx";
-import { downloadExl, changeExlHaed } from "@/assets/js/tool";
+import { XLSX, downloadExl, changeExlHaed } from "@/assets/js/tool";
 
 export default {
   name: "branchListImport",

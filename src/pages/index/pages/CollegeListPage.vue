@@ -1,25 +1,8 @@
 <template>
   <!-- <div style="padding-top:0px" v-if="$store.state.setting != ''"> -->
-  <div class="collegePage" ref="collegePage">
+  <div class="collegePage">
     <!-- 顶部banner -->
-    <div class="poster">
-      <a
-        :href="
-          $store.state.setting.bannerHref
-            ? $store.state.setting.bannerHref
-            : '#'
-        "
-      >
-        <AvueImage
-          :srcImage="
-            $store.state.setting.bannerUri
-              ? $store.state.setting.bannerUri
-              : $store.state.defaultBanner
-          "
-          :replaceImage="$store.state.defaultBanner"
-        />
-      </a>
-    </div>
+    <Carousel />
     <!-- 学院列表 -->
     <div class="college-wrapper">
       <div class="container">
@@ -31,12 +14,12 @@
 </template>
 
 <script>
-import AvueImage from "@/components/AvueImage";
+import Carousel from "../components/Carousel";
 
 export default {
   name: "collegeListPage",
   components: {
-    AvueImage,
+    Carousel,
     CollegeList: () =>
       import(/* webpackChunkName: "collegeList" */ "../components/CollegeList"),
     MyNoData: () =>
@@ -65,18 +48,9 @@ export default {
 .collegePage {
   overflow: hidden;
   padding-top: @header_height;
-  .poster {
-    margin: 0 auto;
-    height: 428px;
-    background-color: #aaa;
-    img {
-      width: 100%;
-      height: 100%;
-    }
-  }
   .college-wrapper {
     background: url("../../../assets/images/college_background.png") no-repeat
-      center center;
+    center center;
     padding-top: 50px;
     .container {
       width: @content_width;

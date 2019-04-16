@@ -94,8 +94,7 @@ import {
   Upload
 } from "element-ui";
 import StudentList from "./StudentList";
-import XLSX from "xlsx";
-import { downloadExl, changeExlHaed } from "@/assets/js/tool";
+import { downloadExl, changeExlHaed, XLSX } from "@/assets/js/tool";
 
 export default {
   name: "studentListImport",
