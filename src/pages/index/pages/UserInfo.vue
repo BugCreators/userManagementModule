@@ -5,7 +5,7 @@
       <el-breadcrumb-item>个人信息</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="userInfo-page">
-      <div class="userInfo-main">
+      <div :class="!isAdmin ? 'userInfo-main' : 'userInfo-admin'">
         <el-form label-position="left" :model="userInfo">
           <el-form-item v-for="item in i18n" :key="item.index" :label="item.cn">
             <el-input
@@ -13,6 +13,7 @@
               v-model="userInfo[item.en]"
               :disabled="item.disabled"
               :type="item.type"
+              :rows="item.rows"
             ></el-input>
             <div v-else>
               <el-radio
@@ -111,7 +112,8 @@ export default {
         {
           en: "description",
           cn: "个人描述",
-          type: "textarea"
+          type: "textarea",
+          rows: 10
         }
       ]
     };
@@ -239,9 +241,16 @@ export default {
   &-main {
     margin: 0 auto;
     width: 1200px;
-    .el-input {
-      width: 70%;
-    }
+  }
+  &-admin {
+    padding-left: 40px;
+    width: 1000px;
+  }
+  .el-input {
+    width: 50%;
+  }
+  .el-textarea {
+    width: 80%;
   }
 }
 </style>

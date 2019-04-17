@@ -39,7 +39,7 @@
         </div>
       </el-submenu>
       <el-menu-item
-        v-else-if="item.show"
+        v-else-if="$store.state.selectAuthority[item.show] || !item.show"
         :index="item.href"
         @click="switchTab(item)"
       >

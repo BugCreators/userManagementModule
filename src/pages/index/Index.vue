@@ -20,14 +20,6 @@ export default {
     AvueHeader,
     AvueFooter
   },
-  data() {
-    return {
-      setting: ``,
-      LoadingOpts: {
-        fullscreen: true
-      }
-    };
-  },
   computed: {
     userInfo() {
       return this.$store.state.userInfo;
@@ -35,14 +27,13 @@ export default {
   },
   created() {
     let that = this;
-    let loadingInstance = Loading.service(this.LoadingOpts);
+    let loading = Loading.service();
     this.$store.dispatch("getUserInfo").then(() => {
       this.$store.dispatch("getItems", {
         url: this.$store.state.getSysSetting,
         cb(res) {
-          loadingInstance.close();
+          loading.close();
           if (res.code === 200) {
-            that.setting = res.data;
             that.$store.commit("setSetting", res.data);
           } else {
             MessageBox.alert(`读取系统配置出错，请稍候重试`, `系统出错`, {

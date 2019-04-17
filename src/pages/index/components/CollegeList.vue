@@ -11,7 +11,11 @@
     <div class="college-list">
       <el-row :gutter="26">
         <el-col v-for="item in list" :span="3" :key="item.id">
-          <a class="college-card" :href="'index.html#/college/' + item.id" v-if="item.logo">
+          <a
+            class="college-card"
+            :href="'index.html#/college/' + item.id"
+            v-if="item.logo"
+          >
             <AvueImage
               :srcImage="logoUrl(item.logo)"
               :replaceImage="$store.state.defaultCollege"

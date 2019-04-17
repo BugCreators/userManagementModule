@@ -50,7 +50,7 @@ export default {
   padding-top: @header_height;
   .college-wrapper {
     background: url("../../../assets/images/college_background.png") no-repeat
-    center center;
+      center center;
     padding-top: 50px;
     .container {
       width: @content_width;

@@ -317,23 +317,31 @@ select, input, textarea, button {
     color: @default_color !important;
     border-color: @default_color !important;
   }
-}
-
-.el-button--primary {
-  background-color: @default_color !important;
-  border-color: @default_color !important;
-  &:focus,
-  &:hover{
-    color: white !important;
+  &--text {
+    color: @default_color;
+    &.el-button {
+      &:active,
+      &:focus,
+      &:hover {
+        border-color: white !important;
+      }
+    }
   }
-}
-
-.el-button--danger {
-  &:focus,
-  &:hover{
-    background-color: #f56c6c !important;
-    border-color: #f56c6c !important;
-    color: white !important;
+  &--primary {
+    background-color: @default_color !important;
+    border-color: @default_color !important;
+    &:focus,
+    &:hover{
+      color: white !important;
+    }
+  }
+  &--danger {
+    &:focus,
+    &:hover{
+      background-color: #f56c6c !important;
+      border-color: #f56c6c !important;
+      color: white !important;
+    }
   }
 }
 

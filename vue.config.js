@@ -79,20 +79,20 @@ module.exports = {
   // https://github.com/neutrinojs/webpack-chain#getting-started
 
   chainWebpack: config => {
-  // 对内部的 webpack 配置进行更细粒度的修改
-  if (process.env.NODE_ENV === 'production') {
+    // 对内部的 webpack 配置进行更细粒度的修改
+    // if (process.env.NODE_ENV === 'production') {
     //为生产环境修改配置
     config.module
-        .rule('images')
-        .use('image-webpack-loader')
-        .loader('image-webpack-loader')
-        .options({
-          bypassOnDebug: true
-        })
-        .end();
-  } else {
+      .rule("images")
+      .use("image-webpack-loader")
+      .loader("image-webpack-loader")
+      .options({
+        bypassOnDebug: true
+      })
+      .end();
+    // } else {
     //为开发环境修改配置
-  }
+    // }
   },
 
   /* 
@@ -111,7 +111,7 @@ module.exports = {
         algorithm: "gzip",
         test: new RegExp("\\.(" + ["js", "css"].join("|") + ")$"),
         threshold: 8192,
-        minRatio: 0.8,
+        minRatio: 0.8
         // deleteOriginalAssets: true // 是否删除源文件
       })
     ];
@@ -122,16 +122,16 @@ module.exports = {
       // 为生产环境修改配置
       config.plugins = [...config.plugins, ...pluginsPro];
       config.externals = {
-        "axios": "axios",
-        "element-ui": 'ELEMENT',
-        "vue": "Vue",
-        "vuex": "Vuex",
+        axios: "axios",
+        "element-ui": "ELEMENT",
+        vue: "Vue",
+        vuex: "Vuex",
         "vue-router": "VueRouter"
-      }
+      };
     } else {
       // 为开发环境修改配置
       config.plugins = [...config.plugins, ...pluginsDev];
-    };
+    }
   },
   /*******************************************************************************************************************/
 

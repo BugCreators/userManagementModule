@@ -1,9 +1,16 @@
 <template>
-  <el-carousel class="poster" height="320px" type="card">
-    <el-carousel-item v-for="item in $store.state.setting.carousel">
+  <AvueImage 
+    v-if="!$store.state.setting.carousel.length"
+    :srcImage="$store.state.defaultBanner"
+  />
+  <el-carousel class="poster" height="320px" type="card" v-else>
+    <el-carousel-item
+      v-for="(item, index) in $store.state.setting.carousel"
+      :key="index"
+    >
       <a :href="item.href">
         <AvueImage
-          :srcImage="logoUrl(item.src)"
+          :srcImage="logoUrl(item.url)"
           :replaceImage="$store.state.defaultBanner"
         />
       </a>
@@ -31,7 +38,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style lang="less" scope>

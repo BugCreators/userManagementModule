@@ -6,8 +6,8 @@ import { stringify } from "qs";
 Vue.use(Vuex);
 
 // const baseUrl = "http://127.0.0.1/avue/public";
-// const baseUrl = "http://api.avue.com";
-const baseUrl = "http://47.103.5.57:8080";
+const baseUrl = "http://api.avue.com";
+// const baseUrl = "http://47.103.5.57:8080";
 
 export default new Vuex.Store({
   state: {
@@ -17,7 +17,12 @@ export default new Vuex.Store({
       schoolAddr: ``,
       schoolName: ``,
       // 走马灯图片
-      carousel: [],
+      carousel: [
+        {
+          url: "",
+          href: ""
+        }
+      ],
       // 其它系统链接
       systemWebsite: []
     },
@@ -155,23 +160,21 @@ export default new Vuex.Store({
         name: "userInfo",
         title: "个人信息",
         class: "el-icon-edit-outline",
-        show: true,
         href: "userInfo"
       },
       {
         name: "changePw",
         title: "修改密码",
         class: "el-icon-edit",
-        show: true,
         href: "changePw"
+      },
+      {
+        name: "setting",
+        title: "基本设置",
+        class: "el-icon-setting",
+        show: "select_system_setting",
+        href: "setting"
       }
-      // ,
-      // {
-      //   name: "setting",
-      //   title: "基本设置",
-      //   class: "el-icon-setting",
-      //   href: "setting"
-      // }
     ],
 
     // 学院详情对话框
@@ -185,7 +188,7 @@ export default new Vuex.Store({
 
     /*******************网络接口*******************/
     // 系统设置
-    getSysSetting: baseUrl + `/api/user/getSysSetting`,
+    getSysSetting: baseUrl + `/api/system/getSysSetting`,
     // 学院列表
     getCollegeList: baseUrl + `/api/college/getCollegeList`,
     // 学院详情 参数: id
@@ -372,6 +375,12 @@ export default new Vuex.Store({
     resetPwTeacher: baseUrl + `/api/teacher/resetPassword`,
     // 修改教师
     changeTeacher: baseUrl + `/api/teacher/changeTeacher`,
+
+    // 系统设置
+    // 修改学校名字
+    changeSchoolName: baseUrl + `/api/system/changeSchoolName`,
+    // 修改学校地址
+    changeSchoolAddress: baseUrl + `/api/system/changeSchoolAddress`,
     /*****************END*******************/
     /************获取权限 BEGIN**************/
     // 进入后台权限
