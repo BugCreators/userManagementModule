@@ -1,5 +1,5 @@
 <template>
-  <AvueImage 
+  <AvueImage
     v-if="!$store.state.setting.carousel.length"
     :srcImage="$store.state.defaultBanner"
   />

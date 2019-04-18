@@ -11,10 +11,10 @@
       list-type="picture-card"
       ref="upload"
       :auto-upload="false"
-      :http-request="uploadIogo"
-      :on-change="validateForm"
       :file-list="fileList"
+      :http-request="uploadIogo"
       :limit="1"
+      :on-change="validateForm"
       drag
     >
       <i class="el-icon-upload"></i>

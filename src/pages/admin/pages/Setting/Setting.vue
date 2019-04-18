@@ -3,84 +3,89 @@
     <div class="setting-page">
       <el-form :model="setting">
         <el-form-item :label="i18n.schoolName">
-          <el-input v-model="setting.schoolName" :disabled="disabledName"></el-input>
+          <el-input
+            v-model="setting.schoolName"
+            :disabled="disabledName"
+          ></el-input>
           <div class="editButton">
             <div v-if="disabledName">
-              <span class="editInfo" @click="changeDisabledName">修改</span>
+              <span @click="changeDisabledName">修改</span>
             </div>
             <div v-else>
-              <span class="editInfo" @click="changeInfo('schoolName')">确定</span>
-              <span class="editInfo" @click="changeDisabledName">取消</span>
+              <span @click="changeInfo('schoolName')">确定</span>
+              <span @click="changeDisabledName">取消</span>
             </div>
           </div>
         </el-form-item>
         <el-form-item :label="i18n.schoolAddress">
-          <el-input v-model="setting.schoolAddress" :disabled="disabledAddress"></el-input>
+          <el-input
+            v-model="setting.schoolAddress"
+            :disabled="disabledAddress"
+          ></el-input>
           <div class="editButton">
             <div v-if="disabledAddress">
-              <span class="editInfo" @click="changeDisabledAddress">修改</span>
+              <span @click="changeDisabledAddress">修改</span>
             </div>
             <div v-else>
-              <span class="editInfo" @click="changeInfo('schoolAddress')">确定</span>
-              <span class="editInfo" @click="changeDisabledAddress">取消</span>
+              <span @click="changeInfo('schoolAddress')">确定</span>
+              <span @click="changeDisabledAddress">取消</span>
             </div>
           </div>
         </el-form-item>
-        <!-- <el-form-item :label="i18n.carousel + '（最多6张）'">
-          <el-card v-for="(item, index) in setting.carousel" :key="index">
-            <div slot="header">
-              <span>{{ item.name }}</span>
-              <el-button class="card-button" type="text" @click="deleteCarouselItem(index)">删除</el-button>
-            </div>
-            <div>
-              链接：
-              <el-input v-model="item.href" :disabled="true"></el-input>
-            </div>
-            <el-upload
-              accept="image/jpg,image/png"
-              action="Upload"
-              list-type="picture"
-              :auto-upload="false"
-              :file-list="[item]"
-              :limit="2"
-              :on-change="handleChange"
-            >
-              图片：
-              <el-button size="small" type="primary">点击上传</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-            </el-upload>
+        <el-form-item :label="i18n.carousel + '（最多6张）'">
+          <CarouselCard
+            v-for="item in setting.carousel"
+            :key="item.index"
+            :item="item"
+            @carouselChange="carouselChange"
+            @deleteItem="deleteItem"
+            @openLog="openLog"
+          />
+          <el-card
+            v-if="setting.carousel.length < 6"
+            class="addCarouseItem"
+            type="addCard"
+          >
+            <span
+              class="el-icon-circle-plus-outline addButton"
+              @click="openLog()"
+            ></span>
           </el-card>
-          <el-card type="addCard" v-if="setting.carousel.length < 6" class="addCarouseItem">
-            <span class="el-icon-circle-plus-outline addButton" @click="addCarouseItem"></span>
-          </el-card>
-        </el-form-item> -->
+        </el-form-item>
       </el-form>
+      <CarouselLog
+        v-if="showLog"
+        :dataIndex="currentIndex"
+        :showLog="showLog"
+        @carouselChange="carouselChange"
+        @closeLog="closeLog"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import {
-  Button,
   Card,
   Form,
   FormItem,
   Input,
   Loading,
   MessageBox,
-  Upload,
   Message
 } from "element-ui";
+import CarouselCard from "./components/CarouselCard";
+import CarouselLog from "./components/CarouselLog";
 
 export default {
   name: "sysSetting",
   components: {
-    elButton: Button,
+    CarouselCard,
+    CarouselLog,
     elCard: Card,
     elForm: Form,
     elFormItem: FormItem,
-    elInput: Input,
-    elUpload: Upload
+    elInput: Input
   },
   data() {
     return {
@@ -98,34 +103,39 @@ export default {
         systemWebsite: "系统链接"
       },
       disabledName: true,
-      disabledAddress: true
+      disabledAddress: true,
+      showLog: false,
+      currentIndex: ""
     };
   },
   created() {
-    let that = this;
-    let loading = Loading.service();
-    this.$store.dispatch("getItems", {
-      url: this.$store.state.getSysSetting,
-      cb(res) {
-        loading.close();
-        if (res.code === 200) {
-          that.setting = res.data;
-          that.setting.carousel = that.setting.carousel.map(item => {
-            item.name = item.url.split('/').pop();
-            item.url = that.$store.state.baseUrl + item.url;
-            return item;
-          });
-          that.$store.commit("setSetting", res.data);
-        } else {
-          MessageBox.alert(`读取系统配置出错，请稍候重试`, `系统出错`, {
-            type: `error`,
-            confirmButtonText: `确定`
-          });
-        }
-      }
-    });
+    this.getSysSetting();
   },
   methods: {
+    getSysSetting() {
+      let that = this;
+      let loading = Loading.service();
+      this.$store.dispatch("getItems", {
+        url: this.$store.state.getSysSetting,
+        cb(res) {
+          loading.close();
+          if (res.code === 200) {
+            that.setting = res.data;
+            that.setting.carousel = that.setting.carousel.map(item => {
+              item.name = item.url.split("/").pop();
+              item.url = that.$store.state.baseUrl + item.url;
+              return item;
+            });
+            that.$store.commit("setSetting", res.data);
+          } else {
+            MessageBox.alert(`读取系统配置出错，请稍候重试`, `系统出错`, {
+              type: `error`,
+              confirmButtonText: `确定`
+            });
+          }
+        }
+      });
+    },
     changeDisabledName() {
       this.disabledName = !this.disabledName;
     },
@@ -135,11 +145,11 @@ export default {
     changeInfo(type) {
       let url, data;
       if (type === "schoolName") {
-        url = this.$store.state.changeSchoolName,
-        data = this.setting.schoolName
+        (url = this.$store.state.changeSchoolName),
+          (data = this.setting.schoolName);
       } else if (type === "schoolAddress") {
-        url = this.$store.state.changeSchoolAddress,
-        data = this.setting.schoolAddress
+        (url = this.$store.state.changeSchoolAddress),
+          (data = this.setting.schoolAddress);
       }
       let that = this;
       this.$store.dispatch("getItems", {
@@ -160,32 +170,21 @@ export default {
             Message.error(res.msg);
           }
         }
-      })
+      });
     },
-    deleteCarouselItem(index) {
+    openLog(index) {
+      this.currentIndex = index;
+      this.showLog = true;
+    },
+    closeLog() {
+      this.currentIndex = "";
+      this.showLog = false;
+    },
+    deleteItem(index) {
       this.setting.carousel.splice(index, 1);
     },
-    addCarouseItem() {
-      if (this.setting.carousel.length > 6) {
-        Message.error('轮播图不能超过6个！')
-      }
-      this.setting.carousel.push({
-        url: "",
-        href: ""
-      })
-    },
-    handleChange(file, fileList) {
-      let fileType = file.raw.type;
-      const isJPG = fileType === "image/jpg" || fileType === "image/png";
-      const isLt1M = file.size / 1024 < 500;
-      if (!isJPG) {
-        Message.error("只能上传jpg/png文件!");
-      }
-      if (!isLt1M) {
-        Message.error(`文件大小不能超过500kb!`);
-      }
-      fileList.splice(0, 1, file);
-      fileList.pop();
+    carouselChange() {
+      this.getSysSetting();
     }
   }
 };
@@ -201,13 +200,11 @@ export default {
       .el-card {
         display: inline-block;
         margin-right: 20px;
+        max-height: 400px;
+        max-width: 450px;
         width: 25%;
         .el-input {
           width: 85%;
-        }
-        .el-upload__tip {
-          display: inline-block;
-          margin-left: 10px;
         }
         &:not([type="addCard"]) {
           &:nth-child(4) {
@@ -215,11 +212,11 @@ export default {
           }
         }
         &.addCarouseItem {
-          height: 300px;
+          height: 400px;
           font-size: 40px;
           position: relative;
           text-align: center;
-          width: 250px;
+          width: 15%;
           .addButton {
             cursor: pointer;
             position: absolute;
@@ -240,13 +237,10 @@ export default {
 }
 .editButton {
   display: inline-block;
-  .editInfo {
+  span {
     cursor: pointer;
     color: @default_color;
     margin-left: 20px;
   }
-}
-.card-button {
-  float: right;
 }
 </style>

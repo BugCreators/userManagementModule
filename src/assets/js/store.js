@@ -381,6 +381,18 @@ export default new Vuex.Store({
     changeSchoolName: baseUrl + `/api/system/changeSchoolName`,
     // 修改学校地址
     changeSchoolAddress: baseUrl + `/api/system/changeSchoolAddress`,
+    // 获取轮播图信息
+    getCarouselItem: baseUrl + `/api/system/getCarouselItem`,
+    // 添加轮播图
+    addCarouselItem: baseUrl + `/api/system/addCarouselItem`,
+    // 删除轮播图
+    deleteCarouselItem: baseUrl + `/api/system/deleteCarouselItem`,
+    // 编辑轮播图-图片
+    changeCarouselItemPicture:
+      baseUrl + `/api/system/changeCarouselItemPicture`,
+    // 编辑轮播图-链接
+    changeCarouselItemWebsite:
+      baseUrl + `/api/system/changeCarouselItemWebsite`,
     /*****************END*******************/
     /************获取权限 BEGIN**************/
     // 进入后台权限
