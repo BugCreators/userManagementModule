@@ -36,7 +36,7 @@
 <script>
 import AvueHeader from "@/components/AvueHeader";
 import AvueSidebar from "./components/AvueSidebar";
-import { MessageBox, Tabs, TabPane } from "element-ui";
+import { Loading, MessageBox, Tabs, TabPane } from "element-ui";
 
 export default {
   name: "admin",
@@ -95,6 +95,7 @@ export default {
         }
       });
     }
+    let loading = Loading.service();
     this.$store.dispatch("getUserInfo").then(() => {
       this.$store.dispatch("getItems", {
         url: this.$store.state.intoBackstage,
@@ -102,6 +103,7 @@ export default {
           token: this.$store.state.userInfo.token
         },
         cb(res) {
+          loading.close();
           if (res.code === 200) {
             if (res.data.intoBackstage === 0) {
               MessageBox.alert("你没有足够的权限进入后台", "提示", {

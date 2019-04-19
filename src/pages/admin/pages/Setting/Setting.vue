@@ -2,62 +2,59 @@
   <div class="setting mg--20">
     <div class="setting-page">
       <el-form :model="setting">
-        <el-form-item :label="i18n.schoolName">
-          <el-input
-            v-model="setting.schoolName"
-            :disabled="disabledName"
-          ></el-input>
-          <div class="editButton">
-            <div v-if="disabledName">
-              <span @click="changeDisabledName">修改</span>
-            </div>
-            <div v-else>
-              <span @click="changeInfo('schoolName')">确定</span>
-              <span @click="changeDisabledName">取消</span>
-            </div>
-          </div>
+        <el-form-item :label="i18n.schoolInfo">
+          <SchoolInfoCard
+            v-if="setting.schoolInfo.index"
+            :schoolInfo="setting.schoolInfo"
+          />
         </el-form-item>
-        <el-form-item :label="i18n.schoolAddress">
-          <el-input
-            v-model="setting.schoolAddress"
-            :disabled="disabledAddress"
-          ></el-input>
-          <div class="editButton">
-            <div v-if="disabledAddress">
-              <span @click="changeDisabledAddress">修改</span>
-            </div>
-            <div v-else>
-              <span @click="changeInfo('schoolAddress')">确定</span>
-              <span @click="changeDisabledAddress">取消</span>
-            </div>
-          </div>
+        <el-form-item :label="i18n.systemWebsite">
+          <OtherSystemCard
+            v-for="item in setting.systemWebsite"
+            :key="item.index"
+            :system="item"
+            @settingChange="settingChange"
+          />
+          <el-card class="addCard addCard-system" type="addCard">
+            <span
+              class="el-icon-circle-plus-outline addButton"
+              @click="openSystemLog"
+            ></span>
+          </el-card>
         </el-form-item>
         <el-form-item :label="i18n.carousel + '（最多6张）'">
           <CarouselCard
             v-for="item in setting.carousel"
+            class="carouselCard"
             :key="item.index"
             :item="item"
-            @carouselChange="carouselChange"
+            @settingChange="settingChange"
             @deleteItem="deleteItem"
-            @openLog="openLog"
+            @openLog="openCarouselLog"
           />
           <el-card
             v-if="setting.carousel.length < 6"
-            class="addCarouseItem"
+            class="addCard addCard-carousel"
             type="addCard"
           >
             <span
               class="el-icon-circle-plus-outline addButton"
-              @click="openLog()"
+              @click="openCarouselLog()"
             ></span>
           </el-card>
         </el-form-item>
       </el-form>
+      <OtherSystemLog
+        v-if="showSystemLog"
+        :showLog="showSystemLog"
+        @settingChange="settingChange"
+        @closeLog="closeLog"
+      />
       <CarouselLog
-        v-if="showLog"
-        :dataIndex="currentIndex"
-        :showLog="showLog"
-        @carouselChange="carouselChange"
+        v-if="showCarouselLog"
+        :dataIndex="currentCarouseIndex"
+        :showLog="showCarouselLog"
+        @settingChange="settingChange"
         @closeLog="closeLog"
       />
     </div>
@@ -65,47 +62,44 @@
 </template>
 
 <script>
-import {
-  Card,
-  Form,
-  FormItem,
-  Input,
-  Loading,
-  MessageBox,
-  Message
-} from "element-ui";
-import CarouselCard from "./components/CarouselCard";
-import CarouselLog from "./components/CarouselLog";
+import { Card, Form, FormItem, Loading, MessageBox } from "element-ui";
 
 export default {
   name: "sysSetting",
   components: {
-    CarouselCard,
-    CarouselLog,
+    CarouselCard: () =>
+      import(/* webpackChunkName: "carouselCard" */ "./components/CarouselCard"),
+    CarouselLog: () =>
+      import(/* webpackChunkName: "carouselLog" */ "./components/CarouselLog"),
     elCard: Card,
     elForm: Form,
     elFormItem: FormItem,
-    elInput: Input
+    OtherSystemCard: () =>
+      import(/* webpackChunkName: "otherSystemCard" */ "./components/OtherSystemCard"),
+    OtherSystemLog: () =>
+      import(/* webpackChunkName: "otherSystemLog" */ "./components/OtherSystemLog"),
+    SchoolInfoCard: () =>
+      import(/* webpackChunkName: "schoolInfoCard" */ "./components/SchoolInfoCard")
   },
   data() {
     return {
       setting: {
-        schoolName: "",
-        schoolAddress: "",
+        schoolInfo: {
+          name: ``,
+          address: ``
+        },
         carousel: [],
         systemWebsite: []
       },
       i18n: {
-        schoolName: "学校名称",
-        schoolAddress: "学校地址",
-        carousel: "轮播图",
-        href: "链接",
-        systemWebsite: "系统链接"
+        schoolInfo: `学校信息`,
+        carousel: `轮播图`,
+        href: `链接`,
+        systemWebsite: `其它系统`
       },
-      disabledName: true,
-      disabledAddress: true,
-      showLog: false,
-      currentIndex: ""
+      showSystemLog: false,
+      showCarouselLog: false,
+      currentCarouseIndex: ""
     };
   },
   created() {
@@ -136,54 +130,22 @@ export default {
         }
       });
     },
-    changeDisabledName() {
-      this.disabledName = !this.disabledName;
+    openSystemLog() {
+      this.showSystemLog = true;
     },
-    changeDisabledAddress() {
-      this.disabledAddress = !this.disabledAddress;
-    },
-    changeInfo(type) {
-      let url, data;
-      if (type === "schoolName") {
-        (url = this.$store.state.changeSchoolName),
-          (data = this.setting.schoolName);
-      } else if (type === "schoolAddress") {
-        (url = this.$store.state.changeSchoolAddress),
-          (data = this.setting.schoolAddress);
-      }
-      let that = this;
-      this.$store.dispatch("getItems", {
-        url,
-        query: {
-          data,
-          token: this.$store.state.userInfo.token
-        },
-        cb(res) {
-          if (res.code === 200) {
-            Message.success(res.msg);
-            if (type === "schoolName") {
-              that.changeDisabledName();
-            } else if (type === "schoolAddress") {
-              that.changeDisabledAddress();
-            }
-          } else {
-            Message.error(res.msg);
-          }
-        }
-      });
-    },
-    openLog(index) {
-      this.currentIndex = index;
-      this.showLog = true;
+    openCarouselLog(index) {
+      this.currentCarouseIndex = index;
+      this.showCarouselLog = true;
     },
     closeLog() {
-      this.currentIndex = "";
-      this.showLog = false;
+      this.currentCarouseIndex = "";
+      this.showCarouselLog = false;
+      this.showSystemLog = false;
     },
     deleteItem(index) {
       this.setting.carousel.splice(index, 1);
     },
-    carouselChange() {
+    settingChange() {
       this.getSysSetting();
     }
   }
@@ -200,9 +162,14 @@ export default {
       .el-card {
         display: inline-block;
         margin-right: 20px;
-        max-height: 400px;
         max-width: 450px;
         width: 25%;
+        &.systemCard {
+          max-height: 240px;
+        }
+        &.carouselCard {
+          max-height: 400px;
+        }
         .el-input {
           width: 85%;
         }
@@ -211,36 +178,34 @@ export default {
             margin-left: 5em;
           }
         }
-        &.addCarouseItem {
-          height: 400px;
+        &.addCard {
           font-size: 40px;
           position: relative;
           text-align: center;
           width: 15%;
-          .addButton {
-            cursor: pointer;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            &:hover {
-              color: @default_color;
-            }
+          &-system {
+            height: 240px;
+          }
+          &-carousel {
+            height: 400px;
           }
         }
       }
     }
   }
-  .el-input {
-    width: 50%;
-  }
 }
 .editButton {
   display: inline-block;
-  span {
-    cursor: pointer;
+  margin-left: 20px;
+}
+.addButton {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  &:hover {
     color: @default_color;
-    margin-left: 20px;
   }
 }
 </style>

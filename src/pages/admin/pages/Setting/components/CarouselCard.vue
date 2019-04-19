@@ -12,16 +12,14 @@
       <el-input
         v-model="item.href"
         class="carouselHref"
-        :disabled="disabledWebsite"
+        :disabled="disabled"
       ></el-input>
-      <div class="editButton">
-        <div v-if="disabledWebsite">
-          <span @click="changeDisabledWebsite">修改</span>
-        </div>
-        <div v-else>
-          <span @click="changeInfo('website')">确定</span>
-          <span @click="changeDisabledWebsite">取消</span>
-        </div>
+      <div class="editButton" v-if="disabled">
+        <el-button type="text" @click="switchDisabled">修改</el-button>
+      </div>
+      <div class="editButton" v-else>
+        <el-button type="text" @click="changeInfo('website')">确定</el-button>
+        <el-button type="text" @click="switchDisabled(true)">取消</el-button>
       </div>
     </div>
     <div>
@@ -50,8 +48,12 @@ export default {
   },
   data() {
     return {
-      disabledWebsite: true
+      disabled: true,
+      initHref: ""
     };
+  },
+  created() {
+    this.initHref = this.item.href;
   },
   methods: {
     openLog(index) {
@@ -87,34 +89,41 @@ export default {
           loading.close();
           if (res.code === 200) {
             Message.success(res.msg);
-            that.$emit("carouselChange");
+            that.$emit("settingChange");
           } else {
             Message.error(res.msg);
           }
         }
       });
     },
-    changeDisabledWebsite() {
-      this.disabledWebsite = !this.disabledWebsite;
+    switchDisabled(isCancel) {
+      if (isCancel) {
+        this.item.href = this.initHref;
+      }
+      this.disabled = !this.disabled;
     },
     changeInfo() {
       let that = this;
-      this.$store.dispatch("getItems", {
-        url: this.$store.state.changeCarouselItemWebsite,
-        query: {
-          index: this.item.index,
-          website: this.item.href,
-          token: this.$store.state.userInfo.token
-        },
-        cb(res) {
-          if (res.code === 200) {
-            Message.success(res.msg);
-            that.changeDisabledWebsite();
-          } else {
-            Message.error(res.msg);
+      if (this.initHref !== this.item.href) {
+        this.$store.dispatch("getItems", {
+          url: this.$store.state.changeCarouselItemWebsite,
+          query: {
+            index: this.item.index,
+            website: this.item.href,
+            token: this.$store.state.userInfo.token
+          },
+          cb(res) {
+            if (res.code === 200) {
+              Message.success(res.msg);
+              that.switchDisabled();
+            } else {
+              Message.error(res.msg);
+            }
           }
-        }
-      });
+        });
+      } else {
+        this.switchDisabled();
+      }
     }
   }
 };
@@ -123,9 +132,6 @@ export default {
 <style lang="less" scope>
 .carouselHref {
   width: 65% !important;
-}
-.cardButton {
-  float: right;
 }
 .carouselImage {
   height: 200px;

@@ -14,8 +14,10 @@ export default new Vuex.Store({
     /*******************基础数据********************/
     // 设置
     setting: {
-      schoolAddr: ``,
-      schoolName: ``,
+      schoolInfo: {
+        schoolAddress: ``,
+        schoolName: ``
+      },
       // 走马灯图片
       carousel: [
         {
@@ -377,10 +379,14 @@ export default new Vuex.Store({
     changeTeacher: baseUrl + `/api/teacher/changeTeacher`,
 
     // 系统设置
-    // 修改学校名字
-    changeSchoolName: baseUrl + `/api/system/changeSchoolName`,
-    // 修改学校地址
-    changeSchoolAddress: baseUrl + `/api/system/changeSchoolAddress`,
+    // 修改学校信息
+    changeSchoolInfo: baseUrl + `/api/system/changeSchoolInfo`,
+    // 添加系统链接
+    addSystemItem: baseUrl + `/api/system/addSystemItem`,
+    // 删除系统链接
+    deleteSystemItem: baseUrl + `/api/system/deleteSystemItem`,
+    // 编辑系统链接信息
+    changeSystemItem: baseUrl + `/api/system/changeSystemItem`,
     // 获取轮播图信息
     getCarouselItem: baseUrl + `/api/system/getCarouselItem`,
     // 添加轮播图

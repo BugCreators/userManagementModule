@@ -25,7 +25,7 @@
         只能上传jpg/png文件，且不超过500kb
       </div>
     </el-upload>
-    <div slot="footer" class="dialog-footer">
+    <div class="dialog-footer" slot="footer">
       <el-button @click="closeLog">取 消</el-button>
       <el-button type="primary" @click="uploadSubmit">确 定</el-button>
     </div>
@@ -121,7 +121,7 @@ export default {
         cb(res) {
           if (res.code === 200) {
             Message.success(res.msg);
-            that.$emit("carouselChange");
+            that.$emit("settingChange");
             that.closeLog();
           } else {
             Message.error(res.msg);
@@ -136,6 +136,9 @@ export default {
 <style lang="less" scope>
 .website {
   margin-bottom: 20px;
+  .el-input {
+    width: 50%;
+  }
 }
 .el-upload {
   &-list--picture &-list__item {
