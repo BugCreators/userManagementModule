@@ -1,6 +1,6 @@
 <template>
   <!-- <div class="footer">{{setting.copyright || 'Copyright © 2019 xxx All Rights Reserved'}}&nbsp;{{setting.icp || ''}}</div> -->
-  <div class="footer">Copyright © 2019 xxx All Rights Reserved</div>
+  <div class="footer">Copyright © 2019 黄子敦 All Rights Reserved | <a href="http://www.miitbeian.gov.cn/">粤ICP备19041292号-1</a></div>
 </template>
 
 <script>

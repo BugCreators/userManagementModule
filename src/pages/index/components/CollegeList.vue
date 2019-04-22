@@ -93,6 +93,7 @@ export default {
     }
   }
   .college-list {
+    min-height: 300px;
     padding-top: 70px;
     .college-card {
       background: #fff;

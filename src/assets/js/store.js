@@ -6,8 +6,8 @@ import { stringify } from "qs";
 Vue.use(Vuex);
 
 // const baseUrl = "http://127.0.0.1/avue/public";
-const baseUrl = "http://api.avue.com";
-// const baseUrl = "http://47.103.5.57:8080";
+// const baseUrl = "http://api.avue.com";
+const baseUrl = "http://avue.club:8080";
 
 export default new Vuex.Store({
   state: {
