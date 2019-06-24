@@ -37,6 +37,7 @@
 import AvueHeader from "@/components/AvueHeader";
 import AvueSidebar from "./components/AvueSidebar";
 import { Loading, MessageBox, Tabs, TabPane } from "element-ui";
+import { mapMutations, mapActions, mapState } from "vuex";
 
 export default {
   name: "admin",
@@ -60,6 +61,9 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      token: state => state.userInfo.token
+    }),
     currentName() {
       return this.$route.name;
     },
@@ -76,13 +80,12 @@ export default {
     }
   },
   created() {
-    let that = this;
     if (document.cookie.indexOf("avueUser=null") !== -1) {
       MessageBox.confirm("请先登录！", "提示", {
         cancelButtonText: "回到首页",
         confirmButtonText: "登录",
         type: "warning",
-        callback(action) {
+        callback: action => {
           switch (action) {
             case "cancel":
             case "close":
@@ -96,13 +99,13 @@ export default {
       });
     }
     let loading = Loading.service();
-    this.$store.dispatch("getUserInfo").then(() => {
-      this.$store.dispatch("getItems", {
+    this.getUserInfo().then(() => {
+      this.getItems({
         url: this.$store.state.intoBackstage,
         query: {
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
             if (res.data.intoBackstage === 0) {
@@ -115,8 +118,8 @@ export default {
               });
             }
           } else {
-            that.$store.dispatch("clearUserInfo").then(() => {
-              that.$store.commit("clearUserInfo");
+            this.clearUserInfo().then(() => {
+              this.clearUserInfoM();
             });
             MessageBox.alert(res.msg, "提示", {
               confirmButtonText: "确定",
@@ -151,6 +154,10 @@ export default {
     window.addEventListener("beforeunload", this.loadStore);
   },
   methods: {
+    ...mapActions(["getUserInfo", "getItems", "clearUserInfo"]),
+    ...mapMutations({
+      clearUserInfoM: "clearUserInfo"
+    }),
     sidebarswitch() {
       this.isCollapse = !this.isCollapse;
     },

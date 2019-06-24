@@ -15,6 +15,7 @@
 
 <script>
 import Carousel from "../components/Carousel";
+import { mapActions } from "vuex";
 
 export default {
   name: "collegeListPage",
@@ -31,15 +32,17 @@ export default {
     };
   },
   created() {
-    let that = this;
-    this.$store.dispatch("getItems", {
+    this.getItems({
       url: this.$store.state.getCollegeList,
-      cb(res) {
+      cb: res => {
         if (res.code === 200) {
-          that.collegeList = res.data;
+          this.collegeList = res.data;
         }
       }
     });
+  },
+  methods: {
+    ...mapActions(["getItems"])
   }
 };
 </script>

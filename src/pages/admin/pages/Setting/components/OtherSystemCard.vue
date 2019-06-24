@@ -22,6 +22,7 @@
 
 <script>
 import { Button, Card, Message, MessageBox } from "element-ui";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "otherSystemCard",
@@ -43,7 +44,13 @@ export default {
     this.initName = this.system.name;
     this.initWebsite = this.system.website;
   },
+  computed: {
+    ...mapState({
+      token: state => state.userInfo.token
+    })
+  },
   methods: {
+    ...mapActions(["getItems"]),
     switchDisabled(isCancel) {
       if (isCancel) {
         this.system.name = this.initName;
@@ -58,17 +65,16 @@ export default {
       ) {
         this.switchDisabled();
       } else {
-        let that = this;
-        this.$store.dispatch("getItems", {
+        this.getItems({
           url: this.$store.state.changeSystemItem,
           query: {
             system: this.system,
-            token: this.$store.state.userInfo.token
+            token: this.token
           },
-          cb(res) {
+          cb: res => {
             if (res.code === 200) {
               Message.success(res.msg);
-              that.switchDisabled();
+              this.switchDisabled();
             } else {
               Message.error(res.msg);
             }
@@ -77,33 +83,31 @@ export default {
       }
     },
     deleteItemConfirm() {
-      let that = this;
       MessageBox.confirm(`确认删除该系统链接？`, `确认删除`, {
         type: "warning",
-        callback(action) {
+        callback: action => {
           switch (action) {
             case "cancel":
             case "close":
               Message.info(`取消删除`);
               break;
             case "confirm":
-              that.deleteItem();
+              this.deleteItem();
           }
         }
       });
     },
     deleteItem() {
-      let that = this;
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.deleteSystemItem,
         query: {
           index: this.system.index,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
             Message.success(res.msg);
-            that.$emit("settingChange");
+            this.$emit("settingChange");
           } else {
             Message.error(res.msg);
           }

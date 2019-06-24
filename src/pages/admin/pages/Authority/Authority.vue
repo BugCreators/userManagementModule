@@ -21,6 +21,7 @@
 import AuthorityList from "./components/AuthorityList";
 import ListWarp from "./../components/ListWarp";
 import SearchBox from "./../../components/SearchBox";
+import { mapMutations } from "vuex";
 
 export default {
   name: "Authority",
@@ -36,12 +37,13 @@ export default {
     };
   },
   created() {
-    this.$store.commit("setSearchValue", {
+    this.setSearchValue({
       basis: 0,
       name: ""
     });
   },
   methods: {
+    ...mapMutations(["setSearchValue"]),
     changeCount(count) {
       this.count = count;
     }

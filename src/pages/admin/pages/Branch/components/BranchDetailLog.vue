@@ -74,6 +74,7 @@ import {
   Radio,
   RadioGroup
 } from "element-ui";
+import { mapState, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "branchDetailLog",
@@ -118,38 +119,38 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      showDetailLog: state => state.showDetailLog,
+      token: state => state.userInfo.token
+    }),
     logTitle() {
-      let title = this.dataId ? "编辑" : "添加";
-      return title + "部门";
-    },
-    showDetailLog() {
-      return this.$store.state.showDetailLog;
+      return `${this.dataId ? "编辑" : "添加"}部门`;
     }
   },
   methods: {
+    ...mapActions(["getItems", "postItems"]),
+    ...mapMutations(["switchDetailLog"]),
     getInfo() {
-      let that = this;
       let loading = Loading.service();
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.getBranchDetail,
         query: {
           id: this.dataId,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
-            that.info = res.data;
+            this.info = res.data;
           } else {
             Message.error(res.msg);
-            that.closeDetailLog();
+            this.closeDetailLog();
           }
         }
       });
     },
     formSubmit() {
-      let url,
-        that = this;
+      let url = "";
       if (this.dataId) {
         url = this.$store.state.changeBranch;
       } else {
@@ -163,20 +164,20 @@ export default {
       let loading = Loading.service({
         target: document.getElementById("form")
       });
-      this.$store.dispatch("postItems", {
+      this.postItems({
         url,
         query: {
           data: this.info,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
             Message.success(res.msg);
             this.dataId
-              ? that.$emit("dataChange", res.data)
-              : that.$emit("listChange");
-            that.closeDetailLog();
+              ? this.$emit("dataChange", res.data)
+              : this.$emit("listChange");
+            this.closeDetailLog();
           } else {
             Message.error(res.msg || "添加失败，请稍后重试");
           }
@@ -184,7 +185,7 @@ export default {
       });
     },
     closeDetailLog() {
-      this.$store.commit("switchDetailLog");
+      this.switchDetailLog();
     }
   }
 };

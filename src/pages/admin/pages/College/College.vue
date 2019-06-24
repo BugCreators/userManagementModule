@@ -36,6 +36,7 @@
 import SearchBox from "./../../components/SearchBox";
 import CollegeList from "./components/CollegeList";
 import ListWarp from "./../components/ListWarp";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "college",
@@ -61,30 +62,27 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      showLogoLog: state => state.showLogoLog,
+      showDetailLog: state => state.showDetailLog,
+      showImportLog: state => state.showImportLog
+    }),
     selectedId() {
       return this.$refs["list"].selectedId.map((value, index, array) => {
         return {
           id: array[index]["id"]
         };
       });
-    },
-    showLogoLog() {
-      return this.$store.state.showLogoLog;
-    },
-    showDetailLog() {
-      return this.$store.state.showDetailLog;
-    },
-    showImportLog() {
-      return this.$store.state.showImportLog;
     }
   },
   created() {
-    this.$store.commit("setSearchValue", {
+    this.setSearchValue({
       basis: 0,
       name: ""
     });
   },
   methods: {
+    ...mapMutations(["setSearchValue", "switchLogoLog", "switchDetailLog"]),
     changeCount(count) {
       this.count = count;
     },
@@ -105,11 +103,11 @@ export default {
     },
     openLogoLog(id) {
       this.currentId = id;
-      this.$store.commit("switchLogoLog");
+      this.switchLogoLog();
     },
     openDetailLog(id) {
       this.currentId = id;
-      this.$store.commit("switchDetailLog");
+      this.switchDetailLog();
     }
   }
 };

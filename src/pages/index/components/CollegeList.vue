@@ -47,16 +47,11 @@ export default {
       required: true
     }
   },
-  data() {
-    return {};
-  },
   methods: {
     logoUrl(url) {
-      if (url == "" || url == null) {
-        return this.$store.state.defaultCollege;
-      } else {
-        return this.$store.state.baseUrl + url;
-      }
+      return url == "" || url == null
+        ? this.$store.state.defaultCollege
+        : this.$store.state.baseUrl + url;
     }
   }
 };

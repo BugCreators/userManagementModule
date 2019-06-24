@@ -49,6 +49,7 @@
 import { Input, Checkbox, Button } from "element-ui";
 import md5 from "md5";
 import { getUrlParam } from "@/assets/js/tool";
+import { mapActions, mapMutations } from "vuex";
 
 export default {
   name: "loginFrame",
@@ -71,16 +72,15 @@ export default {
     };
   },
   created() {
-    let that = this;
     new Promise(res => res())
-      .then(() => that.getSetting())
+      .then(() => this.getSetting())
       .then(() => {
         let userInfo = localStorage.getItem("avueUser");
         if (userInfo != null) {
           userInfo = JSON.parse(userInfo);
-          (that.number = userInfo.number), (that.password = userInfo.password);
-          that.remember = true;
-          that.isEncrypt = true;
+          (this.number = userInfo.number), (this.password = userInfo.password);
+          this.remember = true;
+          this.isEncrypt = true;
         }
         return true;
       });
@@ -91,14 +91,15 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["getItems", "postItems"]),
+    ...mapMutations(["setSetting"]),
     clickForgetPwd() {},
     getSetting() {
-      let that = this;
-      that.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.getSysSetting,
-        cb(res) {
-          that.setting = res.data;
-          that.$store.commit("setSetting", that.setting);
+        cb: res => {
+          this.setting = res.data;
+          this.setSetting(this.setting);
         }
       });
     },
@@ -112,21 +113,20 @@ export default {
         this.errMes = "密码不能为空";
         return;
       }
-      let that = this;
       this.logining = true;
-      this.$store.dispatch("postItems", {
+      this.postItems({
         url: this.$store.state.login,
         query: {
           number: this.number,
-          password: that.isEncrypt ? this.password : md5(that.password)
+          password: this.isEncrypt ? this.password : md5(this.password)
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
             /********** 记住密码 START ********/
-            if (that.remember) {
+            if (this.remember) {
               let obj = {
-                number: that.number,
-                password: that.isEncrypt ? that.password : md5(that.password)
+                number: this.number,
+                password: this.isEncrypt ? this.password : md5(this.password)
               };
               let objStr = JSON.stringify(obj);
               localStorage.setItem("avueUser", objStr);
@@ -135,9 +135,9 @@ export default {
             }
             /************** END **************/
             let userObj = res.data;
-            userObj.password = that.isEncrypt
-              ? that.password
-              : md5(that.password);
+            userObj.password = this.isEncrypt
+              ? this.password
+              : md5(this.password);
             let userInfo = JSON.stringify(userObj);
             document.cookie = "avueUser=" + encodeURIComponent(userInfo) + ";";
 
@@ -148,9 +148,9 @@ export default {
               location = "index.html";
             }
           } else {
-            that.logining = false;
-            that.loading = false;
-            that.errMes = res.msg;
+            this.logining = false;
+            this.loading = false;
+            this.errMes = res.msg;
           }
         }
       });

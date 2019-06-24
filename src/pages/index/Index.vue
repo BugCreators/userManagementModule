@@ -13,6 +13,7 @@
 import AvueHeader from "@/components/AvueHeader";
 import AvueFooter from "@/components/AvueFooter";
 import { Loading, MessageBox } from "element-ui";
+import { mapActions, mapMutations } from "vuex";
 
 export default {
   name: "index",
@@ -20,21 +21,15 @@ export default {
     AvueHeader,
     AvueFooter
   },
-  computed: {
-    userInfo() {
-      return this.$store.state.userInfo;
-    }
-  },
   created() {
-    let that = this;
     let loading = Loading.service();
-    this.$store.dispatch("getUserInfo").then(() => {
-      this.$store.dispatch("getItems", {
+    this.getUserInfo().then(() => {
+      this.getItems({
         url: this.$store.state.getSysSetting,
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
-            that.$store.commit("setSetting", res.data);
+            this.setSetting(res.data);
           } else {
             MessageBox.alert(`读取系统配置出错，请稍候重试`, `系统出错`, {
               type: `error`,
@@ -44,6 +39,10 @@ export default {
         }
       });
     });
+  },
+  methods: {
+    ...mapActions(["getUserInfo", "getItems"]),
+    ...mapMutations(["setSetting"])
   }
 };
 </script>

@@ -18,6 +18,7 @@
 
 <script>
 import { Button } from "element-ui";
+import { mapMutations } from "vuex";
 
 export default {
   name: "listWarp",
@@ -63,6 +64,7 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(["switchImportLog"]),
     listDeletion() {
       this.$emit(this.delFuncName);
     },
@@ -70,7 +72,7 @@ export default {
       this.$emit(this.addFuncName);
     },
     listImport() {
-      this.$store.commit("switchImportLog");
+      this.switchImportLog();
     },
     listExport() {
       this.$emit(this.exportFuncName);

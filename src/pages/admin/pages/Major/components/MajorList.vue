@@ -88,6 +88,7 @@ import {
   TableColumn
 } from "element-ui";
 import { downloadExl } from "@/assets/js/tool";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "majorList",
@@ -128,12 +129,10 @@ export default {
     };
   },
   computed: {
-    searchValue() {
-      return this.$store.state.searchValue;
-    },
-    showDetailLog() {
-      return this.$store.state.showDetailLog;
-    }
+    ...mapState({
+      searchValue: state => state.searchValue,
+      token: state => state.userInfo.token
+    })
   },
   watch: {
     listExcel(newV) {
@@ -152,23 +151,23 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["postItems"]),
     getList() {
-      let that = this;
       let loading = Loading.service(this.loadingOpts);
-      return this.$store.dispatch("postItems", {
-        url: that.$store.state.getMajorList,
+      return this.postItems({
+        url: this.$store.state.getMajorList,
         query: {
-          pageSize: that.pageSize,
-          pageIndex: that.pageIndex,
-          searchValue: that.searchValue,
-          token: that.$store.state.userInfo.token
+          pageSize: this.pageSize,
+          pageIndex: this.pageIndex,
+          searchValue: this.searchValue,
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
-            that.list = res.data.list;
-            that.listCount = res.data.count;
-            that.$emit("changeCount", that.listCount);
+            this.list = res.data.list;
+            this.listCount = res.data.count;
+            this.$emit("changeCount", this.listCount);
           } else {
             Message.error(res.msg);
           }
@@ -192,7 +191,6 @@ export default {
       loading.close();
     },
     datasDeleteConfirm(ids) {
-      let that = this;
       if (ids.length <= 0) {
         Message.warning({
           message: "请选择至少一个专业"
@@ -203,34 +201,33 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-        callback(action) {
+        callback: action => {
           switch (action) {
             case "cancel":
             case "close":
               Message.info("取消删除");
               break;
             case "confirm":
-              that.datasDelete(ids);
+              this.datasDelete(ids);
               break;
           }
         }
       });
     },
     datasDelete(ids) {
-      let that = this;
-      this.$store.dispatch("postItems", {
+      this.postItems({
         url: this.$store.state.delMajors,
         query: {
           majorsId: ids,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
             Message.success(res.msg);
-            if (that.list.length % that.pageSize == ids.length) {
-              that.pageIndex--;
+            if (this.list.length % this.pageSize == ids.length) {
+              this.pageIndex--;
             }
-            that.getList();
+            this.getList();
           } else {
             Message.error(res.msg);
           }
@@ -238,36 +235,34 @@ export default {
       });
     },
     listExportConfirm() {
-      let that = this;
       MessageBox.confirm("确认导出当前列表数据？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-        callback(action) {
+        callback: action => {
           switch (action) {
             case "cancel":
             case "close":
               Message.info("取消导出");
               break;
             case "confirm":
-              that.listExport();
+              this.listExport();
               break;
           }
         }
       });
     },
     listExport() {
-      let allList,
-        that = this;
+      let allList;
       let loading = Loading.service({
         text: "获取数据导出中，请稍候..."
       });
-      return this.$store.dispatch("postItems", {
-        url: that.$store.state.getAllMajorList,
+      return this.postItems({
+        url: this.$store.state.getAllMajorList,
         query: {
-          token: that.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
             allList = res.data;
             downloadExl(allList, "xlsx", "专业列表");

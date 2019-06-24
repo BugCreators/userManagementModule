@@ -92,6 +92,7 @@ import {
   Option,
   Select
 } from "element-ui";
+import { mapState, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "classDetailLog",
@@ -145,43 +146,43 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      showDetailLog: state => state.showDetailLog,
+      token: state => state.userInfo.token
+    }),
     logTitle() {
-      let title = this.dataId ? "编辑" : "添加";
-      return title + "班级";
-    },
-    showDetailLog() {
-      return this.$store.state.showDetailLog;
+      return `${this.dataId ? "编辑" : "添加"}班级`;
     }
   },
   methods: {
+    ...mapActions(["getItems", "postItems"]),
+    ...mapMutations(["switchDetailLog"]),
     getInfo() {
-      let that = this;
       let loading = Loading.service();
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.getClassDetail,
         query: {
           id: this.dataId,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
-            that.info = res.data;
-            that.getMajorList();
+            this.info = res.data;
+            this.getMajorList();
           } else {
             Message.error(res.msg);
-            that.closeDetailLog();
+            this.closeDetailLog();
           }
         }
       });
     },
     getGradeList() {
-      let that = this;
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.getGradeList,
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
-            that.gradeList = res.data;
+            this.gradeList = res.data;
           } else {
             Message.error(res.msg);
           }
@@ -189,12 +190,11 @@ export default {
       });
     },
     getCollegeList() {
-      let that = this;
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.getCollegeList,
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
-            that.collegeList = res.data;
+            this.collegeList = res.data;
           } else {
             Message.error(res.msg);
           }
@@ -202,21 +202,20 @@ export default {
       });
     },
     getMajorList(isChange) {
-      let that = this;
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.getMajorListBycollegeId,
         query: {
           id: this.info.college_id,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
             if (res.data.length > 0) {
-              that.majorList = res.data;
-              isChange ? (that.info.major_id = that.majorList[0].id) : "";
+              this.majorList = res.data;
+              isChange ? (this.info.major_id = this.majorList[0].id) : "";
             } else {
-              that.majorList = {};
-              that.info.major_id = "";
+              this.majorList = {};
+              this.info.major_id = "";
             }
           } else {
             Message.error(res.msg);
@@ -228,8 +227,7 @@ export default {
       this.getMajorList(true);
     },
     formSubmit() {
-      let url,
-        that = this;
+      let url = "";
       if (this.dataId) {
         url = this.$store.state.changeClass;
       } else {
@@ -259,18 +257,18 @@ export default {
       let loading = Loading.service({
         target: document.getElementById("form")
       });
-      this.$store.dispatch("postItems", {
+      this.postItems({
         url,
         query: {
           data: this.info,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
             Message.success(res.msg);
-            that.$emit("listChange");
-            that.closeDetailLog();
+            this.$emit("listChange");
+            this.closeDetailLog();
           } else {
             Message.error(res.msg || "添加失败，请稍后重试");
           }
@@ -278,7 +276,7 @@ export default {
       });
     },
     closeDetailLog() {
-      this.$store.commit("switchDetailLog");
+      this.switchDetailLog();
     }
   }
 };

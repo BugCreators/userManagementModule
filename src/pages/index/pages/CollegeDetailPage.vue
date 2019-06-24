@@ -43,6 +43,7 @@
 <script>
 import { Breadcrumb, BreadcrumbItem, MessageBox } from "element-ui";
 import AvueImage from "@/components/AvueImage";
+import { mapActions } from "vuex";
 
 export default {
   name: "collegeDetailPage",
@@ -75,18 +76,18 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["getItems"]),
     getCollegeDetail(id) {
-      var that = this;
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.getCollegeDetail,
         query: {
           id: id ? id : this.collegeId
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
-            that.info = res.data;
+            this.info = res.data;
             if (res.data.description.length > 245) {
-              that.isShow = true;
+              this.isShow = true;
             }
           } else {
             MessageBox.alert(res.msg, res.code + `错误`, {
@@ -110,11 +111,9 @@ export default {
       }
     },
     logoUrl(url) {
-      if (url == "" || url == null) {
-        return this.$store.state.defaultCollege;
-      } else {
-        return this.$store.state.baseUrl + url;
-      }
+      return url == "" || url == null
+        ? this.$store.state.defaultCollege
+        : this.$store.state.baseUrl + url;
     }
   }
 };

@@ -63,6 +63,7 @@
 
 <script>
 import { Card, Form, FormItem, Loading, MessageBox } from "element-ui";
+import { mapActions, mapMutations } from "vuex";
 
 export default {
   name: "sysSetting",
@@ -106,21 +107,22 @@ export default {
     this.getSysSetting();
   },
   methods: {
+    ...mapActions(["getItems"]),
+    ...mapMutations(["setSetting"]),
     getSysSetting() {
-      let that = this;
       let loading = Loading.service();
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.getSysSetting,
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
-            that.setting = res.data;
-            that.setting.carousel = that.setting.carousel.map(item => {
+            this.setting = res.data;
+            this.setting.carousel = this.setting.carousel.map(item => {
               item.name = item.url.split("/").pop();
-              item.url = that.$store.state.baseUrl + item.url;
+              item.url = this.$store.state.baseUrl + item.url;
               return item;
             });
-            that.$store.commit("setSetting", res.data);
+            this.setSetting(res.data);
           } else {
             MessageBox.alert(`读取系统配置出错，请稍候重试`, `系统出错`, {
               type: `error`,

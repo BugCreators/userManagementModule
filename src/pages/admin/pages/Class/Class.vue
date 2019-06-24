@@ -34,6 +34,7 @@
 import SearchBox from "./../../components/SearchBox";
 import ClassList from "./components/ClassList";
 import ListWarp from "./../components/ListWarp";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "class",
@@ -57,30 +58,26 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      showDetailLog: state => state.showDetailLog,
+      showImportLog: state => state.showImportLog
+    }),
     selectedId() {
       return this.$refs["list"].selectedId.map((value, index, array) => {
         return {
           id: array[index]["id"]
         };
       });
-    },
-    showLogoLog() {
-      return this.$store.state.showLogoLog;
-    },
-    showDetailLog() {
-      return this.$store.state.showDetailLog;
-    },
-    showImportLog() {
-      return this.$store.state.showImportLog;
     }
   },
   created() {
-    this.$store.commit("setSearchValue", {
+    this.setSearchValue({
       basis: 0,
       name: ""
     });
   },
   methods: {
+    ...mapMutations(["setSearchValue", "switchDetailLog"]),
     changeCount(count) {
       this.count = count;
     },
@@ -93,13 +90,9 @@ export default {
     listExport() {
       this.$refs["list"].listExportConfirm();
     },
-    openLogoLog(id) {
-      this.currentId = id;
-      this.$store.commit("switchLogoLog");
-    },
     openDetailLog(id) {
       this.currentId = id;
-      this.$store.commit("switchDetailLog");
+      this.switchDetailLog();
     }
   }
 };

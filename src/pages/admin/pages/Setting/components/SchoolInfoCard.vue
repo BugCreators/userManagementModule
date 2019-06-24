@@ -21,6 +21,7 @@
 
 <script>
 import { Button, Card, Message } from "element-ui";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "schoolInfoCard",
@@ -42,7 +43,13 @@ export default {
     this.initName = this.schoolInfo.name;
     this.initAddress = this.schoolInfo.address;
   },
+  computed: {
+    ...mapState({
+      token: state => state.userInfo.token
+    })
+  },
   methods: {
+    ...mapActions(["getItems"]),
     switchDisabled(isCancel) {
       if (isCancel) {
         this.schoolInfo.name = this.initName;
@@ -51,26 +58,25 @@ export default {
       this.disabled = !this.disabled;
     },
     changeSchoolInfo() {
-      let that = this;
       if (
         this.initName === this.schoolInfo.name &&
         this.initAddress === this.schoolInfo.address
       ) {
         this.switchDisabled();
       } else {
-        this.$store.dispatch("getItems", {
+        this.getItems({
           url: this.$store.state.changeSchoolInfo,
           query: {
             schoolInfo: {
               name: this.schoolInfo.name,
               address: this.schoolInfo.address
             },
-            token: this.$store.state.userInfo.token
+            token: this.token
           },
-          cb(res) {
+          cb: res => {
             if (res.code === 200) {
               Message.success(res.msg);
-              that.switchDisabled();
+              this.switchDisabled();
             } else {
               Message.error(res.msg);
             }

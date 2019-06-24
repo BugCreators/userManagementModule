@@ -51,6 +51,7 @@
 
 <script>
 import { Menu, MenuItem, Submenu, Tooltip } from "element-ui";
+import { mapState, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "avueSidebar",
@@ -70,21 +71,27 @@ export default {
       checkResult: false
     };
   },
+  computed: {
+    ...mapState({
+      token: state => state.userInfo.token
+    })
+  },
   created() {
-    let that = this;
-    this.$store.dispatch("getItems", {
+    this.getItems({
       url: this.$store.state.getSelectAuthority,
       query: {
-        token: this.$store.state.userInfo.token
+        token: this.token
       },
-      cb(res) {
+      cb: res => {
         if (res.code === 200) {
-          that.$store.commit("setSelectAuthority", res.data);
+          this.setSelectAuthority(res.data);
         }
       }
     });
   },
   methods: {
+    ...mapActions(["getItems"]),
+    ...mapMutations(["setSelectAuthority"]),
     subMenuIndex(index) {
       return index.toString();
     },

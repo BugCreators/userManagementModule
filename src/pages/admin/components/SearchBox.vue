@@ -64,6 +64,7 @@
 
 <script>
 import { Button, Input, Option, Select } from "element-ui";
+import { mapMutations } from "vuex";
 
 export default {
   name: "searchBox",
@@ -159,12 +160,13 @@ export default {
   },
   computed: {
     placeholder() {
-      return "请输入" + this.i18n[this.moduleName] + "名称";
+      return `请输入${this.i18n[this.moduleName]}名称`;
     }
   },
   methods: {
+    ...mapMutations(["setSearchValue"]),
     serchValueChange() {
-      this.$store.commit("setSearchValue", {
+      this.setSearchValue({
         basis: this.searchValue.basis,
         name: this.searchValue.name
       });
@@ -175,7 +177,7 @@ export default {
           basis: 0,
           name: ""
         };
-        this.$store.commit("setSearchValue", this.searchValue);
+        this.setSearchValue(this.searchValue);
       }
     }
   }

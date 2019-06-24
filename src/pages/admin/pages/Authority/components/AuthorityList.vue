@@ -32,6 +32,7 @@
 
 <script>
 import { Message, Loading, Pagination, Table, TableColumn } from "element-ui";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "authorityList",
@@ -53,12 +54,10 @@ export default {
     };
   },
   computed: {
-    searchValue() {
-      return this.$store.state.searchValue;
-    },
-    showDetailLog() {
-      return this.$store.state.showDetailLog;
-    }
+    ...mapState({
+      searchValue: state => state.searchValue,
+      token: state => state.userInfo.token
+    })
   },
   watch: {
     searchValue() {
@@ -70,23 +69,23 @@ export default {
     this.getAuthorityList();
   },
   methods: {
+    ...mapActions(["postItems"]),
     getAuthorityList() {
-      let that = this;
       let loading = Loading.service(this.loadingOpts);
-      return this.$store.dispatch("postItems", {
+      return this.postItems({
         url: this.$store.state.getAuthorityList,
         query: {
           pageSize: this.pageSize,
           pageIndex: this.pageIndex,
           searchValue: this.searchValue,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
-            that.authorityList = res.data.list;
-            that.authorityListCount = res.data.count;
-            that.$emit("changeCount", that.authorityListCount);
+            this.authorityList = res.data.list;
+            this.authorityListCount = res.data.count;
+            this.$emit("changeCount", this.authorityListCount);
           } else {
             Message.error(res.msg || "获取列表失败，请稍后再试");
           }

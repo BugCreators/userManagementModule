@@ -67,6 +67,7 @@ import {
   Table,
   TableColumn
 } from "element-ui";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "studentList",
@@ -106,12 +107,10 @@ export default {
     };
   },
   computed: {
-    searchValue() {
-      return this.$store.state.searchValue;
-    },
-    showDetailLog() {
-      return this.$store.state.showDetailLog;
-    }
+    ...mapState({
+      searchValue: state => state.searchValue,
+      token: state => state.userInfo.token
+    })
   },
   watch: {
     listExcel(newV) {
@@ -130,18 +129,18 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["postItems", "getItems"]),
     getList() {
-      let that = this;
       let loading = Loading.service(this.loadingOpts);
-      return this.$store.dispatch("postItems", {
-        url: that.$store.state.getStudentList,
+      return this.postItems({
+        url: this.$store.state.getStudentList,
         query: {
-          pageSize: that.pageSize,
-          pageIndex: that.pageIndex,
-          searchValue: that.searchValue,
-          token: that.$store.state.userInfo.token
+          pageSize: this.pageSize,
+          pageIndex: this.pageIndex,
+          searchValue: this.searchValue,
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
             let listTemp = res.data.list.map(item => {
@@ -152,9 +151,9 @@ export default {
               }
               return item;
             });
-            that.list = listTemp;
-            that.listCount = res.data.count;
-            that.$emit("changeCount", that.listCount);
+            this.list = listTemp;
+            this.listCount = res.data.count;
+            this.$emit("changeCount", this.listCount);
           } else {
             Message.error(res.msg);
           }
@@ -165,30 +164,29 @@ export default {
       this.selectedId = selection.map(item => item.id);
     },
     resetPwConfirm(id) {
-      let that = this;
       MessageBox.confirm("此操作将重置该用户密码为学号，是否继续？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-        callback(action) {
+        callback: action => {
           switch (action) {
             case "cancel":
             case "close":
               Message.info("取消重置");
               break;
             case "confirm":
-              that.resetPw(id);
+              this.resetPw(id);
               break;
           }
         }
       });
     },
     resetPw(id) {
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.resetPwStudent,
         query: {
           id: id,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
         cb(res) {
           if (res.code === 200) {
@@ -203,7 +201,6 @@ export default {
       this.$emit("openDetailLog", id);
     },
     datasDeleteConfirm(ids) {
-      let that = this;
       if (ids.length <= 0) {
         Message.warning({
           message: "请选择至少一个学生"
@@ -214,34 +211,33 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-        callback(action) {
+        callback: action => {
           switch (action) {
             case "cancel":
             case "close":
               Message.info("取消删除");
               break;
             case "confirm":
-              that.datasDelete(ids);
+              this.datasDelete(ids);
               break;
           }
         }
       });
     },
     datasDelete(ids) {
-      let that = this;
-      this.$store.dispatch("postItems", {
+      this.postItems({
         url: this.$store.state.delStudents,
         query: {
           studentsId: ids,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
             Message.success(res.msg);
-            if (that.list.length % that.pageSize == ids.length) {
-              that.pageIndex--;
+            if (this.list.length % this.pageSize == ids.length) {
+              this.pageIndex--;
             }
-            that.getList();
+            this.getList();
           } else {
             Message.error(res.msg);
           }

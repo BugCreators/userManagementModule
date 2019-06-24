@@ -67,6 +67,7 @@ import {
   Table,
   TableColumn
 } from "element-ui";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "administratorList",
@@ -105,12 +106,10 @@ export default {
     };
   },
   computed: {
-    searchValue() {
-      return this.$store.state.searchValue;
-    },
-    showDetailLog() {
-      return this.$store.state.showDetailLog;
-    }
+    ...mapState({
+      searchValue: state => state.searchValue,
+      token: state => state.userInfo.token
+    })
   },
   watch: {
     searchValue() {
@@ -123,23 +122,23 @@ export default {
     this.getList();
   },
   methods: {
+    ...mapActions(["postItems", "clearUserInfo"]),
     getList() {
-      let that = this;
       let loading = Loading.service(this.loadingOpts);
-      return this.$store.dispatch("postItems", {
-        url: that.$store.state.getAdministratorList,
+      return this.postItems({
+        url: this.$store.state.getAdministratorList,
         query: {
-          pageSize: that.pageSize,
-          pageIndex: that.pageIndex,
-          searchValue: that.searchValue,
-          token: that.$store.state.userInfo.token
+          pageSize: this.pageSize,
+          pageIndex: this.pageIndex,
+          searchValue: this.searchValue,
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
-            that.list = res.data.list;
-            that.listCount = res.data.count;
-            that.$emit("changeCount", that.listCount);
+            this.list = res.data.list;
+            this.listCount = res.data.count;
+            this.$emit("changeCount", this.listCount);
           } else {
             Message.error(res.msg);
           }
@@ -150,7 +149,6 @@ export default {
       this.selectedId = selection.map(item => item.id);
     },
     resetPwConfirm(id) {
-      let that = this;
       MessageBox.confirm(
         "此操作将重置该管理员密码为职工号，是否继续？",
         "提示",
@@ -158,14 +156,14 @@ export default {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning",
-          callback(action) {
+          callback: action => {
             switch (action) {
               case "cancel":
               case "close":
                 Message.info("取消重置");
                 break;
               case "confirm":
-                that.resetPw(id);
+                this.resetPw(id);
                 break;
             }
           }
@@ -173,25 +171,24 @@ export default {
       );
     },
     resetPw(id) {
-      let that = this;
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.resetPwAdmin,
         query: {
           id: id,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
             Message.success(res.msg);
             if (res.data.changeByOwn) {
-              that.$store.dispatch("clearUserInfo").then(() => {
-                that.$store.commit("clearUserInfo");
+              this.clearUserInfo().then(() => {
+                this.$store.commit("clearUserInfo");
               });
               MessageBox.confirm("当前用户密码已重置，请重新登录", "密码重置", {
                 cancelButtonText: "回到首页",
                 confirmButtonText: "登录",
                 type: "warning",
-                callback(action) {
+                callback: action => {
                   switch (action) {
                     case "cancel":
                     case "close":
@@ -214,7 +211,6 @@ export default {
       this.$emit("openDetailLog", id);
     },
     datasDeleteConfirm(ids) {
-      let that = this;
       if (ids.length <= 0) {
         Message.warning({
           message: "请选择至少一个管理员"
@@ -225,34 +221,33 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-        callback(action) {
+        callback: action => {
           switch (action) {
             case "cancel":
             case "close":
               Message.info("取消删除");
               break;
             case "confirm":
-              that.datasDelete(ids);
+              this.datasDelete(ids);
               break;
           }
         }
       });
     },
     datasDelete(ids) {
-      let that = this;
-      this.$store.dispatch("postItems", {
+      this.postItems({
         url: this.$store.state.delAdministrators,
         query: {
           adminsId: ids,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
             Message.success(res.msg);
-            if (that.list.length % that.pageSize == ids.length) {
-              that.pageIndex--;
+            if (this.list.length % this.pageSize == ids.length) {
+              this.pageIndex--;
             }
-            that.getList();
+            this.getList();
           } else {
             Message.error(res.msg);
           }

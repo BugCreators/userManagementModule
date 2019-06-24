@@ -67,6 +67,7 @@ import {
   Table,
   TableColumn
 } from "element-ui";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "roleList",
@@ -103,12 +104,10 @@ export default {
     };
   },
   computed: {
-    searchValue() {
-      return this.$store.state.searchValue;
-    },
-    showDetailLog() {
-      return this.$store.state.showDetailLog;
-    }
+    ...mapState({
+      searchValue: state => state.searchValue,
+      token: state => state.userInfo.token
+    })
   },
   watch: {
     searchValue() {
@@ -121,23 +120,23 @@ export default {
     this.getList();
   },
   methods: {
+    ...mapActions(["postItems"]),
     getList() {
-      let that = this;
       let loading = Loading.service(this.loadingOpts);
-      return this.$store.dispatch("postItems", {
-        url: that.$store.state.getRoleList,
+      return this.postItems({
+        url: this.$store.state.getRoleList,
         query: {
-          pageSize: that.pageSize,
-          pageIndex: that.pageIndex,
-          searchValue: that.searchValue,
-          token: that.$store.state.userInfo.token
+          pageSize: this.pageSize,
+          pageIndex: this.pageIndex,
+          searchValue: this.searchValue,
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
-            that.list = res.data.list;
-            that.listCount = res.data.count;
-            that.$emit("changeCount", that.listCount);
+            this.list = res.data.list;
+            this.listCount = res.data.count;
+            this.$emit("changeCount", this.listCount);
           } else {
             Message.error(res.msg);
           }
@@ -151,7 +150,6 @@ export default {
       this.$emit("openDetailLog", id);
     },
     datasDeleteConfirm(ids) {
-      let that = this;
       if (ids.length <= 0) {
         Message.warning({
           message: "请选择至少一个角色"
@@ -162,34 +160,33 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-        callback(action) {
+        callback: action => {
           switch (action) {
             case "cancel":
             case "close":
               Message.info("取消删除");
               break;
             case "confirm":
-              that.datasDelete(ids);
+              this.datasDelete(ids);
               break;
           }
         }
       });
     },
     datasDelete(ids) {
-      let that = this;
-      this.$store.dispatch("postItems", {
+      this.postItems({
         url: this.$store.state.delRoles,
         query: {
           rolesId: ids,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
             Message.success(res.msg);
-            if (that.list.length % that.pageSize == ids.length) {
-              that.pageIndex--;
+            if (this.list.length % this.pageSize == ids.length) {
+              this.pageIndex--;
             }
-            that.getList();
+            this.getList();
           } else {
             Message.error(res.msg);
           }

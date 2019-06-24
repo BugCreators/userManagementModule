@@ -34,6 +34,7 @@
 
 <script>
 import { Button, Dialog, Input, Message, Upload } from "element-ui";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "carouseLog",
@@ -61,19 +62,24 @@ export default {
       this.getCarouselItem();
     }
   },
+  computed: {
+    ...mapState({
+      token: state => state.userInfo.token
+    })
+  },
   methods: {
+    ...mapActions(["getItems", "postItems"]),
     getCarouselItem() {
-      let that = this;
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.getCarouselItem,
         query: {
           index: this.dataIndex,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
-            that.item = res.data;
-            that.item.url = that.$store.state.baseUrl + that.item.url;
+            this.item = res.data;
+            this.item.url = this.$store.state.baseUrl + this.item.url;
           }
         }
       });
@@ -98,11 +104,10 @@ export default {
       this.$refs.upload.submit();
     },
     uploadCarousel(param) {
-      let url,
-        that = this;
+      let url = "";
       let data = new FormData();
       data.append("image", param.file);
-      data.append("token", this.$store.state.userInfo.token);
+      data.append("token", this.token);
       if (this.dataIndex) {
         data.append("index", this.dataIndex);
         url = this.$store.state.changeCarouselItemPicture;
@@ -110,7 +115,7 @@ export default {
         data.append("website", this.item.href);
         url = this.$store.state.addCarouselItem;
       }
-      this.$store.dispatch("postItems", {
+      this.postItems({
         url,
         query: data,
         config: {
@@ -118,11 +123,11 @@ export default {
             "Content-Type": "multipart/form-data"
           }
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
             Message.success(res.msg);
-            that.$emit("settingChange");
-            that.closeLog();
+            this.$emit("settingChange");
+            this.closeLog();
           } else {
             Message.error(res.msg);
           }

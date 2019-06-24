@@ -19,6 +19,7 @@
 
 <script>
 import { Button, Dialog, Form, FormItem, Input, Message } from "element-ui";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "otherSystemLog",
@@ -50,31 +51,30 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      token: state => state.userInfo.token
+    }),
     disabled() {
-      if (this.system.name && this.system.website) {
-        return false;
-      } else {
-        return true;
-      }
+      return !(this.system.name && this.system.website);
     }
   },
   methods: {
+    ...mapActions(["getItems"]),
     closeLog() {
       this.$emit("closeLog");
     },
     addSystem() {
-      let that = this;
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.addSystemItem,
         query: {
           system: this.system,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
             Message.success(res.msg);
-            that.$emit("settingChange");
-            that.$emit("closeLog");
+            this.$emit("settingChange");
+            this.$emit("closeLog");
           } else {
             Message.error(res.msg);
           }

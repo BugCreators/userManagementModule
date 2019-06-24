@@ -127,6 +127,7 @@ import {
   RadioGroup,
   Select
 } from "element-ui";
+import { mapState, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "administratorDetailLog",
@@ -206,51 +207,51 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      showDetailLog: state => state.showDetailLog,
+      token: state => state.userInfo.token
+    }),
     logTitle() {
-      let title = this.dataId ? "编辑" : "添加";
-      return title + "角色";
-    },
-    showDetailLog() {
-      return this.$store.state.showDetailLog;
+      return `${this.dataId ? "编辑" : "添加"}角色`;
     }
   },
   methods: {
+    ...mapActions(["getItems", "postItems"]),
+    ...mapMutations(["switchDetailLog"]),
     getInfo() {
-      let that = this;
       let loading = Loading.service();
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.getAdministratorDetail,
         query: {
           id: this.dataId,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
-            that.info = res.data;
-            that.info.number = Number(that.info.number);
+            this.info = res.data;
+            this.info.number = Number(this.info.number);
           } else {
             Message.error(res.msg);
-            that.closeDetailLog();
+            this.closeDetailLog();
           }
         }
       });
     },
     getBranchList() {
-      let that = this;
       let loading = Loading.service({
         target: document.getElementById("form")
       });
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.getBranchListByAdminDetail,
         query: {
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
-            that.branchList = that.branchList.concat(res.data);
-            that.getRoleList();
+            this.branchList = this.branchList.concat(res.data);
+            this.getRoleList();
           } else {
             Message.error(res.msg);
           }
@@ -258,20 +259,19 @@ export default {
       });
     },
     getRoleList() {
-      let that = this;
       let loading = Loading.service({
         target: document.getElementById("form")
       });
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.getRoleListByBranchId,
         query: {
           branchId: this.info.branch_id,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
-            that.roleList = res.data;
+            this.roleList = res.data;
           } else {
             Message.error(res.msg);
           }
@@ -282,8 +282,7 @@ export default {
       this.getRoleList();
     },
     formSubmit() {
-      let url,
-        that = this;
+      let url = "";
       if (this.dataId) {
         url = this.$store.state.changeAdministrator;
       } else {
@@ -302,19 +301,19 @@ export default {
       let loading = Loading.service({
         target: document.getElementById("form")
       });
-      this.$store.dispatch("postItems", {
+      this.postItems({
         url,
         query: {
           data: this.info,
           moduleList: this.moduleList,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
             Message.success(res.msg);
-            that.$emit("listChange");
-            that.closeDetailLog();
+            this.$emit("listChange");
+            this.closeDetailLog();
           } else {
             Message.error(res.msg || "添加失败，请稍后重试");
           }
@@ -322,7 +321,7 @@ export default {
       });
     },
     closeDetailLog() {
-      this.$store.commit("switchDetailLog");
+      this.switchDetailLog();
     }
   }
 };

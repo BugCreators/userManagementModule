@@ -36,6 +36,7 @@
 <script>
 import { Card, Loading, Message, MessageBox } from "element-ui";
 import AvueImage from "@/components/AvueImage";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "carouseCard",
@@ -55,18 +56,23 @@ export default {
   created() {
     this.initHref = this.item.href;
   },
+  computed: {
+    ...mapState({
+      token: state => state.userInfo.token
+    })
+  },
   methods: {
+    ...mapActions(["getItems"]),
     openLog(index) {
       this.$emit("openLog", index);
     },
     deleteItemConfirm() {
-      let that = this;
       MessageBox.confirm(`确认删除该图片？`, `确认删除`, {
         type: "warning",
-        callback(action) {
+        callback: action => {
           switch (action) {
             case "confirm":
-              that.deleteItem();
+              this.deleteItem();
               break;
             case "cancel":
             case "close":
@@ -77,19 +83,18 @@ export default {
       });
     },
     deleteItem() {
-      let that = this;
       let loading = Loading.service();
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.deleteCarouselItem,
         query: {
           index: this.item.index,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
             Message.success(res.msg);
-            that.$emit("settingChange");
+            this.$emit("settingChange");
           } else {
             Message.error(res.msg);
           }
@@ -103,19 +108,18 @@ export default {
       this.disabled = !this.disabled;
     },
     changeInfo() {
-      let that = this;
       if (this.initHref !== this.item.href) {
-        this.$store.dispatch("getItems", {
+        this.getItems({
           url: this.$store.state.changeCarouselItemWebsite,
           query: {
             index: this.item.index,
             website: this.item.href,
             token: this.$store.state.userInfo.token
           },
-          cb(res) {
+          cb: res => {
             if (res.code === 200) {
               Message.success(res.msg);
-              that.switchDisabled();
+              this.switchDisabled();
             } else {
               Message.error(res.msg);
             }

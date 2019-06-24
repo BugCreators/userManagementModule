@@ -67,6 +67,7 @@ import {
   Option
 } from "element-ui";
 import { downloadExl } from "@/assets/js/tool";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "studentListExport",
@@ -110,20 +111,25 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapState({
+      token: state => state.userInfo.token
+    })
+  },
   created() {
     this.getCollegeList();
   },
   methods: {
+    ...mapActions(["getItems", "postItems"]),
     closeExportLog() {
       this.$emit("switchExportLog");
     },
     getCollegeList() {
-      let that = this;
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.getCollegeList,
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
-            that.collegeList = that.defaultOption.concat(res.data);
+            this.collegeList = this.defaultOption.concat(res.data);
           } else {
             Message.error(res.msg);
           }
@@ -131,21 +137,20 @@ export default {
       });
     },
     getMajorList() {
-      let that = this;
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.getMajorListBycollegeId,
         query: {
           id: this.info.college_id,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
             if (res.data.length > 0) {
-              that.majorList = that.defaultOption.concat(res.data);
-              that.info.major_id = that.majorList[0].id;
+              this.majorList = this.defaultOption.concat(res.data);
+              this.info.major_id = this.majorList[0].id;
             } else {
-              that.majorList = {};
-              that.info.major_id = "";
+              this.majorList = {};
+              this.info.major_id = "";
             }
           } else {
             Message.error(res.msg);
@@ -154,21 +159,20 @@ export default {
       });
     },
     getClassList() {
-      let that = this;
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.getClassListByMajorId,
         query: {
           id: this.info.major_id,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
             if (res.data.length > 0) {
-              that.classList = that.defaultOption.concat(res.data);
-              that.info.class_id = that.classList[0].id;
+              this.classList = this.defaultOption.concat(res.data);
+              this.info.class_id = this.classList[0].id;
             } else {
-              that.classList = {};
-              that.info.class_id = "";
+              this.classList = {};
+              this.info.class_id = "";
             }
           } else {
             Message.error(res.msg);
@@ -187,45 +191,43 @@ export default {
       }
     },
     listExportConfirm() {
-      let that = this;
       MessageBox.confirm("确认导出当前列表数据？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-        callback(action) {
+        callback: action => {
           switch (action) {
             case "cancel":
             case "close":
               Message.info("取消导出");
               break;
             case "confirm":
-              that.listExport();
+              this.listExport();
               break;
           }
         }
       });
     },
     listExport() {
-      let allList,
-        that = this;
+      let allList;
       let loading = Loading.service({
         text: "获取数据导出中，请稍候..."
       });
-      return this.$store.dispatch("postItems", {
-        url: that.$store.state.getAllStudentList,
+      return this.postItems({
+        url: this.$store.state.getAllStudentList,
         query: {
-          data: that.info,
-          token: that.$store.state.userInfo.token
+          data: this.info,
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
             if (res.data.length) {
               let listTemp = res.data;
               allList = listTemp.map(item => {
-                if (item[that.i18n["sex"]] == 1) {
-                  item[that.i18n["sex"]] = "男";
+                if (item[this.i18n["sex"]] == 1) {
+                  item[this.i18n["sex"]] = "男";
                 } else {
-                  item[that.i18n["sex"]] = "女";
+                  item[this.i18n["sex"]] = "女";
                 }
                 return item;
               });

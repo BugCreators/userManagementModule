@@ -38,6 +38,7 @@
 
 <script>
 import { Button, Dialog, Message, MessageBox, Upload } from "element-ui";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "collegeLogoChange",
@@ -65,24 +66,25 @@ export default {
     this.getCollegeLogo();
   },
   computed: {
-    showLogoLog() {
-      return this.$store.state.showLogoLog;
-    }
+    ...mapState({
+      showLogoLog: state => state.showLogoLog,
+      token: state => state.userInfo.token
+    })
   },
   methods: {
+    ...mapActions(["getItems", "postItems"]),
     getCollegeLogo() {
-      let that = this;
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.getCollegeLogo,
         query: {
-          token: this.$store.state.userInfo.token,
+          token: this.token,
           id: this.collegeId
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
             if (res.data.url != "" && res.data.url != null) {
-              res.data.url = that.$store.state.baseUrl + res.data.url;
-              that.fileList.push(res.data);
+              res.data.url = this.$store.state.baseUrl + res.data.url;
+              this.fileList.push(res.data);
             }
           }
         }
@@ -92,12 +94,11 @@ export default {
       this.$refs.upload.submit();
     },
     uploadIogo(param) {
-      let that = this;
       let data = new FormData();
       data.append("image", param.file);
       data.append("id", this.collegeId);
-      data.append("token", this.$store.state.userInfo.token);
-      this.$store.dispatch("postItems", {
+      data.append("token", this.token);
+      this.postItems({
         url: this.$store.state.changeCollegeLogo,
         query: data,
         config: {
@@ -105,11 +106,11 @@ export default {
             "Content-Type": "multipart/form-data"
           }
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
             Message.success(res.msg);
-            that.$emit("logoChange", res.data);
-            that.closeLogoLog();
+            this.$emit("logoChange", res.data);
+            this.closeLogoLog();
           } else {
             Message.error(res.msg);
           }
@@ -132,37 +133,35 @@ export default {
       return isJPG && isLt1M;
     },
     deleteLogoConfirm() {
-      let that = this;
       MessageBox.confirm("确定删除该学院现在的院徽？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-        callback(action) {
+        callback: action => {
           switch (action) {
             case "cancel":
             case "close":
               Message.info("取消删除");
               break;
             case "confirm":
-              that.deleteLogo();
+              this.deleteLogo();
               break;
           }
         }
       });
     },
     deleteLogo() {
-      let that = this;
-      this.$store.dispatch("postItems", {
+      this.postItems({
         url: this.$store.state.deleteCollegeLogo,
         query: {
           id: this.collegeId,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
             Message.success(res.msg);
-            that.$emit("logoDelete", res.data);
-            that.closeLogoLog();
+            this.$emit("logoDelete", res.data);
+            this.closeLogoLog();
           } else {
             Message.error(res.msg);
           }

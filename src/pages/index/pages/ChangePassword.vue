@@ -32,6 +32,7 @@ import {
   MessageBox
 } from "element-ui";
 import md5 from "md5";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "changePassword",
@@ -70,11 +71,11 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      userInfo: state => state.userInfo
+    }),
     isAdmin() {
-      if (location.href.indexOf("admin") != -1) {
-        return true;
-      }
-      return false;
+      return location.href.indexOf("admin") != -1;
     }
   },
   created() {
@@ -83,7 +84,7 @@ export default {
         cancelButtonText: "回到首页",
         confirmButtonText: "登录",
         type: "warning",
-        callback(action) {
+        callback: action => {
           switch (action) {
             case "cancel":
             case "close":
@@ -98,11 +99,11 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["postItems", "clearUserInfo"]),
     confirmChange() {
-      let that = this;
       MessageBox.confirm("确定进行修改？", "确认修改", {
         type: "warning",
-        callback(action) {
+        callback: action => {
           switch (action) {
             default:
             case "cancel":
@@ -110,7 +111,7 @@ export default {
               Message.info("取消修改");
               break;
             case "confirm":
-              that.changePw();
+              this.changePw();
               break;
           }
         }
@@ -134,22 +135,21 @@ export default {
       }
       this.i18n[2].errorMsg = "";
 
-      let that = this;
-      this.$store.dispatch("postItems", {
+      this.postItems({
         url: this.$store.state.changePasswordByUser,
         query: {
           oldPw: md5(this.password.oldPw),
           newPw: md5(this.password.newPw),
           confirmPw: md5(this.password.confirmPw),
-          number: this.$store.state.userInfo.number,
-          token: this.$store.state.userInfo.token
+          number: this.userInfo.number,
+          token: this.userInfo.token
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
             Message.success(res.msg);
           } else if (res.code === 402) {
-            that.$store.dispatch("clearUserInfo").then(() => {
-              that.$store.commit("clearUserInfo");
+            this.clearUserInfo().then(() => {
+              this.$store.commit("clearUserInfo");
             });
             MessageBox.confirm(
               "会话已过期，要进行操作请重新登陆！",
@@ -158,7 +158,7 @@ export default {
                 cancelButtonText: "回到首页",
                 confirmButtonText: "登录",
                 type: "warning",
-                callback(action) {
+                callback: action => {
                   switch (action) {
                     case "cancel":
                     case "close":

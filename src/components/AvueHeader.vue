@@ -63,6 +63,7 @@
 <script>
 import AvueImage from "./AvueImage.vue";
 import { Dropdown, DropdownMenu, DropdownItem } from "element-ui";
+import { mapActions } from "vuex";
 
 export default {
   name: "AvueHeader",
@@ -91,18 +92,19 @@ export default {
   },
   computed: {
     buttonInfo() {
-      let obj = {
-        href: "login.html",
-        text: "登陆"
-      };
-      if (location.pathname === "/login.html") {
-        obj.href = "index.html";
-        obj.text = "回到首页";
-      }
-      return obj;
+      return location.pathname === "/login.html"
+        ? {
+            href: "index.html",
+            text: "回到首页"
+          }
+        : {
+            href: "login.html",
+            text: "登陆"
+          };
     }
   },
   methods: {
+    ...mapActions(["clearUserInfo"]),
     handleCommand(command) {
       switch (command) {
         case "userInfo":
@@ -127,9 +129,8 @@ export default {
       }
     },
     logout() {
-      var that = this;
-      this.$store.dispatch("clearUserInfo").then(() => {
-        that.$store.commit("clearUserInfo");
+      this.clearUserInfo().then(() => {
+        this.$store.commit("clearUserInfo");
       });
       location.href = "index.html";
     }

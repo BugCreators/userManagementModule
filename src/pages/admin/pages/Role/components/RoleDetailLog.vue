@@ -122,6 +122,7 @@ import {
   Option,
   Select
 } from "element-ui";
+import { mapState, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "roleDetailLog",
@@ -191,47 +192,47 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      showDetailLog: state => state.showDetailLog,
+      token: state => state.userInfo.token
+    }),
     logTitle() {
-      let title = this.dataId ? "编辑" : "添加";
-      return title + "角色";
-    },
-    showDetailLog() {
-      return this.$store.state.showDetailLog;
+      return `${this.dataId ? "编辑" : "添加"}角色`;
     }
   },
   methods: {
+    ...mapActions(["getItems", "postItems"]),
+    ...mapMutations(["switchDetailLog"]),
     getInfo() {
-      let that = this;
       let loading = Loading.service();
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.getRoleDetail,
         query: {
           id: this.dataId,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
-            that.info = res.data;
+            this.info = res.data;
           } else {
             Message.error(res.msg);
-            that.closeDetailLog();
+            this.closeDetailLog();
           }
         }
       });
     },
     getBranchList() {
-      let that = this;
       let loading = Loading.service(this.loadingOpts);
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.getBranchListByRoleDetail,
         query: {
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
-            that.branchList = that.branchList.concat(res.data);
+            this.branchList = this.branchList.concat(res.data);
           } else {
             Message.error(res.msg);
           }
@@ -239,19 +240,18 @@ export default {
       });
     },
     getModuleList() {
-      let that = this;
       let loading = Loading.service({
         target: document.getElementById("form")
       });
-      this.$store.dispatch("postItems", {
+      this.postItems({
         url: this.$store.state.getModuleList,
         query: {
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
-            that.moduleList = res.data;
+            this.moduleList = res.data;
           } else {
             Message.error(res.msg);
           }
@@ -259,8 +259,7 @@ export default {
       });
     },
     formSubmit() {
-      let url,
-        that = this;
+      let url = "";
       if (this.dataId) {
         url = this.$store.state.changeRole;
       } else {
@@ -279,19 +278,19 @@ export default {
       let loading = Loading.service({
         target: document.getElementById("form")
       });
-      this.$store.dispatch("postItems", {
+      this.postItems({
         url,
         query: {
           data: this.info,
           moduleList: this.moduleList,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
             Message.success(res.msg);
-            that.$emit("listChange");
-            that.closeDetailLog();
+            this.$emit("listChange");
+            this.closeDetailLog();
           } else {
             Message.error(res.msg || "添加失败，请稍后重试");
           }
@@ -299,7 +298,7 @@ export default {
       });
     },
     closeDetailLog() {
-      this.$store.commit("switchDetailLog");
+      this.switchDetailLog();
     }
   }
 };

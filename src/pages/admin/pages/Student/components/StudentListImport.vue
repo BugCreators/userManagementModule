@@ -95,6 +95,7 @@ import {
 } from "element-ui";
 import StudentList from "./StudentList";
 import { downloadExl, changeExlHaed, XLSX } from "@/assets/js/tool";
+import { mapState, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "studentListImport",
@@ -143,24 +144,26 @@ export default {
     };
   },
   computed: {
-    showImportLog() {
-      return this.$store.state.showImportLog;
-    }
+    ...mapState({
+      showImportLog: state => state.showImportLog,
+      token: state => state.userInfo.token
+    })
   },
   created() {
     this.getCollegeList();
   },
   methods: {
+    ...mapActions(["getItems", "postItems"]),
+    ...mapMutations(["switchImportLog"]),
     closeImportLog() {
-      this.$store.commit("switchImportLog");
+      this.switchImportLog();
     },
     getCollegeList() {
-      let that = this;
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.getCollegeList,
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
-            that.collegeList = res.data;
+            this.collegeList = res.data;
           } else {
             Message.error(res.msg);
           }
@@ -168,23 +171,22 @@ export default {
       });
     },
     getMajorList() {
-      let that = this;
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.getMajorListBycollegeId,
         query: {
           id: this.data.college_id,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
             if (res.data.length > 0) {
-              that.majorList = res.data;
-              that.data.major_id = that.majorList[0].id;
+              this.majorList = res.data;
+              this.data.major_id = this.majorList[0].id;
             } else {
-              that.majorList = {};
-              that.data.major_id = "";
+              this.majorList = {};
+              this.data.major_id = "";
             }
-            that.getClassList();
+            this.getClassList();
           } else {
             Message.error(res.msg);
           }
@@ -192,21 +194,20 @@ export default {
       });
     },
     getClassList() {
-      let that = this;
-      this.$store.dispatch("getItems", {
+      this.getItems({
         url: this.$store.state.getClassListByMajorId,
         query: {
           id: this.data.major_id,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
             if (res.data.length > 0) {
-              that.classList = res.data;
-              that.data.class_id = that.classList[0].id;
+              this.classList = res.data;
+              this.data.class_id = this.classList[0].id;
             } else {
-              that.classList = {};
-              that.data.class_id = "";
+              this.classList = {};
+              this.data.class_id = "";
             }
           } else {
             Message.error(res.msg);
@@ -283,7 +284,6 @@ export default {
       this.isImport = true;
     },
     importExcel() {
-      let that = this;
       if (this.data.college_id == "") {
         this.message = "学院不能为空！";
         return;
@@ -308,19 +308,19 @@ export default {
         item.class_id = this.data.class_id;
         return item;
       });
-      this.$store.dispatch("postItems", {
+      this.postItems({
         url: this.$store.state.importStudentList,
         query: {
           data: this.data,
           studentList: newList,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
             Message.success(res.msg);
-            that.$emit("listChange");
-            that.closeImportLog();
+            this.$emit("listChange");
+            this.closeImportLog();
           } else {
             Message.error(res.msg);
           }

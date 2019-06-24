@@ -41,6 +41,7 @@
 import { Button, Dialog, Loading, Message, Upload } from "element-ui";
 import CollegeList from "./CollegeList";
 import { downloadExl, changeExlHaed, XLSX } from "@/assets/js/tool";
+import { mapState, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "collegeListImport",
@@ -64,13 +65,16 @@ export default {
     };
   },
   computed: {
-    showImportLog() {
-      return this.$store.state.showImportLog;
-    }
+    ...mapState({
+      showImportLog: state => state.showImportLog,
+      token: state => state.userInfo.token
+    })
   },
   methods: {
+    ...mapActions(["postItems"]),
+    ...mapMutations(["switchImportLog"]),
     closeImportLog() {
-      this.$store.commit("switchImportLog");
+      this.switchImportLog();
     },
     templateDownload() {
       let listHead = new Object(),
@@ -124,22 +128,21 @@ export default {
       this.isImport = true;
     },
     importExcel() {
-      let that = this;
       let loading = Loading.service({
         text: "导入中，请稍候···"
       });
-      this.$store.dispatch("postItems", {
+      this.postItems({
         url: this.$store.state.importCollegeList,
         query: {
           collegeList: this.listExcel,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           loading.close();
           if (res.code === 200) {
             Message.success(res.msg);
-            that.$emit("listChange");
-            that.closeImportLog();
+            this.$emit("listChange");
+            this.closeImportLog();
           } else {
             Message.error(res.msg);
           }

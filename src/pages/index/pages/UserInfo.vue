@@ -47,6 +47,7 @@ import {
   MessageBox,
   Radio
 } from "element-ui";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "userInfo",
@@ -119,11 +120,11 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      token: state => state.userInfo.token
+    }),
     isAdmin() {
-      if (location.href.indexOf("admin") != -1) {
-        return true;
-      }
-      return false;
+      return location.href.indexOf("admin") != -1;
     }
   },
   created() {
@@ -132,7 +133,7 @@ export default {
         cancelButtonText: "回到首页",
         confirmButtonText: "登录",
         type: "warning",
-        callback(action) {
+        callback: action => {
           switch (action) {
             case "cancel":
             case "close":
@@ -148,28 +149,27 @@ export default {
     this.getUserInfo();
   },
   methods: {
+    ...mapActions(["postItems", "clearUserInfo"]),
     getUserInfo() {
-      let that = this;
-      this.$store.dispatch("postItems", {
+      this.postItems({
         url: this.$store.state.getUserInfo,
         query: {
           number: this.$store.state.userInfo.number,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
-            that.userInfo = res.data;
+            this.userInfo = res.data;
           } else if (res.code === 402) {
-            that.reload();
+            this.reload();
           }
         }
       });
     },
     confirmChange() {
-      let that = this;
       MessageBox.confirm("确定进行修改？", "确认修改", {
         type: "warning",
-        callback(action) {
+        callback: action => {
           switch (action) {
             default:
             case "cancel":
@@ -177,15 +177,14 @@ export default {
               Message.info("取消修改");
               break;
             case "confirm":
-              that.changeInfoByUser();
+              this.changeInfoByUser();
               break;
           }
         }
       });
     },
     changeInfoByUser() {
-      let that = this;
-      this.$store.dispatch("postItems", {
+      this.postItems({
         url: this.$store.state.changeUserInfoByUser,
         query: {
           number: this.userInfo.number,
@@ -193,13 +192,13 @@ export default {
           sex: this.userInfo.sex,
           address: this.userInfo.address,
           description: this.userInfo.description,
-          token: this.$store.state.userInfo.token
+          token: this.token
         },
-        cb(res) {
+        cb: res => {
           if (res.code === 200) {
             Message.success(res.msg);
           } else if (res.code === 402) {
-            that.reload();
+            this.reload();
           } else {
             Message.error(res.msg);
           }
@@ -207,15 +206,14 @@ export default {
       });
     },
     reload() {
-      let that = this;
-      this.$store.dispatch("clearUserInfo").then(() => {
-        that.$store.commit("clearUserInfo");
+      this.clearUserInfo().then(() => {
+        this.$store.commit("clearUserInfo");
       });
       MessageBox.confirm("会话已过期，要进行操作请重新登陆！", "会话过期", {
         cancelButtonText: "回到首页",
         confirmButtonText: "登录",
         type: "warning",
-        callback(action) {
+        callback: action => {
           switch (action) {
             case "cancel":
             case "close":
