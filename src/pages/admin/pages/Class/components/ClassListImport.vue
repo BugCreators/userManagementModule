@@ -93,7 +93,6 @@ export default {
         return false;
       }
       const fileReader = new FileReader();
-      let that = this;
       fileReader.onload = ev => {
         try {
           let sheetArray;
@@ -102,25 +101,25 @@ export default {
             type: "binary"
           });
           for (let sheet in workbook.Sheets) {
-            changeExlHaed(workbook.Sheets[sheet], Object.keys(that.i18n));
+            changeExlHaed(workbook.Sheets[sheet], Object.keys(this.i18n));
             sheetArray = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
           }
           sheetArray.forEach(item => {
-            that.isImport = false;
+            this.isImport = false;
             item.message = "";
             if (!item.grade) {
               item.message = "年级不能为空！";
-              that.isImport = true;
+              this.isImport = true;
             }
             if (!item.name) {
               item.message += "班级名不能为空！";
-              that.isImport = true;
+              this.isImport = true;
             }
             if (!item.majorName) {
               item.message += "专业名不能为空！";
-              that.isImport = true;
+              this.isImport = true;
             }
-            that.listExcel.push(item);
+            this.listExcel.push(item);
           });
         } catch (e) {
           Message.error({

@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :before-close="closeDetailLog"
+    :before-close="switchDetailLog"
     :title="logTitle"
     :visible.sync="showDetailLog"
   >
@@ -100,7 +100,7 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="closeDetailLog">取 消</el-button>
+      <el-button @click="switchDetailLog">取 消</el-button>
       <el-button type="primary" @click="formSubmit()">确 定</el-button>
     </div>
   </el-dialog>
@@ -203,7 +203,7 @@ export default {
             this.getDepartmentList();
           } else {
             Message.error(res.msg);
-            this.closeDetailLog();
+            this.switchDetailLog();
           }
         }
       });
@@ -279,15 +279,12 @@ export default {
           if (res.code === 200) {
             Message.success(res.msg);
             this.$emit("listChange");
-            this.closeDetailLog();
+            this.switchDetailLog();
           } else {
             Message.error(res.msg || "添加失败，请稍后重试");
           }
         }
       });
-    },
-    closeDetailLog() {
-      this.switchDetailLog();
     }
   }
 };
