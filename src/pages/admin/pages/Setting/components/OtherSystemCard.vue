@@ -40,14 +40,14 @@ export default {
       initWebsite: ""
     };
   },
-  created() {
-    this.initName = this.system.name;
-    this.initWebsite = this.system.website;
-  },
   computed: {
     ...mapState({
       token: state => state.userInfo.token
     })
+  },
+  created() {
+    this.initName = this.system.name;
+    this.initWebsite = this.system.website;
   },
   methods: {
     ...mapActions(["getItems"]),

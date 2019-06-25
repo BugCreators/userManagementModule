@@ -1,0 +1,22 @@
+.flod-animate(@begin, @end, @name) {
+    @keyframes @name {
+        from {
+            transform: rotate(@begin);
+        }
+        to {
+            transform: rotate(@end);
+        }
+    }
+}
+.flod-animate(0, 180deg, flod);
+.flod-animate(180deg, 360deg, no-flod);
+.sidebar-switch {
+    i {
+        color: white;
+        display: inline-block;
+        animation: no-flod 0.3s forwards;
+        &.i-flod {
+            animation: flod 0.3s forwards;
+        }
+    }
+}

@@ -99,23 +99,23 @@ export default {
       }
     };
   },
-  mounted() {
-    if (this.dataId) {
-      this.getInfo();
-    }
-  },
   computed: {
     ...mapState({
       showDetailLog: state => state.showDetailLog,
       token: state => state.userInfo.token
     }),
-    ...mapMutations(["switchDetailLog"]),
     logTitle() {
       return `${this.dataId ? "编辑" : "添加"}学院`;
     }
   },
+  mounted() {
+    if (this.dataId) {
+      this.getInfo();
+    }
+  },
   methods: {
     ...mapActions(["getItems", "postItems"]),
+    ...mapMutations(["switchDetailLog"]),
     getInfo() {
       let loading = Loading.service();
       this.getItems({

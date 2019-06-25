@@ -18,12 +18,4 @@ export default {
 };
 </script>
 
-<style lang="less">
-.footer {
-  color: #aaa;
-  font-size: 12px;
-  height: @footer_height;
-  line-height: @footer_height;
-  text-align: center;
-}
-</style>
+<style lang="less" src="./AvueFooter.less"></style>

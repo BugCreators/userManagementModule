@@ -182,15 +182,6 @@ export default {
       isIndeterminate: true
     };
   },
-  mounted() {
-    this.loadingOpts.target = document.getElementById("form");
-    this.getBranchList();
-    if (this.dataId) {
-      this.getInfo();
-    } else {
-      this.getModuleList();
-    }
-  },
   computed: {
     ...mapState({
       showDetailLog: state => state.showDetailLog,
@@ -198,6 +189,15 @@ export default {
     }),
     logTitle() {
       return `${this.dataId ? "编辑" : "添加"}角色`;
+    }
+  },
+  mounted() {
+    this.loadingOpts.target = document.getElementById("form");
+    this.getBranchList();
+    if (this.dataId) {
+      this.getInfo();
+    } else {
+      this.getModuleList();
     }
   },
   methods: {

@@ -130,7 +130,7 @@ const router = new Router({
       path: "/userInfo",
       name: "userInfo",
       component: () =>
-        import(/* webpackChunkName: "userInfo" */ "../index/pages/UserInfo"),
+        import(/* webpackChunkName: "userInfo" */ "../index/pages/UserInfo/UserInfo"),
       meta: {
         requireAuth: true
       }
@@ -139,7 +139,7 @@ const router = new Router({
       path: "/changePw",
       name: "changePw",
       component: () =>
-        import(/* webpackChunkName: "changePw" */ "../index/pages/ChangePassword"),
+        import(/* webpackChunkName: "changePw" */ "../index/pages/ChangePassword/ChangePassword"),
       meta: {
         requireAuth: true
       }

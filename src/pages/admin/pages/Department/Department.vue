@@ -27,9 +27,9 @@
 </template>
 
 <script>
-import SearchBox from "./../../components/SearchBox";
+import SearchBox from "./../../components/SearchBox/SearchBox";
 import DepartmentList from "./components/DepartmentList";
-import ListWarp from "./../components/ListWarp";
+import ListWarp from "./../components/ListWarp/ListWarp";
 import { mapMutations, mapState } from "vuex";
 
 export default {

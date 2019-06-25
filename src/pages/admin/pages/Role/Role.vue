@@ -31,9 +31,9 @@
 </template>
 
 <script>
-import SearchBox from "./../../components/SearchBox";
+import SearchBox from "./../../components/SearchBox/SearchBox";
 import RoleList from "./components/RoleList";
-import ListWarp from "./../components/ListWarp";
+import ListWarp from "./../components/ListWarp/ListWarp";
 import { mapState, mapMutations } from "vuex";
 
 export default {

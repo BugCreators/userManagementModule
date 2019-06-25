@@ -113,11 +113,6 @@ export default {
       }
     };
   },
-  mounted() {
-    if (this.dataId) {
-      this.getInfo();
-    }
-  },
   computed: {
     ...mapState({
       showDetailLog: state => state.showDetailLog,
@@ -125,6 +120,11 @@ export default {
     }),
     logTitle() {
       return `${this.dataId ? "编辑" : "添加"}部门`;
+    }
+  },
+  mounted() {
+    if (this.dataId) {
+      this.getInfo();
     }
   },
   methods: {

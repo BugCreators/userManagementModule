@@ -184,13 +184,4 @@ export default {
 };
 </script>
 
-<style lang="less">
-.searchLine {
-  margin-bottom: 10px;
-  text-align: center;
-  .el-input.input {
-    margin-right: 10px;
-    width: 20%;
-  }
-}
-</style>
+<style lang="less" src="./SearchBox.less"></style>

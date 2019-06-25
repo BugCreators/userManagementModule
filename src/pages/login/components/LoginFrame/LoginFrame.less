@@ -1,0 +1,126 @@
+.el-checkbox__inner::after {
+    content: none;
+}
+.content {
+    min-height: 894px;
+    .twoLoginMethods {
+        left: 50%;
+        margin-left: -219px;
+        position: absolute;
+        top: 25%;
+        width: 360px;
+        .logo-login {
+            margin-bottom: 50px;
+            text-align: center;
+        }
+        .loginBox {
+            background: #fff;
+            border-radius: 6px;
+            overflow: hidden;
+            padding: 24px 24px 30px 24px;
+            position: relative;
+            .loginAccount {
+                float: left;
+                position: relative;
+                width: 312px;
+                &::after {
+                    background: #f2f2f2;
+                    content: "";
+                    display: inline-block;
+                    height: 240px;
+                    position: absolute;
+                    right: 88px;
+                    top: 36px;
+                    width: 0;
+                }
+                .login-method {
+                    color: @default_text_color;
+                    font-size: 20px;
+                    font-weight: bold;
+                    padding-bottom: 36px;
+                }
+                .has-padding {
+                    padding: 0 16px;
+                    .errMes {
+                        color: #ff6969;
+                        font-size: 12px;
+                        padding-bottom: 10px;
+                        span {
+                            padding-left: 8px;
+                            position: relative;
+                            top: 2px;
+                        }
+                    }
+                    .el-input {
+                        &.hasMargin {
+                            margin-bottom: 20px;
+                        }
+                        .el-input__inner {
+                            border-color: #dcdfe6;
+                            font-size: 16px;
+                            height: 50px;
+                            padding: 0 24px;
+                            width: 280px;
+                        }
+                    }
+                    .remember {
+                        padding-top: 18px;
+                        .el-checkbox__input {
+                            .el-checkbox__inner {
+                                border-color: #dcdfe6;
+                                border-radius: 2px;
+                                height: 18px;
+                                width: 18px;
+                            }
+                            &.is-checked {
+                                .el-checkbox__inner {
+                                    background-color: @default_color;
+                                    border-color: @default_color;
+                                    &::after {
+                                        border: 2px solid #fff;
+                                        border-left: 0;
+                                        border-top: 0;
+                                        box-sizing: content-box;
+                                        content: "";
+                                        height: 8px;
+                                        left: 5px;
+                                        position: absolute;
+                                        transform: rotate(45deg) scaleY(1);
+                                        top: 1px;
+                                        width: 4px;
+                                    }
+                                }
+                            }
+                        }
+                        .el-checkbox__label {
+                            color: #999;
+                            font-size: 16px;
+                            padding-left: 5px;
+                            position: relative;
+                            top: 1px;
+                        }
+                        a {
+                            color: @default_color;
+                            float: right;
+                            font-size: 16px;
+                            text-decoration: none;
+                        }
+                    }
+                    .el-button {
+                        background: @default_color;
+                        border-color: @default_color;
+                        color: #fff !important;
+                        font-size: 16px;
+                        height: 50px;
+                        margin-top: 60px;
+                        width: 100%;
+                        &.noClick {
+                            background: #c1e8d1 !important;
+                            border-color: #c1e8d1 !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

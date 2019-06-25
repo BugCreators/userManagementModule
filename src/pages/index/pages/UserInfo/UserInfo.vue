@@ -230,25 +230,4 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-.userInfo {
-  &-page {
-    background: white;
-    padding: 30px 0;
-  }
-  &-main {
-    margin: 0 auto;
-    width: 1200px;
-  }
-  &-admin {
-    padding-left: 40px;
-    width: 1000px;
-  }
-  .el-input {
-    width: 50%;
-  }
-  .el-textarea {
-    width: 80%;
-  }
-}
-</style>
+<style lang="less" src="./UserInfo.less" scoped></style>

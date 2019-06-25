@@ -39,22 +39,4 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-.majorList {
-  padding-top: 25px;
-}
-.majorListItem {
-  margin-bottom: 25px;
-  .majorName {
-    text-align: center;
-  }
-  .majorInfo {
-    text-indent: 2em;
-  }
-}
-.el-collapse-item {
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-</style>
+<style lang="less" src="./CollegeDetailMajorList.less" scoped></style>

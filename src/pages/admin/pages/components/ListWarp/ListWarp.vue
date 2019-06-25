@@ -81,13 +81,4 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-.listWarp {
-  margin-bottom: 10px;
-  overflow: hidden;
-  .dataSum {
-    float: right;
-    line-height: 2.5;
-  }
-}
-</style>
+<style lang="less" src="./ListWarp.less" scoped></style>

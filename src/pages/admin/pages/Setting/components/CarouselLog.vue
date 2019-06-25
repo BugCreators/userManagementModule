@@ -57,15 +57,15 @@ export default {
       }
     };
   },
-  created() {
-    if (this.dataIndex) {
-      this.getCarouselItem();
-    }
-  },
   computed: {
     ...mapState({
       token: state => state.userInfo.token
     })
+  },
+  created() {
+    if (this.dataIndex) {
+      this.getCarouselItem();
+    }
   },
   methods: {
     ...mapActions(["getItems", "postItems"]),

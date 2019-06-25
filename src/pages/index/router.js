@@ -9,25 +9,25 @@ export default new Router({
       path: "/",
       name: "collegeListPage",
       component: () =>
-        import(/* webpackChunkName: "collegeListPage" */ "./pages/CollegeListPage")
+        import(/* webpackChunkName: "collegeListPage" */ "./pages/CollegeListPage/CollegeListPage")
     },
     {
       path: "/college/:id",
       name: "collegeDetail",
       component: () =>
-        import(/* webpackChunkName: "collegeDetail" */ "./pages/CollegeDetailPage")
+        import(/* webpackChunkName: "collegeDetail" */ "./pages/CollegeDetailPage/CollegeDetailPage")
     },
     {
       path: "/userInfo",
       name: "userInfo",
       component: () =>
-        import(/* webpackChunkName: "userInfo" */ "./pages/UserInfo")
+        import(/* webpackChunkName: "userInfo" */ "./pages/UserInfo/UserInfo")
     },
     {
       path: "/changePw",
       name: "changePassword",
       component: () =>
-        import(/* webpackChunkName: "changePw" */ "./pages/ChangePassword")
+        import(/* webpackChunkName: "changePw" */ "./pages/ChangePassword/ChangePassword")
     },
     {
       path: "/login",

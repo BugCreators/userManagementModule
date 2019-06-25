@@ -89,7 +89,7 @@ import {
   Table,
   TableColumn
 } from "element-ui";
-import AvueImage from "@/components/AvueImage";
+import AvueImage from "@/components/AvueImage/AvueImage";
 import { downloadExl } from "@/assets/js/tool";
 import { mapState, mapActions } from "vuex";
 

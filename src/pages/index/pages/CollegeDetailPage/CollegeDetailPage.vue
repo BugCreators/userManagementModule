@@ -42,7 +42,7 @@
 
 <script>
 import { Breadcrumb, BreadcrumbItem, MessageBox } from "element-ui";
-import AvueImage from "@/components/AvueImage";
+import AvueImage from "@/components/AvueImage/AvueImage";
 import { mapActions } from "vuex";
 
 export default {
@@ -52,7 +52,7 @@ export default {
     elBreadcrumbItem: BreadcrumbItem,
     AvueImage,
     MajorList: () =>
-      import(/* webpackChunkName: "majorList" */ "../components/CollegeDetailMajorList")
+      import(/* webpackChunkName: "majorList" */ "../../components/CollegeDetailMajorList/CollegeDetailMajorList")
   },
   data() {
     return {
@@ -119,85 +119,4 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-.college-detail-page {
-  padding-top: @header_height;
-  .detail {
-    background-color: white;
-    margin: 0 auto;
-    width: @content_width;
-    .basis {
-      overflow: hidden;
-    }
-    #college-des {
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 3;
-      font-size: 16px;
-      line-height: 1.5;
-      margin-top: 15px;
-      overflow: hidden;
-      text-indent: 2em;
-    }
-    .detail-right {
-      text-align: left;
-      span {
-        display: block;
-        margin-bottom: 6px;
-        &.college-name {
-          font-size: 22px;
-        }
-        &.college-otherInfo {
-          color: @default_text_color;
-        }
-        &:last-child {
-          margin-bottom: 0;
-        }
-      }
-    }
-    .showMore {
-      color: @default_color;
-      cursor: pointer;
-      font-size: 14px;
-      margin-bottom: 5px;
-      span {
-        background: no-repeat url("../../../assets/images/icon/expand.png");
-        display: inline-block;
-        height: 10px;
-        margin-right: 5px;
-        transition: all 0.3s ease 0s;
-        width: 14px;
-        &.icon-fold {
-          transform: rotate(180deg);
-        }
-      }
-    }
-  }
-  .college-info {
-    background: white;
-    overflow: hidden;
-    padding: 30px 0;
-    .college-img {
-      float: left;
-      height: 200px;
-      margin-right: 50px;
-    }
-  }
-  .college-major {
-    background: white;
-    margin: 20px auto 0;
-    overflow: hidden;
-    padding: 20px 0;
-    h1 {
-      border-left: 4px solid @default_color;
-      font-size: 20px;
-      font-weight: normal;
-      height: 20px;
-      line-height: 16px;
-      margin-top: 8px;
-      padding-left: 10px;
-      text-align: left;
-    }
-  }
-}
-</style>
+<style lang="less" src="./CollegeDetailPage.less" scoped></style>

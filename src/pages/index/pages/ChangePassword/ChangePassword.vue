@@ -181,21 +181,4 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-.changePw {
-  &-page {
-    background: white;
-    padding: 30px 0 100px;
-  }
-  &-main {
-    margin: 0 auto;
-    width: 1200px;
-    .el-input {
-      width: 30%;
-    }
-  }
-}
-.errorMsg {
-  margin-left: 10px;
-}
-</style>
+<style lang="less" src="./ChangePassword.less" scoped></style>

@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import Carousel from "../components/Carousel";
+import Carousel from "../../components/Carousel/Carousel";
 import { mapActions } from "vuex";
 
 export default {
@@ -22,9 +22,9 @@ export default {
   components: {
     Carousel,
     CollegeList: () =>
-      import(/* webpackChunkName: "collegeList" */ "../components/CollegeList"),
+      import(/* webpackChunkName: "collegeList" */ "../../components/CollegeList/CollegeList"),
     MyNoData: () =>
-      import(/* webpackChunkName: "myNoData" */ "@/components/MyNoData")
+      import(/* webpackChunkName: "myNoData" */ "@/components/MyNoData/MyNoData")
   },
   data() {
     return {
@@ -47,21 +47,4 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-.collegePage {
-  overflow: hidden;
-  padding-top: @header_height;
-  .college-wrapper {
-    background: url("../../../assets/images/college_background.png") no-repeat
-      center center;
-    padding-top: 50px;
-    .container {
-      width: @content_width;
-      margin: 0 auto;
-    }
-  }
-  .myNoData {
-    padding: 100px 0;
-  }
-}
-</style>
+<style lang="less" src="./CollegeListPage.less" scoped></style>

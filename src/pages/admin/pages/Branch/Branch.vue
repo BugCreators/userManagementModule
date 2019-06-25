@@ -32,9 +32,9 @@
 </template>
 
 <script>
-import SearchBox from "./../../components/SearchBox";
+import SearchBox from "./../../components/SearchBox/SearchBox";
 import BranchList from "./components/BranchList";
-import ListWarp from "./../components/ListWarp";
+import ListWarp from "./../components/ListWarp/ListWarp";
 import { mapState, mapMutations } from "vuex";
 
 export default {

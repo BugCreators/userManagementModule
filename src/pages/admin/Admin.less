@@ -1,0 +1,25 @@
+.content {
+    height: 100%;
+    padding-top: @header_height;
+}
+.sidebar {
+    background: @header_bg;
+    height: ~"calc(100% - @{header_height})";
+    position: relative;
+    width: @sidebar_width;
+    z-index: 999;
+    ul {
+        height: 100%;
+        position: fixed;
+    }
+}
+.content-right {
+    margin-left: @sidebar_width;
+    overflow: hidden;
+    transition: all 0.4s;
+    width: ~"calc(100% - @{sidebar_width})";
+    &-fold {
+        margin-left: @sidebar_width_fold;
+        width: ~"calc(100% - @{sidebar_width_fold})";
+    }
+}

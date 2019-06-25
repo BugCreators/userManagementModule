@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import AvueHeader from "@/components/AvueHeader";
-import AvueFooter from "@/components/AvueFooter";
+import AvueHeader from "@/components/AvueHeader/AvueHeader";
+import AvueFooter from "@/components/AvueFooter/AvueFooter";
 import { Loading, MessageBox } from "element-ui";
 import { mapActions, mapMutations } from "vuex";
 

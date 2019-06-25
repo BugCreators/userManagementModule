@@ -35,7 +35,7 @@
 
 <script>
 import { Card, Loading, Message, MessageBox } from "element-ui";
-import AvueImage from "@/components/AvueImage";
+import AvueImage from "@/components/AvueImage/AvueImage";
 import { mapState, mapActions } from "vuex";
 
 export default {
@@ -53,13 +53,13 @@ export default {
       initHref: ""
     };
   },
-  created() {
-    this.initHref = this.item.href;
-  },
   computed: {
     ...mapState({
       token: state => state.userInfo.token
     })
+  },
+  created() {
+    this.initHref = this.item.href;
   },
   methods: {
     ...mapActions(["getItems"]),

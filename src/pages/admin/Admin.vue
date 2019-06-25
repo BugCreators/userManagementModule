@@ -34,8 +34,8 @@
 </template>
 
 <script>
-import AvueHeader from "@/components/AvueHeader";
-import AvueSidebar from "./components/AvueSidebar";
+import AvueHeader from "@/components/AvueHeader/AvueHeader";
+import AvueSidebar from "./components/AvueSidebar/AvueSidebar";
 import { Loading, MessageBox, Tabs, TabPane } from "element-ui";
 import { mapMutations, mapActions, mapState } from "vuex";
 
@@ -227,30 +227,4 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-.content {
-  height: 100%;
-  padding-top: @header_height;
-}
-.sidebar {
-  background: @header_bg;
-  height: ~"calc(100% - @{header_height})";
-  position: relative;
-  width: @sidebar_width;
-  z-index: 999;
-  ul {
-    height: 100%;
-    position: fixed;
-  }
-}
-.content-right {
-  margin-left: @sidebar_width;
-  overflow: hidden;
-  transition: all 0.4s;
-  width: ~"calc(100% - @{sidebar_width})";
-  &-fold {
-    margin-left: @sidebar_width_fold;
-    width: ~"calc(100% - @{sidebar_width_fold})";
-  }
-}
-</style>
+<style lang="less" src="./Admin.less" scoped></style>

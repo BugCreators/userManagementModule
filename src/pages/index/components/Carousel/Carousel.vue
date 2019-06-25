@@ -20,7 +20,7 @@
 
 <script>
 import { Carousel, CarouselItem } from "element-ui";
-import AvueImage from "@/components/AvueImage";
+import AvueImage from "@/components/AvueImage/AvueImage";
 
 export default {
   name: "carousel",
@@ -39,9 +39,4 @@ export default {
 };
 </script>
 
-<style lang="less" scope>
-.poster {
-  margin-top: 20px;
-  text-align: center;
-}
-</style>
+<style lang="less" src="./Carousel.less" scope></style>

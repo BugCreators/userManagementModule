@@ -39,14 +39,14 @@ export default {
       initAddress: ""
     };
   },
-  created() {
-    this.initName = this.schoolInfo.name;
-    this.initAddress = this.schoolInfo.address;
-  },
   computed: {
     ...mapState({
       token: state => state.userInfo.token
     })
+  },
+  created() {
+    this.initName = this.schoolInfo.name;
+    this.initAddress = this.schoolInfo.address;
   },
   methods: {
     ...mapActions(["getItems"]),

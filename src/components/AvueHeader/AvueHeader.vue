@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import AvueImage from "./AvueImage.vue";
+import AvueImage from "../AvueImage/AvueImage";
 import { Dropdown, DropdownMenu, DropdownItem } from "element-ui";
 import { mapActions } from "vuex";
 
@@ -138,60 +138,4 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-.header {
-  background: @header_bg;
-  height: @header_height;
-  position: fixed;
-  width: 100%;
-  z-index: 1999;
-  .container {
-    margin: 0 auto;
-    padding: 0;
-    width: @content_width;
-  }
-  .container-admin {
-    padding: 0 20px;
-  }
-  .logo {
-    float: left;
-    margin: 10px 0 0 0 !important;
-    img {
-      width: auto;
-    }
-  }
-  .header-right {
-    float: right;
-    color: white;
-    a {
-      color: white;
-    }
-    div {
-      display: inline-block;
-    }
-  }
-  .otherSystem {
-    display: inline-block;
-    margin-right: 20px;
-    span {
-      margin-right: 10px;
-    }
-  }
-  .userInfo {
-    display: inline-block;
-    &,
-    .el-dropdown,
-    .loginButton {
-      color: white;
-      font-size: 16px;
-      line-height: 3.5;
-    }
-    .el-dropdown-menu__item {
-      color: @default_color;
-    }
-  }
-}
-.headerScroll {
-  background: url("../assets/images/nav_bg_scroll.png") 0 -20px repeat-x;
-}
-</style>
+<style lang="less" src="./AvueHeader.less" scoped></style>

@@ -62,14 +62,14 @@ export default {
       fileList: []
     };
   },
-  created() {
-    this.getCollegeLogo();
-  },
   computed: {
     ...mapState({
       showLogoLog: state => state.showLogoLog,
       token: state => state.userInfo.token
     })
+  },
+  created() {
+    this.getCollegeLogo();
   },
   methods: {
     ...mapActions(["getItems", "postItems"]),
