@@ -13,7 +13,7 @@
             v-for="item in setting.systemWebsite"
             :key="item.index"
             :system="item"
-            @settingChange="settingChange"
+            @settingChange="getSysSetting"
           />
           <el-card class="addCard addCard-system" type="addCard">
             <span
@@ -28,7 +28,7 @@
             class="carouselCard"
             :key="item.index"
             :item="item"
-            @settingChange="settingChange"
+            @settingChange="getSysSetting"
             @deleteItem="deleteItem"
             @openLog="openCarouselLog"
           />
@@ -47,14 +47,14 @@
       <OtherSystemLog
         v-if="showSystemLog"
         :showLog="showSystemLog"
-        @settingChange="settingChange"
+        @settingChange="getSysSetting"
         @closeLog="closeLog"
       />
       <CarouselLog
         v-if="showCarouselLog"
         :dataIndex="currentCarouseIndex"
         :showLog="showCarouselLog"
-        @settingChange="settingChange"
+        @settingChange="getSysSetting"
         @closeLog="closeLog"
       />
     </div>
@@ -63,24 +63,24 @@
 
 <script>
 import { Card, Form, FormItem, Loading, MessageBox } from "element-ui";
-import { mapActions, mapMutations } from "vuex";
+import { mapMutations } from "vuex";
 
 export default {
   name: "sysSetting",
   components: {
     CarouselCard: () =>
-      import(/* webpackChunkName: "carouselCard" */ "./components/CarouselCard"),
+      import(/* webpackChunkName: "carouselCard" */ "./components/CarouselCard/CarouselCard"),
     CarouselLog: () =>
-      import(/* webpackChunkName: "carouselLog" */ "./components/CarouselLog"),
+      import(/* webpackChunkName: "carouselLog" */ "./components/CarouselLog/CarouselLog"),
     elCard: Card,
     elForm: Form,
     elFormItem: FormItem,
     OtherSystemCard: () =>
-      import(/* webpackChunkName: "otherSystemCard" */ "./components/OtherSystemCard"),
+      import(/* webpackChunkName: "otherSystemCard" */ "./components/OtherSystemCard/OtherSystemCard"),
     OtherSystemLog: () =>
-      import(/* webpackChunkName: "otherSystemLog" */ "./components/OtherSystemLog"),
+      import(/* webpackChunkName: "otherSystemLog" */ "./components/OtherSystemLog/OtherSystemLog"),
     SchoolInfoCard: () =>
-      import(/* webpackChunkName: "schoolInfoCard" */ "./components/SchoolInfoCard")
+      import(/* webpackChunkName: "schoolInfoCard" */ "./components/SchoolInfoCard/SchoolInfoCard")
   },
   data() {
     return {
@@ -107,30 +107,25 @@ export default {
     this.getSysSetting();
   },
   methods: {
-    ...mapActions(["getItems"]),
     ...mapMutations(["setSetting"]),
-    getSysSetting() {
+    async getSysSetting() {
       let loading = Loading.service();
-      this.getItems({
-        url: this.$store.state.getSysSetting,
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            this.setting = res.data;
-            this.setting.carousel = this.setting.carousel.map(item => {
-              item.name = item.url.split("/").pop();
-              item.url = this.$store.state.baseUrl + item.url;
-              return item;
-            });
-            this.setSetting(res.data);
-          } else {
-            MessageBox.alert(`读取系统配置出错，请稍候重试`, `系统出错`, {
-              type: `error`,
-              confirmButtonText: `确定`
-            });
-          }
-        }
-      });
+      const { data: res } = await this.$http.getSysSetting();
+      loading.close();
+      if (res.code === 200) {
+        this.setting = res.data;
+        this.setting.carousel = this.setting.carousel.map(item => {
+          item.name = item.url.split("/").pop();
+          item.url = this.$store.state.baseUrl + item.url;
+          return item;
+        });
+        this.setSetting(res.data);
+      } else {
+        MessageBox.alert(`读取系统配置出错，请稍候重试`, `系统出错`, {
+          type: `error`,
+          confirmButtonText: `确定`
+        });
+      }
     },
     openSystemLog() {
       this.showSystemLog = true;
@@ -146,9 +141,6 @@ export default {
     },
     deleteItem(index) {
       this.setting.carousel.splice(index, 1);
-    },
-    settingChange() {
-      this.getSysSetting();
     }
   }
 };

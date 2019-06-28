@@ -67,7 +67,7 @@ import {
   Table,
   TableColumn
 } from "element-ui";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "administratorList",
@@ -122,28 +122,26 @@ export default {
     this.getList();
   },
   methods: {
-    ...mapActions(["postItems", "clearUserInfo"]),
-    getList() {
+    ...mapActions(["clearUserInfo"]),
+    ...mapMutations({
+      clearUserInfoM: "clearUserInfo"
+    }),
+    async getList() {
       let loading = Loading.service(this.loadingOpts);
-      return this.postItems({
-        url: this.$store.state.getAdministratorList,
-        query: {
-          pageSize: this.pageSize,
-          pageIndex: this.pageIndex,
-          searchValue: this.searchValue,
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            this.list = res.data.list;
-            this.listCount = res.data.count;
-            this.$emit("changeCount", this.listCount);
-          } else {
-            Message.error(res.msg);
-          }
-        }
+      const { data: res } = await this.$http.getAdministratorList({
+        pageSize: this.pageSize,
+        pageIndex: this.pageIndex,
+        searchValue: this.searchValue,
+        token: this.token
       });
+      loading.close();
+      if (res.code === 200) {
+        this.list = res.data.list;
+        this.listCount = res.data.count;
+        this.$emit("changeCount", this.listCount);
+      } else {
+        Message.error(res.msg);
+      }
     },
     selectedChange(selection) {
       this.selectedId = selection.map(item => item.id);
@@ -170,42 +168,36 @@ export default {
         }
       );
     },
-    resetPw(id) {
-      this.getItems({
-        url: this.$store.state.resetPwAdmin,
-        query: {
-          id: id,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            Message.success(res.msg);
-            if (res.data.changeByOwn) {
-              this.clearUserInfo().then(() => {
-                this.$store.commit("clearUserInfo");
-              });
-              MessageBox.confirm("当前用户密码已重置，请重新登录", "密码重置", {
-                cancelButtonText: "回到首页",
-                confirmButtonText: "登录",
-                type: "warning",
-                callback: action => {
-                  switch (action) {
-                    case "cancel":
-                    case "close":
-                      location.href = "index.html";
-                      break;
-                    case "confirm":
-                      location.href = "login.html";
-                      break;
-                  }
-                }
-              });
-            }
-          } else {
-            Message.error(res.msg);
-          }
-        }
+    async resetPw(id) {
+      const { data: res } = await this.$http.resetPw({
+        id: id,
+        token: this.token
       });
+      if (res.code === 200) {
+        Message.success(res.msg);
+        if (res.data.changeByOwn) {
+          await this.clearUserInfo();
+          this.clearUserInfoM();
+          MessageBox.confirm("当前用户密码已重置，请重新登录", "密码重置", {
+            cancelButtonText: "回到首页",
+            confirmButtonText: "登录",
+            type: "warning",
+            callback: action => {
+              switch (action) {
+                case "cancel":
+                case "close":
+                  location.href = "index.html";
+                  break;
+                case "confirm":
+                  location.href = "login.html";
+                  break;
+              }
+            }
+          });
+        }
+      } else {
+        Message.error(res.msg);
+      }
     },
     editData(id) {
       this.$emit("openDetailLog", id);
@@ -234,25 +226,20 @@ export default {
         }
       });
     },
-    datasDelete(ids) {
-      this.postItems({
-        url: this.$store.state.delAdministrators,
-        query: {
-          adminsId: ids,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            Message.success(res.msg);
-            if (this.list.length % this.pageSize == ids.length) {
-              this.pageIndex--;
-            }
-            this.getList();
-          } else {
-            Message.error(res.msg);
-          }
-        }
+    async datasDelete(ids) {
+      const { data: res } = await this.$http.delAdministrators({
+        adminsId: ids,
+        token: this.token
       });
+      if (res.code === 200) {
+        Message.success(res.msg);
+        if (this.list.length % this.pageSize == ids.length) {
+          this.pageIndex--;
+        }
+        this.getList();
+      } else {
+        Message.error(res.msg);
+      }
     },
     pageChange(page) {
       this.pageIndex = page;

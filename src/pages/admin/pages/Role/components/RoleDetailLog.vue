@@ -122,7 +122,7 @@ import {
   Option,
   Select
 } from "element-ui";
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "roleDetailLog",
@@ -201,70 +201,49 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["getItems", "postItems"]),
     ...mapMutations(["switchDetailLog"]),
-    getInfo() {
+    async getInfo() {
       let loading = Loading.service();
-      this.getItems({
-        url: this.$store.state.getRoleDetail,
-        query: {
-          id: this.dataId,
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            this.info = res.data;
-          } else {
-            Message.error(res.msg);
-            this.switchDetailLog();
-          }
-        }
+      const { data: res } = await this.$http.getRoleDetail({
+        id: this.dataId,
+        token: this.token
       });
+      loading.close();
+      if (res.code === 200) {
+        this.info = res.data;
+      } else {
+        Message.error(res.msg);
+        this.switchDetailLog();
+      }
     },
-    getBranchList() {
+    async getBranchList() {
       let loading = Loading.service(this.loadingOpts);
-      this.getItems({
-        url: this.$store.state.getBranchListByRoleDetail,
-        query: {
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            this.branchList = this.branchList.concat(res.data);
-          } else {
-            Message.error(res.msg);
-          }
-        }
+      const { data: res } = await this.$http.getBranchListByRoleDetail({
+        token: this.token
       });
+      loading.close();
+      if (res.code === 200) {
+        this.branchList = this.branchList.concat(res.data);
+      } else {
+        Message.error(res.msg);
+      }
     },
-    getModuleList() {
+    async getModuleList() {
       let loading = Loading.service({
         target: document.getElementById("form")
       });
-      this.postItems({
-        url: this.$store.state.getModuleList,
-        query: {
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            this.moduleList = res.data;
-          } else {
-            Message.error(res.msg);
-          }
-        }
+      const { data: res } = await this.$http.getModuleList({
+        token: this.token
       });
-    },
-    formSubmit() {
-      let url = "";
-      if (this.dataId) {
-        url = this.$store.state.changeRole;
+      loading.close();
+      if (res.code === 200) {
+        this.moduleList = res.data;
       } else {
-        url = this.$store.state.addRole;
+        Message.error(res.msg);
       }
+    },
+    async formSubmit() {
+      let data = {};
       if (this.info.name === "") {
         this.errorMsg = "角色名不能为空！";
         return;
@@ -278,24 +257,28 @@ export default {
       let loading = Loading.service({
         target: document.getElementById("form")
       });
-      this.postItems({
-        url,
-        query: {
+      if (this.dataId) {
+        data = await this.$http.changeRole({
           data: this.info,
           moduleList: this.moduleList,
           token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            Message.success(res.msg);
-            this.$emit("listChange");
-            this.switchDetailLog();
-          } else {
-            Message.error(res.msg || "添加失败，请稍后重试");
-          }
-        }
-      });
+        });
+      } else {
+        data = await this.$http.addRole({
+          data: this.info,
+          moduleList: this.moduleList,
+          token: this.token
+        });
+      }
+      let res = data.data;
+      loading.close();
+      if (res.code === 200) {
+        Message.success(res.msg);
+        this.$emit("listChange");
+        this.switchDetailLog();
+      } else {
+        Message.error(res.msg || "添加失败，请稍后重试");
+      }
     }
   }
 };

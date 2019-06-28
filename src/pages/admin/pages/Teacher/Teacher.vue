@@ -27,8 +27,8 @@
 
 <script>
 import SearchBox from "./../../components/SearchBox/SearchBox";
-import TeacherList from "./components/TeacherList";
 import ListWarp from "./../components/ListWarp/ListWarp";
+import TeacherList from "./components/TeacherList";
 import { mapState, mapMutations } from "vuex";
 
 export default {

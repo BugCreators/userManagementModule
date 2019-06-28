@@ -91,7 +91,7 @@ import {
 } from "element-ui";
 import AvueImage from "@/components/AvueImage/AvueImage";
 import { downloadExl } from "@/assets/js/tool";
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "collegeList",
@@ -153,28 +153,22 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["postItems"]),
-    getList() {
+    async getList() {
       let loading = Loading.service(this.loadingOpts);
-      return this.postItems({
-        url: this.$store.state.getCollegeListByAdmin,
-        query: {
-          pageSize: this.pageSize,
-          pageIndex: this.pageIndex,
-          searchValue: this.searchValue,
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            this.list = res.data.list;
-            this.listCount = res.data.count;
-            this.$emit("changeCount", this.listCount);
-          } else {
-            Message.error(res.msg);
-          }
-        }
+      const { data: res } = await this.$http.getCollegeListByAdmin({
+        pageSize: this.pageSize,
+        pageIndex: this.pageIndex,
+        searchValue: this.searchValue,
+        token: this.token
       });
+      loading.close();
+      if (res.code === 200) {
+        this.list = res.data.list;
+        this.listCount = res.data.count;
+        this.$emit("changeCount", this.listCount);
+      } else {
+        Message.error(res.msg);
+      }
     },
     selectedChange(selection) {
       this.selectedId = selection.map(item => item.id);
@@ -238,25 +232,20 @@ export default {
         }
       });
     },
-    datasDelete(ids) {
-      this.postItems({
-        url: this.$store.state.delCollege,
-        query: {
-          collegesId: ids,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            Message.success(res.msg);
-            if (this.list.length % this.pageSize == ids.length) {
-              this.pageIndex--;
-            }
-            this.getList();
-          } else {
-            Message.error(res.msg);
-          }
-        }
+    async datasDelete(ids) {
+      const { data: res } = await this.$http.delCollege({
+        collegesId: ids,
+        token: this.token
       });
+      if (res.code === 200) {
+        Message.success(res.msg);
+        if (this.list.length % this.pageSize == ids.length) {
+          this.pageIndex--;
+        }
+        this.getList();
+      } else {
+        Message.error(res.msg);
+      }
     },
     listExportConfirm() {
       MessageBox.confirm("确认导出当前列表数据？", "提示", {
@@ -276,26 +265,21 @@ export default {
         }
       });
     },
-    listExport() {
+    async listExport() {
       let allList;
       let loading = Loading.service({
         text: "获取数据导出中，请稍候..."
       });
-      return this.postItems({
-        url: this.$store.state.getAllCollegeList,
-        query: {
-          token: this.token
-        },
-        cb(res) {
-          if (res.code === 200) {
-            allList = res.data;
-            downloadExl(allList, "xlsx", "学院列表");
-          } else {
-            Message.error(res.msg);
-          }
-          loading.close();
-        }
+      const { data: res } = await this.$http.getAllCollegeList({
+        token: this.token
       });
+      if (res.code === 200) {
+        allList = res.data;
+        downloadExl(allList, "xlsx", "学院列表");
+      } else {
+        Message.error(res.msg);
+      }
+      loading.close();
     },
     importListChange() {
       this.list = this.listExcel.slice(

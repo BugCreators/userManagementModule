@@ -21,27 +21,22 @@ export default {
     AvueHeader,
     AvueFooter
   },
-  created() {
+  async created() {
     let loading = Loading.service();
-    this.getUserInfo().then(() => {
-      this.getItems({
-        url: this.$store.state.getSysSetting,
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            this.setSetting(res.data);
-          } else {
-            MessageBox.alert(`读取系统配置出错，请稍候重试`, `系统出错`, {
-              type: `error`,
-              confirmButtonText: `确定`
-            });
-          }
-        }
+    await this.getUserInfo();
+    const { data: res } = await this.$http.getSysSetting();
+    loading.close();
+    if (res.code === 200) {
+      this.setSetting(res.data);
+    } else {
+      MessageBox.alert(`读取系统配置出错，请稍候重试`, `系统出错`, {
+        type: `error`,
+        confirmButtonText: `确定`
       });
-    });
+    }
   },
   methods: {
-    ...mapActions(["getUserInfo", "getItems"]),
+    ...mapActions(["getUserInfo"]),
     ...mapMutations(["setSetting"])
   }
 };

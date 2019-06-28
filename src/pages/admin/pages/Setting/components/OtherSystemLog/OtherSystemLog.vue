@@ -19,7 +19,7 @@
 
 <script>
 import { Button, Dialog, Form, FormItem, Input, Message } from "element-ui";
-import { mapActions, mapState } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "otherSystemLog",
@@ -59,39 +59,24 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["getItems"]),
     closeLog() {
       this.$emit("closeLog");
     },
-    addSystem() {
-      this.getItems({
-        url: this.$store.state.addSystemItem,
-        query: {
-          system: this.system,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            Message.success(res.msg);
-            this.$emit("settingChange");
-            this.$emit("closeLog");
-          } else {
-            Message.error(res.msg);
-          }
-        }
+    async addSystem() {
+      const { data: res } = await this.$http.addSystemItem({
+        system: this.system,
+        token: this.token
       });
+      if (res.code === 200) {
+        Message.success(res.msg);
+        this.$emit("settingChange");
+        this.$emit("closeLog");
+      } else {
+        Message.error(res.msg);
+      }
     }
   }
 };
 </script>
 
-<style lang="less" scope>
-.system {
-  .el-input {
-    width: 70%;
-  }
-  .el-form-item__label {
-    width: 6em;
-  }
-}
-</style>
+<style lang="less" src="./OtherSystemLog.less" scope></style>

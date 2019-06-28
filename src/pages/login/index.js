@@ -4,6 +4,8 @@ import "../../assets/css/common.less";
 import router from "./router";
 import store from "@/assets/js/store";
 
+import "@/assets/js/http/api/login";
+
 Vue.config.productionTip = false;
 
 new Vue({

@@ -41,7 +41,7 @@
 import { Button, Dialog, Loading, Message, Upload } from "element-ui";
 import BranchList from "./BranchList";
 import { XLSX, downloadExl, changeExlHaed } from "@/assets/js/tool";
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "branchListImport",
@@ -76,7 +76,6 @@ export default {
     })
   },
   methods: {
-    ...mapActions(["postItems"]),
     ...mapMutations(["switchImportLog"]),
     closeImportLog() {
       this.switchImportLog();
@@ -138,7 +137,7 @@ export default {
       this.listExcel = [];
       this.isImport = true;
     },
-    importExcel() {
+    async importExcel() {
       let loading = Loading.service({
         text: "导入中，请稍候···"
       });
@@ -148,23 +147,18 @@ export default {
         item.level = this.level[level];
         return item;
       });
-      this.postItems({
-        url: this.$store.state.importBranchList,
-        query: {
-          branchList: newList,
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            Message.success(res.msg);
-            this.$emit("listChange");
-            this.closeImportLog();
-          } else {
-            Message.error(res.msg);
-          }
-        }
+      const { data: res } = await this.$http.importBranchList({
+        branchList: newList,
+        token: this.token
       });
+      loading.close();
+      if (res.code === 200) {
+        Message.success(res.msg);
+        this.$emit("listChange");
+        this.closeImportLog();
+      } else {
+        Message.error(res.msg);
+      }
     }
   }
 };

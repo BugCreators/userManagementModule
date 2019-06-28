@@ -1,11 +1,8 @@
 ﻿import Vue from "vue";
 import Vuex from "vuex";
-import axios from "axios";
-import { stringify } from "qs";
 
 Vue.use(Vuex);
 
-// const baseUrl = "http://127.0.0.1/avue/public";
 // const baseUrl = "http://api.avue.com";
 const baseUrl = "http://avue.club:8080";
 
@@ -28,12 +25,6 @@ export default new Vuex.Store({
       // 其它系统链接
       systemWebsite: []
     },
-    /*{
-      logoUri,
-      // 网站备案
-      copyright,
-      icp
-    }*/
     // 搜索值
     searchValue: {
       basis: 0,
@@ -48,17 +39,10 @@ export default new Vuex.Store({
     defaultHeader: `/assets/images/default/head.png`,
     // 默认学院封面
     defaultCollege: require(`../images/default/college.png`),
-    // defaultCollegeDetail: require (`../images/default/college_detail.png`),
     defaultBanner: require(`../images/default/banner.png`),
     defaultNoData: require(`../images/NoData.png`),
     // 用户信息
     userInfo: ``,
-    // number: ``,
-    // password: ``,
-    // realname: ``,
-    // intoBackstage: ``,
-    // token: ``,
-    // roleName: ``,
     // 查询权限
     selectAuthority: {
       select_admin: 0,
@@ -186,226 +170,7 @@ export default new Vuex.Store({
     showImportLog: false,
 
     // 上传院徽
-    showLogoLog: false,
-
-    /*******************网络接口*******************/
-    // 系统设置
-    getSysSetting: baseUrl + `/api/system/getSysSetting`,
-    // 学院列表
-    getCollegeList: baseUrl + `/api/college/getCollegeList`,
-    // 学院详情 参数: id
-    getCollegeDetail: baseUrl + `/api/college/getCollegeDetail`,
-    // 用户登录 参数：name, password
-    login: baseUrl + `/api/user/login`,
-    // 获取用户信息
-    getUserInfo: baseUrl + `/api/user/getUserInfo`,
-    // 获取Token
-    getToken: baseUrl + `/api/api/lssue`,
-    // 修改个人信息
-    changeUserInfoByUser: baseUrl + `/api/user/changeUserInfoByUser`,
-    // 用户修改密码
-    changePasswordByUser: baseUrl + `/api/user/changePasswordByUser`,
-    /**************管理员管理*****************/
-    // 部门管理
-    // 部门列表
-    getBranchList: baseUrl + `/api/branch/getBranchList`,
-    // 导出数据 全部部门
-    getAllBranchList: baseUrl + `/api/branch/getAllBranchList`,
-    // 部门详情
-    getBranchDetail: baseUrl + `/api/branch/getBranchDetail`,
-    // 添加部门
-    addBranch: baseUrl + `/api/branch/addBranch`,
-    // 删除部门
-    delBranch: baseUrl + `/api/branch/deleteBranch`,
-    // 批量添加
-    importBranchList: baseUrl + `/api/branch/importBranchList`,
-    // 修改部门
-    changeBranch: baseUrl + `/api/branch/changeBranch`,
-
-    // 角色管理
-    // 角色列表
-    getRoleList: baseUrl + `/api/role/getRoleList`,
-    // 角色详情
-    getRoleDetail: baseUrl + `/api/role/getRoleDetail`,
-    // 修改角色
-    changeRole: baseUrl + `/api/role/changeRole`,
-    // 获取模块列表
-    getModuleList: baseUrl + `/api/role/getModuleList`,
-    // 获取部门名、ID
-    getBranchListByRoleDetail:
-      baseUrl + `/api/branch/getBranchListByRoleDetail`,
-    // 添加角色
-    addRole: baseUrl + `/api/role/addRole`,
-    // 删除角色
-    delRoles: baseUrl + `/api/role/deleteRole`,
-
-    // 权限列表
-    getAuthorityList: baseUrl + `/api/authority/getAuthorityList`,
-
-    // 管理员列表
-    // 管理员列表
-    getAdministratorList: baseUrl + `/api/admin/getAdminList`,
-    // 管理员详情
-    getAdministratorDetail: baseUrl + `/api/admin/getAdminDetail`,
-    // 重置密码
-    resetPwAdmin: baseUrl + `/api/admin/resetPassword`,
-    // 修改管理员
-    changeAdministrator: baseUrl + `/api/admin/changeAdmin`,
-    // 添加管理员
-    addAdministrator: baseUrl + `/api/admin/addAdmin`,
-    // 删除管理员
-    delAdministrators: baseUrl + `/api/admin/deleteAdmin`,
-    // 获取部门名、ID列表
-    getBranchListByAdminDetail:
-      baseUrl + `/api/branch/getBranchListByAdminDetail`,
-    // 获取角色名、ID列表
-    getRoleListByBranchId: baseUrl + `/api/role/getRoleListByBranchId`,
-
-    /*****************END********************/
-    /***************院系管理*****************/
-    // 学院管理
-    // 学院列表
-    getCollegeListByAdmin: baseUrl + `/api/college/getCollegeListByAdmin`,
-    // 导出数据 全部学院
-    getAllCollegeList: baseUrl + `/api/college/getAllCollegeList`,
-    // 学院详情
-    getCollegeDetailByAdmin: baseUrl + `/api/college/getCollegeDetailByAdmin`,
-    // 院徽
-    getCollegeLogo: baseUrl + `/api/college/getCollegeLogo`,
-    // 上传院徽
-    changeCollegeLogo: baseUrl + `/api/college/changeCollegeLogo`,
-    // 删除院徽
-    deleteCollegeLogo: baseUrl + `/api/college/deleteCollegeLogo`,
-    // 添加学院
-    addCollege: baseUrl + `/api/college/addCollege`,
-    // 删除学院
-    delCollege: baseUrl + `/api/college/deleteCollege`,
-    // 批量添加
-    importCollegeList: baseUrl + `/api/college/importCollegeList`,
-    // 修改学院
-    changeCollege: baseUrl + `/api/college/changeCollegeDetail`,
-
-    // 院系管理
-    // 院系列表
-    getDepartmentList: baseUrl + `/api/department/getDepartmentList`,
-    // 导出数据 全部院系
-    getAllDepartmentList: baseUrl + `/api/department/getAllDepartmentList`,
-    // 院系详情
-    getDepartmentDetail: baseUrl + `/api/department/getDepartmentDetail`,
-    // 修改院系
-    changeDepartment: baseUrl + `/api/department/changeDepartment`,
-    // 添加院系
-    addDepartment: baseUrl + `/api/department/addDepartment`,
-    // 删除学院:
-    delDepartments: baseUrl + `/api/department/deleteDepartments`,
-    // 批量添加
-    importDepartmentList: baseUrl + `/api/department/importDepartmentList`,
-    // 获取院系列表（根据学院ID）
-    getDepartmentListByCollegeId:
-      baseUrl + `/api/department/getDepartmentListByCollegeId`,
-
-    // 专业管理
-    // 专业列表
-    getMajorList: baseUrl + `/api/major/getMajorList`,
-    // 导出数据 全部专业
-    getAllMajorList: baseUrl + `/api/major/getAllMajorList`,
-    // 专业详情
-    getMajorDetail: baseUrl + `/api/major/getMajorDetail`,
-    // 添加专业
-    addMajor: baseUrl + `/api/major/addMajor`,
-    // 删除专业
-    delMajors: baseUrl + `/api/major/deleteMajor`,
-    // 批量添加
-    importMajorList: baseUrl + `/api/major/importMajorList`,
-    // 修改专业
-    changeMajor: baseUrl + `/api/major/changeMajor`,
-    // 获取专业列表（根据学院ID）
-    getMajorListBycollegeId: baseUrl + `/api/major/getMajorListByCollegeId`,
-
-    // 班级管理
-    getClassList: baseUrl + `/api/vclass/getClassList`,
-    // 导出数据 全部班级
-    getAllClassList: baseUrl + `/api/vclass/getAllClassList`,
-    // 获取年级
-    getGradeList: baseUrl + `/api/user/getGradeList`,
-    // 班级详情
-    getClassDetail: baseUrl + `/api/vclass/getClassDetail`,
-    // 添加班级
-    addClass: baseUrl + `/api/vclass/addClass`,
-    // 删除班级
-    delClass: baseUrl + `/api/vclass/deleteClass`,
-    // 批量添加
-    importClassList: baseUrl + `/api/vclass/importClassList`,
-    // 修改班级
-    changeClass: baseUrl + `/api/vclass/changeClass`,
-    /*****************END*******************/
-    /************账号管理 BEGIN**************/
-    // 学生列表
-    // 学生列表
-    getStudentList: baseUrl + `/api/student/getStudentList`,
-    // 导出数据 全部学生
-    getAllStudentList: baseUrl + `/api/student/getAllStudentList`,
-    // 学生详情
-    getStudentDetail: baseUrl + `/api/student/getStudentDetail`,
-    // 添加学生
-    addStudent: baseUrl + `/api/student/addStudent`,
-    // 删除学生
-    delStudents: baseUrl + `/api/student/deleteStudent`,
-    // 批量添加
-    importStudentList: baseUrl + `/api/student/importStudentList`,
-    // 重置密码
-    resetPwStudent: baseUrl + `/api/student/resetPassword`,
-    // 修改学生
-    changeStudent: baseUrl + `/api/student/changeStudent`,
-    // 获取班级列表（根据专业ID）
-    getClassListByMajorId: baseUrl + `/api/vclass/getClassListByMajorId`,
-
-    // 教师列表
-    // 教师列表
-    getTeacherList: baseUrl + `/api/teacher/getTeacherList`,
-    // 导出数据 全部教师
-    getAllTeacherList: baseUrl + `/api/teacher/getAllTeacherList`,
-    // 教师详情
-    getTeacherDetail: baseUrl + `/api/teacher/getTeacherDetail`,
-    // 添加教师
-    addTeacher: baseUrl + `/api/teacher/addTeacher`,
-    // 删除教师
-    delTeachers: baseUrl + `/api/teacher/deleteTeacher`,
-    // 批量添加
-    importTeacherList: baseUrl + `/api/teacher/importTeacherList`,
-    // 重置密码
-    resetPwTeacher: baseUrl + `/api/teacher/resetPassword`,
-    // 修改教师
-    changeTeacher: baseUrl + `/api/teacher/changeTeacher`,
-
-    // 系统设置
-    // 修改学校信息
-    changeSchoolInfo: baseUrl + `/api/system/changeSchoolInfo`,
-    // 添加系统链接
-    addSystemItem: baseUrl + `/api/system/addSystemItem`,
-    // 删除系统链接
-    deleteSystemItem: baseUrl + `/api/system/deleteSystemItem`,
-    // 编辑系统链接信息
-    changeSystemItem: baseUrl + `/api/system/changeSystemItem`,
-    // 获取轮播图信息
-    getCarouselItem: baseUrl + `/api/system/getCarouselItem`,
-    // 添加轮播图
-    addCarouselItem: baseUrl + `/api/system/addCarouselItem`,
-    // 删除轮播图
-    deleteCarouselItem: baseUrl + `/api/system/deleteCarouselItem`,
-    // 编辑轮播图-图片
-    changeCarouselItemPicture:
-      baseUrl + `/api/system/changeCarouselItemPicture`,
-    // 编辑轮播图-链接
-    changeCarouselItemWebsite:
-      baseUrl + `/api/system/changeCarouselItemWebsite`,
-    /*****************END*******************/
-    /************获取权限 BEGIN**************/
-    // 进入后台权限
-    intoBackstage: baseUrl + `/api/user/getIntoBackstage`,
-    // 查询权限
-    getSelectAuthority: baseUrl + `/api/user/getSelectAuthority`
-    /****************END********************/
+    showLogoLog: false
   },
   mutations: {
     clearUserInfo(state) {
@@ -445,50 +210,6 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    // eslint-disable-next-line
-    getItems({ commit, state }, opts) {
-      return axios
-        .get(opts.url, {
-          params: opts.query
-        })
-        .then(
-          res => {
-            opts.cb(res.data);
-          },
-          err => {
-            console.log(err);
-          }
-        );
-    },
-    // eslint-disable-next-line
-    postItems({ commit, state }, opts) {
-      return axios
-        .post(opts.url, opts.config ? opts.query : stringify(opts.query), {
-          headers: {
-            "Content-Type": opts.config
-              ? opts.config.headers
-              : "application/x-www-form-urlencoded;charset=UTF-8"
-          }
-        })
-        .then(
-          res => {
-            opts.cb(res.data);
-          },
-          err => {
-            console.log(err);
-          }
-        );
-    },
-    //有数组的请求.
-    // eslint-disable-next-line
-    postArrItems({ commit, state }, opts) {
-      state.postItems(
-        opts.url,
-        stringify(opts.query, {
-          indices: false
-        })
-      );
-    },
     // eslint-disable-next-line
     getUserInfo({ commit, state }) {
       let c_start, c_end;

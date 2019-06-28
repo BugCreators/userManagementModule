@@ -92,7 +92,7 @@ import {
   Option,
   Select
 } from "element-ui";
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "classDetailLog",
@@ -155,84 +155,61 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["getItems", "postItems"]),
     ...mapMutations(["switchDetailLog"]),
-    getInfo() {
+    async getInfo() {
       let loading = Loading.service();
-      this.getItems({
-        url: this.$store.state.getClassDetail,
-        query: {
-          id: this.dataId,
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            this.info = res.data;
-            this.getMajorList();
-          } else {
-            Message.error(res.msg);
-            this.switchDetailLog();
-          }
-        }
+      const { data: res } = await this.$http.getClassDetail({
+        id: this.dataId,
+        token: this.token
       });
+      loading.close();
+      if (res.code === 200) {
+        this.info = res.data;
+        this.getMajorList();
+      } else {
+        Message.error(res.msg);
+        this.switchDetailLog();
+      }
     },
-    getGradeList() {
-      this.getItems({
-        url: this.$store.state.getGradeList,
-        cb: res => {
-          if (res.code === 200) {
-            this.gradeList = res.data;
-          } else {
-            Message.error(res.msg);
-          }
-        }
-      });
+    async getGradeList() {
+      const { data: res } = await this.$http.getGradeList();
+      if (res.code === 200) {
+        this.gradeList = res.data;
+      } else {
+        Message.error(res.msg);
+      }
     },
-    getCollegeList() {
-      this.getItems({
-        url: this.$store.state.getCollegeList,
-        cb: res => {
-          if (res.code === 200) {
-            this.collegeList = res.data;
-          } else {
-            Message.error(res.msg);
-          }
-        }
-      });
+    async getCollegeList() {
+      const { data: res } = await this.$http.getCollegeList();
+      if (res.code === 200) {
+        this.collegeList = res.data;
+      } else {
+        Message.error(res.msg);
+      }
     },
-    getMajorList(isChange) {
-      this.getItems({
-        url: this.$store.state.getMajorListBycollegeId,
-        query: {
-          id: this.info.college_id,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            if (res.data.length > 0) {
-              this.majorList = res.data;
-              isChange ? (this.info.major_id = this.majorList[0].id) : "";
-            } else {
-              this.majorList = {};
-              this.info.major_id = "";
-            }
-          } else {
-            Message.error(res.msg);
-          }
-        }
+    async getMajorList(isChange) {
+      const { data: res } = await this.$http.getMajorListBycollegeId({
+        id: this.info.college_id,
+        token: this.token
       });
+      if (res.code === 200) {
+        if (res.data.length > 0) {
+          this.majorList = res.data;
+          isChange ? (this.info.major_id = this.majorList[0].id) : "";
+        } else {
+          this.majorList = {};
+          this.info.major_id = "";
+        }
+      } else {
+        Message.error(res.msg);
+      }
     },
     collegeChange() {
       this.getMajorList(true);
     },
-    formSubmit() {
-      let url = "";
-      if (this.dataId) {
-        url = this.$store.state.changeClass;
-      } else {
-        url = this.$store.state.addClass;
-      }
+    async formSubmit() {
+      let data = {};
+
       if (this.info.grade === "") {
         this.errorMsg4 = "年级不能为空！";
         return;
@@ -257,23 +234,26 @@ export default {
       let loading = Loading.service({
         target: document.getElementById("form")
       });
-      this.postItems({
-        url,
-        query: {
+      if (this.dataId) {
+        data = await this.$http.changeClass({
           data: this.info,
           token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            Message.success(res.msg);
-            this.$emit("listChange");
-            this.switchDetailLog();
-          } else {
-            Message.error(res.msg || "添加失败，请稍后重试");
-          }
-        }
-      });
+        });
+      } else {
+        data = await this.$http.addClass({
+          data: this.info,
+          token: this.token
+        });
+      }
+      let res = data.data;
+      loading.close();
+      if (res.code === 200) {
+        Message.success(res.msg);
+        this.$emit("listChange");
+        this.switchDetailLog();
+      } else {
+        Message.error(res.msg || "添加失败，请稍后重试");
+      }
     }
   }
 };

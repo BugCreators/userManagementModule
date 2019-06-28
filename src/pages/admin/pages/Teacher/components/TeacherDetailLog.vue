@@ -109,7 +109,7 @@ import {
   Radio,
   RadioGroup
 } from "element-ui";
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "teacherDetailLog",
@@ -185,47 +185,32 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["getItems", "postItems"]),
     ...mapMutations(["switchDetailLog"]),
-    getInfo() {
+    async getInfo() {
       let loading = Loading.service();
-      this.getItems({
-        url: this.$store.state.getTeacherDetail,
-        query: {
-          id: this.dataId,
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            this.info = res.data;
-            this.info.number = Number(this.info.number);
-          } else {
-            Message.error(res.msg);
-            this.switchDetailLog();
-          }
-        }
+      const { data: res } = await this.$http.getTeacherDetail({
+        id: this.dataId,
+        token: this.token
       });
-    },
-    getCollegeList() {
-      this.getItems({
-        url: this.$store.state.getCollegeList,
-        cb: res => {
-          if (res.code === 200) {
-            this.collegeList = res.data;
-          } else {
-            Message.error(res.msg);
-          }
-        }
-      });
-    },
-    formSubmit() {
-      let url;
-      if (this.dataId) {
-        url = this.$store.state.changeTeacher;
+      loading.close();
+      if (res.code === 200) {
+        this.info = res.data;
+        this.info.number = Number(this.info.number);
       } else {
-        url = this.$store.state.addTeacher;
+        Message.error(res.msg);
+        this.switchDetailLog();
       }
+    },
+    async getCollegeList() {
+      const { data: res } = await this.$http.getCollegeList();
+      if (res.code === 200) {
+        this.collegeList = res.data;
+      } else {
+        Message.error(res.msg);
+      }
+    },
+    async formSubmit() {
+      let data = {};
       if (this.info.realname === "") {
         this.errorMsg = "姓名不能为空！";
         return;
@@ -245,23 +230,26 @@ export default {
       let loading = Loading.service({
         target: document.getElementById("form")
       });
-      this.postItems({
-        url,
-        query: {
+      if (this.dataId) {
+        data = await this.$http.changeTeacher({
           data: this.info,
           token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            Message.success(res.msg);
-            this.$emit("listChange");
-            this.switchDetailLog();
-          } else {
-            Message.error(res.msg || "添加失败，请稍后重试");
-          }
-        }
-      });
+        });
+      } else {
+        data = await this.$http.addTeacher({
+          data: this.info,
+          token: this.token
+        });
+      }
+      let res = data.data;
+      loading.close();
+      if (res.code === 200) {
+        Message.success(res.msg);
+        this.$emit("listChange");
+        this.switchDetailLog();
+      } else {
+        Message.error(res.msg || "添加失败，请稍后重试");
+      }
     }
   }
 };

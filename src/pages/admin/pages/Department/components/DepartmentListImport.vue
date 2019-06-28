@@ -41,7 +41,7 @@
 import { Button, Dialog, Loading, Message, Upload } from "element-ui";
 import DepartmentList from "./DepartmentList";
 import { downloadExl, changeExlHaed, XLSX } from "@/assets/js/tool";
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "departmentListImport",
@@ -70,7 +70,6 @@ export default {
     })
   },
   methods: {
-    ...mapActions(["postItems"]),
     ...mapMutations(["switchImportLog"]),
     closeImportLog() {
       this.switchImportLog();
@@ -130,27 +129,22 @@ export default {
       this.listExcel = [];
       this.isImport = true;
     },
-    importExcel() {
+    async importExcel() {
       let loading = Loading.service({
         text: "导入中，请稍候···"
       });
-      this.postItems({
-        url: this.$store.state.importDepartmentList,
-        query: {
-          departmentList: this.listExcel,
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            Message.success(res.msg);
-            this.$emit("listChange");
-            this.closeImportLog();
-          } else {
-            Message.error(res.msg);
-          }
-        }
+      const { data: res } = await this.$http.importDepartmentList({
+        departmentList: this.listExcel,
+        token: this.token
       });
+      loading.close();
+      if (res.code === 200) {
+        Message.success(res.msg);
+        this.$emit("listChange");
+        this.closeImportLog();
+      } else {
+        Message.error(res.msg);
+      }
     }
   }
 };

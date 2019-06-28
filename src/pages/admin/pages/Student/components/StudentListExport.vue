@@ -67,7 +67,7 @@ import {
   Option
 } from "element-ui";
 import { downloadExl } from "@/assets/js/tool";
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "studentListExport",
@@ -120,65 +120,50 @@ export default {
     this.getCollegeList();
   },
   methods: {
-    ...mapActions(["getItems", "postItems"]),
     closeExportLog() {
       this.$emit("switchExportLog");
     },
-    getCollegeList() {
-      this.getItems({
-        url: this.$store.state.getCollegeList,
-        cb: res => {
-          if (res.code === 200) {
-            this.collegeList = this.defaultOption.concat(res.data);
-          } else {
-            Message.error(res.msg);
-          }
-        }
-      });
+    async getCollegeList() {
+      const { data: res } = await this.$http.getCollegeList();
+      if (res.code === 200) {
+        this.collegeList = this.defaultOption.concat(res.data);
+      } else {
+        Message.error(res.msg);
+      }
     },
-    getMajorList() {
-      this.getItems({
-        url: this.$store.state.getMajorListBycollegeId,
-        query: {
-          id: this.info.college_id,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            if (res.data.length > 0) {
-              this.majorList = this.defaultOption.concat(res.data);
-              this.info.major_id = this.majorList[0].id;
-            } else {
-              this.majorList = {};
-              this.info.major_id = "";
-            }
-          } else {
-            Message.error(res.msg);
-          }
-        }
+    async getMajorList() {
+      const { data: res } = await this.$http.getMajorListBycollegeId({
+        id: this.info.college_id,
+        token: this.token
       });
+      if (res.code === 200) {
+        if (res.data.length > 0) {
+          this.majorList = this.defaultOption.concat(res.data);
+          this.info.major_id = this.majorList[0].id;
+        } else {
+          this.majorList = {};
+          this.info.major_id = "";
+        }
+      } else {
+        Message.error(res.msg);
+      }
     },
-    getClassList() {
-      this.getItems({
-        url: this.$store.state.getClassListByMajorId,
-        query: {
-          id: this.info.major_id,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            if (res.data.length > 0) {
-              this.classList = this.defaultOption.concat(res.data);
-              this.info.class_id = this.classList[0].id;
-            } else {
-              this.classList = {};
-              this.info.class_id = "";
-            }
-          } else {
-            Message.error(res.msg);
-          }
-        }
+    async getClassList() {
+      const { data: res } = await this.$http.getClassListByMajorId({
+        id: this.info.major_id,
+        token: this.token
       });
+      if (res.code === 200) {
+        if (res.data.length > 0) {
+          this.classList = this.defaultOption.concat(res.data);
+          this.info.class_id = this.classList[0].id;
+        } else {
+          this.classList = {};
+          this.info.class_id = "";
+        }
+      } else {
+        Message.error(res.msg);
+      }
     },
     collegeChange() {
       if (this.info.college_id != -1) {
@@ -208,39 +193,34 @@ export default {
         }
       });
     },
-    listExport() {
+    async listExport() {
       let allList;
       let loading = Loading.service({
         text: "获取数据导出中，请稍候..."
       });
-      return this.postItems({
-        url: this.$store.state.getAllStudentList,
-        query: {
-          data: this.info,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            if (res.data.length) {
-              let listTemp = res.data;
-              allList = listTemp.map(item => {
-                if (item[this.i18n["sex"]] == 1) {
-                  item[this.i18n["sex"]] = "男";
-                } else {
-                  item[this.i18n["sex"]] = "女";
-                }
-                return item;
-              });
-              downloadExl(allList, "xlsx", "学生列表");
-            } else {
-              Message.info("暂无学生信息");
-            }
-          } else {
-            Message.error(res.msg);
-          }
-          loading.close();
-        }
+      const { data: res } = await this.$http.getAllStudentList({
+        data: this.info,
+        token: this.token
       });
+      if (res.code === 200) {
+        if (res.data.length) {
+          let listTemp = res.data;
+          allList = listTemp.map(item => {
+            if (item[this.i18n["sex"]] == 1) {
+              item[this.i18n["sex"]] = "男";
+            } else {
+              item[this.i18n["sex"]] = "女";
+            }
+            return item;
+          });
+          downloadExl(allList, "xlsx", "学生列表");
+        } else {
+          Message.info("暂无学生信息");
+        }
+      } else {
+        Message.error(res.msg);
+      }
+      loading.close();
     }
   }
 };

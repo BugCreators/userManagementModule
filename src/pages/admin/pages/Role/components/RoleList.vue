@@ -67,7 +67,7 @@ import {
   Table,
   TableColumn
 } from "element-ui";
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "roleList",
@@ -120,28 +120,22 @@ export default {
     this.getList();
   },
   methods: {
-    ...mapActions(["postItems"]),
-    getList() {
+    async getList() {
       let loading = Loading.service(this.loadingOpts);
-      return this.postItems({
-        url: this.$store.state.getRoleList,
-        query: {
-          pageSize: this.pageSize,
-          pageIndex: this.pageIndex,
-          searchValue: this.searchValue,
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            this.list = res.data.list;
-            this.listCount = res.data.count;
-            this.$emit("changeCount", this.listCount);
-          } else {
-            Message.error(res.msg);
-          }
-        }
+      const { data: res } = await this.$http.getRoleList({
+        pageSize: this.pageSize,
+        pageIndex: this.pageIndex,
+        searchValue: this.searchValue,
+        token: this.token
       });
+      loading.close();
+      if (res.code === 200) {
+        this.list = res.data.list;
+        this.listCount = res.data.count;
+        this.$emit("changeCount", this.listCount);
+      } else {
+        Message.error(res.msg);
+      }
     },
     selectedChange(selection) {
       this.selectedId = selection.map(item => item.id);
@@ -173,25 +167,20 @@ export default {
         }
       });
     },
-    datasDelete(ids) {
-      this.postItems({
-        url: this.$store.state.delRoles,
-        query: {
-          rolesId: ids,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            Message.success(res.msg);
-            if (this.list.length % this.pageSize == ids.length) {
-              this.pageIndex--;
-            }
-            this.getList();
-          } else {
-            Message.error(res.msg);
-          }
-        }
+    async datasDelete(ids) {
+      const { data: res } = await this.$http.delRoles({
+        rolesId: ids,
+        token: this.token
       });
+      if (res.code === 200) {
+        Message.success(res.msg);
+        if (this.list.length % this.pageSize == ids.length) {
+          this.pageIndex--;
+        }
+        this.getList();
+      } else {
+        Message.error(res.msg);
+      }
     },
     pageChange(page) {
       this.pageIndex = page;

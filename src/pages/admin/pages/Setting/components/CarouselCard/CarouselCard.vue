@@ -36,7 +36,7 @@
 <script>
 import { Card, Loading, Message, MessageBox } from "element-ui";
 import AvueImage from "@/components/AvueImage/AvueImage";
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "carouseCard",
@@ -62,7 +62,6 @@ export default {
     this.initHref = this.item.href;
   },
   methods: {
-    ...mapActions(["getItems"]),
     openLog(index) {
       this.$emit("openLog", index);
     },
@@ -82,24 +81,19 @@ export default {
         }
       });
     },
-    deleteItem() {
+    async deleteItem() {
       let loading = Loading.service();
-      this.getItems({
-        url: this.$store.state.deleteCarouselItem,
-        query: {
-          index: this.item.index,
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            Message.success(res.msg);
-            this.$emit("settingChange");
-          } else {
-            Message.error(res.msg);
-          }
-        }
+      const { data: res } = await this.$http.deleteCarouselItem({
+        index: this.item.index,
+        token: this.token
       });
+      loading.close();
+      if (res.code === 200) {
+        Message.success(res.msg);
+        this.$emit("settingChange");
+      } else {
+        Message.error(res.msg);
+      }
     },
     switchDisabled(isCancel) {
       if (isCancel) {
@@ -107,24 +101,19 @@ export default {
       }
       this.disabled = !this.disabled;
     },
-    changeInfo() {
+    async changeInfo() {
       if (this.initHref !== this.item.href) {
-        this.getItems({
-          url: this.$store.state.changeCarouselItemWebsite,
-          query: {
-            index: this.item.index,
-            website: this.item.href,
-            token: this.$store.state.userInfo.token
-          },
-          cb: res => {
-            if (res.code === 200) {
-              Message.success(res.msg);
-              this.switchDisabled();
-            } else {
-              Message.error(res.msg);
-            }
-          }
+        const { data: res } = await this.$http.changeCarouselItemWebsite({
+          index: this.item.index,
+          website: this.item.href,
+          token: this.token
         });
+        if (res.code === 200) {
+          Message.success(res.msg);
+          this.switchDisabled();
+        } else {
+          Message.error(res.msg);
+        }
       } else {
         this.switchDisabled();
       }
@@ -133,12 +122,4 @@ export default {
 };
 </script>
 
-<style lang="less" scope>
-.carouselHref {
-  width: 65% !important;
-}
-.carouselImage {
-  height: 200px;
-  width: 100%;
-}
-</style>
+<style lang="less" src="./CarouselCard.less" scope></style>

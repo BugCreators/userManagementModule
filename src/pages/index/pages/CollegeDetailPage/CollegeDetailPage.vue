@@ -43,7 +43,6 @@
 <script>
 import { Breadcrumb, BreadcrumbItem, MessageBox } from "element-ui";
 import AvueImage from "@/components/AvueImage/AvueImage";
-import { mapActions } from "vuex";
 
 export default {
   name: "collegeDetailPage",
@@ -76,39 +75,32 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["getItems"]),
-    getCollegeDetail(id) {
-      this.getItems({
-        url: this.$store.state.getCollegeDetail,
-        query: {
-          id: id ? id : this.collegeId
-        },
-        cb: res => {
-          if (res.code === 200) {
-            this.info = res.data;
-            if (res.data.description.length > 245) {
-              this.isShow = true;
-            }
-          } else {
-            MessageBox.alert(res.msg, res.code + `错误`, {
-              type: "error",
-              callback() {
-                location.href = "/index.html";
-              }
-            });
-          }
-        }
+    async getCollegeDetail(id) {
+      const { data: res } = await this.$http.getCollegeDetail({
+        id: id ? id : this.collegeId
       });
+      if (res.code === 200) {
+        this.info = res.data;
+        if (res.data.description.length > 245) {
+          this.isShow = true;
+        }
+      } else {
+        MessageBox.alert(res.msg, res.code + `错误`, {
+          type: "error",
+          callback() {
+            location.href = "/index.html";
+          }
+        });
+      }
     },
     showMore() {
       let el = document.getElementById("college-des");
       if (this.isShowMore) {
         el.style.display = `-webkit-box`;
-        this.isShowMore = false;
       } else {
         el.style.display = `block`;
-        this.isShowMore = true;
       }
+      this.isShowMore = !this.isShowMore;
     },
     logoUrl(url) {
       return url == "" || url == null

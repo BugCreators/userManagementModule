@@ -22,7 +22,7 @@
 
 <script>
 import { Button, Card, Message, MessageBox } from "element-ui";
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "otherSystemCard",
@@ -50,7 +50,6 @@ export default {
     this.initWebsite = this.system.website;
   },
   methods: {
-    ...mapActions(["getItems"]),
     switchDisabled(isCancel) {
       if (isCancel) {
         this.system.name = this.initName;
@@ -58,28 +57,23 @@ export default {
       }
       this.disabled = !this.disabled;
     },
-    changeOtherSystem() {
+    async changeOtherSystem() {
       if (
         this.initName === this.system.name &&
         this.initWebsite === this.system.website
       ) {
         this.switchDisabled();
       } else {
-        this.getItems({
-          url: this.$store.state.changeSystemItem,
-          query: {
-            system: this.system,
-            token: this.token
-          },
-          cb: res => {
-            if (res.code === 200) {
-              Message.success(res.msg);
-              this.switchDisabled();
-            } else {
-              Message.error(res.msg);
-            }
-          }
+        const { data: res } = await this.$http.changeSystemItem({
+          system: this.system,
+          token: this.token
         });
+        if (res.code === 200) {
+          Message.success(res.msg);
+          this.switchDisabled();
+        } else {
+          Message.error(res.msg);
+        }
       }
     },
     deleteItemConfirm() {
@@ -97,40 +91,20 @@ export default {
         }
       });
     },
-    deleteItem() {
-      this.getItems({
-        url: this.$store.state.deleteSystemItem,
-        query: {
-          index: this.system.index,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            Message.success(res.msg);
-            this.$emit("settingChange");
-          } else {
-            Message.error(res.msg);
-          }
-        }
+    async deleteItem() {
+      const { data: res } = await this.$http.deleteSystemItem({
+        index: this.system.index,
+        token: this.token
       });
+      if (res.code === 200) {
+        Message.success(res.msg);
+        this.$emit("settingChange");
+      } else {
+        Message.error(res.msg);
+      }
     }
   }
 };
 </script>
 
-<style lang="less" scope>
-.otherSystemInput {
-  .el-form-item__label {
-    width: 6em;
-    &::before {
-      content: "*";
-      color: #f56c6c;
-      margin-right: 4px;
-    }
-  }
-  .el-input {
-    margin-bottom: 20px;
-    width: 75% !important;
-  }
-}
-</style>
+<style lang="less" src="./OtherSystemCard.less" scope></style>

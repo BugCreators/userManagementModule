@@ -32,7 +32,7 @@ import {
   MessageBox
 } from "element-ui";
 import md5 from "md5";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "changePassword",
@@ -99,7 +99,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["postItems", "clearUserInfo"]),
+    ...mapActions(["clearUserInfo"]),
+    ...mapMutations({
+      clearUserInfoM: "clearUserInfo"
+    }),
     confirmChange() {
       MessageBox.confirm("确定进行修改？", "确认修改", {
         type: "warning",
@@ -117,7 +120,7 @@ export default {
         }
       });
     },
-    changePw() {
+    async changePw() {
       if (this.password.oldPw === "") {
         this.i18n[0].errorMsg = "旧密码不能为空！";
         return;
@@ -135,47 +138,37 @@ export default {
       }
       this.i18n[2].errorMsg = "";
 
-      this.postItems({
-        url: this.$store.state.changePasswordByUser,
-        query: {
-          oldPw: md5(this.password.oldPw),
-          newPw: md5(this.password.newPw),
-          confirmPw: md5(this.password.confirmPw),
-          number: this.userInfo.number,
-          token: this.userInfo.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            Message.success(res.msg);
-          } else if (res.code === 402) {
-            this.clearUserInfo().then(() => {
-              this.$store.commit("clearUserInfo");
-            });
-            MessageBox.confirm(
-              "会话已过期，要进行操作请重新登陆！",
-              "会话过期",
-              {
-                cancelButtonText: "回到首页",
-                confirmButtonText: "登录",
-                type: "warning",
-                callback: action => {
-                  switch (action) {
-                    case "cancel":
-                    case "close":
-                      location.href = "index.html";
-                      break;
-                    case "confirm":
-                      location.href = "login.html";
-                      break;
-                  }
-                }
-              }
-            );
-          } else {
-            Message.error(res.msg);
-          }
-        }
+      const { data: res } = await this.$http.changePasswordByUser({
+        oldPw: md5(this.password.oldPw),
+        newPw: md5(this.password.newPw),
+        confirmPw: md5(this.password.confirmPw),
+        number: this.userInfo.number,
+        token: this.userInfo.token
       });
+      if (res.code === 200) {
+        Message.success(res.msg);
+      } else if (res.code === 402) {
+        await this.clearUserInfo();
+        this.clearUserInfoM();
+        MessageBox.confirm("会话已过期，要进行操作请重新登陆！", "会话过期", {
+          cancelButtonText: "回到首页",
+          confirmButtonText: "登录",
+          type: "warning",
+          callback: action => {
+            switch (action) {
+              case "cancel":
+              case "close":
+                location.href = "index.html";
+                break;
+              case "confirm":
+                location.href = "login.html";
+                break;
+            }
+          }
+        });
+      } else {
+        Message.error(res.msg);
+      }
     }
   }
 };

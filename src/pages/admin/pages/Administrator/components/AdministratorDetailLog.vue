@@ -43,7 +43,7 @@
       <el-form-item :label="i18n['branch']" prop="branch_id">
         <el-select
           v-model="info.branch_id"
-          @change="branchChange"
+          @change="getRoleList"
           :placeholder="'请选择' + i18n['branch']"
         >
           <el-option
@@ -218,76 +218,53 @@ export default {
   methods: {
     ...mapActions(["getItems", "postItems"]),
     ...mapMutations(["switchDetailLog"]),
-    getInfo() {
+    async getInfo() {
       let loading = Loading.service();
-      this.getItems({
-        url: this.$store.state.getAdministratorDetail,
-        query: {
-          id: this.dataId,
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            this.info = res.data;
-            this.info.number = Number(this.info.number);
-          } else {
-            Message.error(res.msg);
-            this.switchDetailLog();
-          }
-        }
+      const { data: res } = await this.$http.getAdministratorDetail({
+        id: this.dataId,
+        token: this.token
       });
-    },
-    getBranchList() {
-      let loading = Loading.service({
-        target: document.getElementById("form")
-      });
-      this.getItems({
-        url: this.$store.state.getBranchListByAdminDetail,
-        query: {
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            this.branchList = this.branchList.concat(res.data);
-            this.getRoleList();
-          } else {
-            Message.error(res.msg);
-          }
-        }
-      });
-    },
-    getRoleList() {
-      let loading = Loading.service({
-        target: document.getElementById("form")
-      });
-      this.getItems({
-        url: this.$store.state.getRoleListByBranchId,
-        query: {
-          branchId: this.info.branch_id,
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            this.roleList = res.data;
-          } else {
-            Message.error(res.msg);
-          }
-        }
-      });
-    },
-    branchChange() {
-      this.getRoleList();
-    },
-    formSubmit() {
-      let url = "";
-      if (this.dataId) {
-        url = this.$store.state.changeAdministrator;
+      loading.close();
+      if (res.code === 200) {
+        this.info = res.data;
+        this.info.number = Number(this.info.number);
       } else {
-        url = this.$store.state.addAdministrator;
+        Message.error(res.msg);
+        this.switchDetailLog();
       }
+    },
+    async getBranchList() {
+      let loading = Loading.service({
+        target: document.getElementById("form")
+      });
+      const { data: res } = await this.$http.getBranchListByAdminDetail({
+        token: this.token
+      });
+      loading.close();
+      if (res.code === 200) {
+        this.branchList = this.branchList.concat(res.data);
+        this.getRoleList();
+      } else {
+        Message.error(res.msg);
+      }
+    },
+    async getRoleList() {
+      let loading = Loading.service({
+        target: document.getElementById("form")
+      });
+      const { data: res } = await this.$http.getRoleListByBranchId({
+        branchId: this.info.branch_id,
+        token: this.token
+      });
+      loading.close();
+      if (res.code === 200) {
+        this.roleList = res.data;
+      } else {
+        Message.error(res.msg);
+      }
+    },
+    async formSubmit() {
+      let data = {};
       if (this.info.name === "") {
         this.errorMsg = "角色名不能为空！";
         return;
@@ -301,24 +278,28 @@ export default {
       let loading = Loading.service({
         target: document.getElementById("form")
       });
-      this.postItems({
-        url,
-        query: {
+      if (this.dataId) {
+        data = await this.$http.changeAdministrator({
           data: this.info,
           moduleList: this.moduleList,
           token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            Message.success(res.msg);
-            this.$emit("listChange");
-            this.switchDetailLog();
-          } else {
-            Message.error(res.msg || "添加失败，请稍后重试");
-          }
-        }
-      });
+        });
+      } else {
+        data = await this.$http.addAdministrator({
+          data: this.info,
+          moduleList: this.moduleList,
+          token: this.token
+        });
+      }
+      let res = data.data;
+      loading.close();
+      if (res.code === 200) {
+        Message.success(res.msg);
+        this.$emit("listChange");
+        this.switchDetailLog();
+      } else {
+        Message.error(res.msg || "添加失败，请稍后重试");
+      }
     }
   }
 };

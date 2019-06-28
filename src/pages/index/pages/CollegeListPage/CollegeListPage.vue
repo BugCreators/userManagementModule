@@ -15,7 +15,6 @@
 
 <script>
 import Carousel from "../../components/Carousel/Carousel";
-import { mapActions } from "vuex";
 
 export default {
   name: "collegeListPage",
@@ -32,17 +31,15 @@ export default {
     };
   },
   created() {
-    this.getItems({
-      url: this.$store.state.getCollegeList,
-      cb: res => {
-        if (res.code === 200) {
-          this.collegeList = res.data;
-        }
-      }
-    });
+    this.getCollegeList();
   },
   methods: {
-    ...mapActions(["getItems"])
+    async getCollegeList() {
+      const { data: res } = await this.$http.getCollegeList();
+      if (res.code === 200) {
+        this.collegeList = res.data;
+      }
+    }
   }
 };
 </script>

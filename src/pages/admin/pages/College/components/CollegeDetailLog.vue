@@ -64,7 +64,7 @@ import {
   Loading,
   Message
 } from "element-ui";
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "collegeDetailLog",
@@ -114,34 +114,24 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["getItems", "postItems"]),
     ...mapMutations(["switchDetailLog"]),
-    getInfo() {
+    async getInfo() {
       let loading = Loading.service();
-      this.getItems({
-        url: this.$store.state.getCollegeDetailByAdmin,
-        query: {
-          id: this.dataId,
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            this.info = res.data;
-          } else {
-            Message.error(res.msg);
-            this.switchDetailLog();
-          }
-        }
+      const { data: res } = await this.$http.getCollegeDetailByAdmin({
+        id: this.dataId,
+        token: this.token
       });
-    },
-    formSubmit() {
-      let url;
-      if (this.dataId) {
-        url = this.$store.state.changeCollege;
+      loading.close();
+      if (res.code === 200) {
+        this.info = res.data;
       } else {
-        url = this.$store.state.addCollege;
+        Message.error(res.msg);
+        this.switchDetailLog();
       }
+    },
+    async formSubmit() {
+      let data = {},
+        res = {};
       if (this.info.name === "") {
         this.errorMsg = "学院名不能为空！";
         return;
@@ -150,23 +140,26 @@ export default {
       let loading = Loading.service({
         target: document.getElementById("form")
       });
-      this.postItems({
-        url,
-        query: {
+      if (this.dataId) {
+        data = await this.$http.changeCollege({
           data: this.info,
           token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            Message.success(res.msg);
-            this.$emit("listChange");
-            this.switchDetailLog();
-          } else {
-            Message.error(res.msg || "添加失败，请稍后重试");
-          }
-        }
-      });
+        });
+      } else {
+        data = await this.$http.addCollege({
+          data: this.info,
+          token: this.token
+        });
+      }
+      res = data.data;
+      loading.close();
+      if (res.code === 200) {
+        Message.success(res.msg);
+        this.$emit("listChange");
+        this.switchDetailLog();
+      } else {
+        Message.error(res.msg || "添加失败，请稍后重试");
+      }
     }
   }
 };

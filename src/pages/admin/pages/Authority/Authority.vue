@@ -18,9 +18,9 @@
 </template>
 
 <script>
-import AuthorityList from "./components/AuthorityList";
-import ListWarp from "./../components/ListWarp/ListWarp";
 import SearchBox from "./../../components/SearchBox/SearchBox";
+import ListWarp from "./../components/ListWarp/ListWarp";
+import AuthorityList from "./components/AuthorityList";
 import { mapMutations } from "vuex";
 
 export default {

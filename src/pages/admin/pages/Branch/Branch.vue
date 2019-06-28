@@ -33,8 +33,8 @@
 
 <script>
 import SearchBox from "./../../components/SearchBox/SearchBox";
-import BranchList from "./components/BranchList";
 import ListWarp from "./../components/ListWarp/ListWarp";
+import BranchList from "./components/BranchList";
 import { mapState, mapMutations } from "vuex";
 
 export default {

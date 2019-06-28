@@ -67,7 +67,7 @@ import {
   Table,
   TableColumn
 } from "element-ui";
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "studentList",
@@ -129,36 +129,30 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["postItems", "getItems"]),
-    getList() {
+    async getList() {
       let loading = Loading.service(this.loadingOpts);
-      return this.postItems({
-        url: this.$store.state.getStudentList,
-        query: {
-          pageSize: this.pageSize,
-          pageIndex: this.pageIndex,
-          searchValue: this.searchValue,
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            let listTemp = res.data.list.map(item => {
-              if (item.sex) {
-                item.sex = "男";
-              } else {
-                item.sex = "女";
-              }
-              return item;
-            });
-            this.list = listTemp;
-            this.listCount = res.data.count;
-            this.$emit("changeCount", this.listCount);
-          } else {
-            Message.error(res.msg);
-          }
-        }
+      const { data: res } = await this.$http.getStudentList({
+        pageSize: this.pageSize,
+        pageIndex: this.pageIndex,
+        searchValue: this.searchValue,
+        token: this.token
       });
+      loading.close();
+      if (res.code === 200) {
+        let listTemp = res.data.list.map(item => {
+          if (item.sex) {
+            item.sex = "男";
+          } else {
+            item.sex = "女";
+          }
+          return item;
+        });
+        this.list = listTemp;
+        this.listCount = res.data.count;
+        this.$emit("changeCount", this.listCount);
+      } else {
+        Message.error(res.msg);
+      }
     },
     selectedChange(selection) {
       this.selectedId = selection.map(item => item.id);
@@ -181,21 +175,16 @@ export default {
         }
       });
     },
-    resetPw(id) {
-      this.getItems({
-        url: this.$store.state.resetPwStudent,
-        query: {
-          id: id,
-          token: this.token
-        },
-        cb(res) {
-          if (res.code === 200) {
-            Message.success(res.msg);
-          } else {
-            Message.error(res.msg);
-          }
-        }
+    async resetPw(id) {
+      const { data: res } = await this.$http.resetPwStudent({
+        id: id,
+        token: this.token
       });
+      if (res.code === 200) {
+        Message.success(res.msg);
+      } else {
+        Message.error(res.msg);
+      }
     },
     editData(id) {
       this.$emit("openDetailLog", id);
@@ -224,25 +213,20 @@ export default {
         }
       });
     },
-    datasDelete(ids) {
-      this.postItems({
-        url: this.$store.state.delStudents,
-        query: {
-          studentsId: ids,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            Message.success(res.msg);
-            if (this.list.length % this.pageSize == ids.length) {
-              this.pageIndex--;
-            }
-            this.getList();
-          } else {
-            Message.error(res.msg);
-          }
-        }
+    async datasDelete(ids) {
+      const { data: res } = await this.$http.delStudents({
+        studentsId: ids,
+        token: this.token
       });
+      if (res.code === 200) {
+        Message.success(res.msg);
+        if (this.list.length % this.pageSize == ids.length) {
+          this.pageIndex--;
+        }
+        this.getList();
+      } else {
+        Message.error(res.msg);
+      }
     },
     importListChange() {
       this.list = this.listExcel.slice(

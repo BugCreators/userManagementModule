@@ -32,8 +32,8 @@
 
 <script>
 import SearchBox from "./../../components/SearchBox/SearchBox";
-import StudentList from "./components/StudentList";
 import ListWarp from "./../components/ListWarp/ListWarp";
+import StudentList from "./components/StudentList";
 import { mapState, mapMutations } from "vuex";
 
 export default {

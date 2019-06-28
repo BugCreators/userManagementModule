@@ -21,7 +21,7 @@
 
 <script>
 import { Button, Card, Message } from "element-ui";
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "schoolInfoCard",
@@ -49,7 +49,6 @@ export default {
     this.initAddress = this.schoolInfo.address;
   },
   methods: {
-    ...mapActions(["getItems"]),
     switchDisabled(isCancel) {
       if (isCancel) {
         this.schoolInfo.name = this.initName;
@@ -57,47 +56,30 @@ export default {
       }
       this.disabled = !this.disabled;
     },
-    changeSchoolInfo() {
+    async changeSchoolInfo() {
       if (
         this.initName === this.schoolInfo.name &&
         this.initAddress === this.schoolInfo.address
       ) {
         this.switchDisabled();
       } else {
-        this.getItems({
-          url: this.$store.state.changeSchoolInfo,
-          query: {
-            schoolInfo: {
-              name: this.schoolInfo.name,
-              address: this.schoolInfo.address
-            },
-            token: this.token
+        const { data: res } = await this.$http.changeSchoolInfo({
+          schoolInfo: {
+            name: this.schoolInfo.name,
+            address: this.schoolInfo.address
           },
-          cb: res => {
-            if (res.code === 200) {
-              Message.success(res.msg);
-              this.switchDisabled();
-            } else {
-              Message.error(res.msg);
-            }
-          }
+          token: this.token
         });
+        if (res.code === 200) {
+          Message.success(res.msg);
+          this.switchDisabled();
+        } else {
+          Message.error(res.msg);
+        }
       }
     }
   }
 };
 </script>
 
-<style lang="less" scope>
-.schoolInfo {
-  &.el-card {
-    max-width: none !important;
-    width: auto !important;
-  }
-}
-.schoolInfoInput {
-  .el-input {
-    margin-bottom: 20px;
-  }
-}
-</style>
+<style lang="less" src="./SchoolInfoCard.less" scope></style>

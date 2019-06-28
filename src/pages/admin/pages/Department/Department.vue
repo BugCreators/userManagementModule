@@ -28,8 +28,8 @@
 
 <script>
 import SearchBox from "./../../components/SearchBox/SearchBox";
-import DepartmentList from "./components/DepartmentList";
 import ListWarp from "./../components/ListWarp/ListWarp";
+import DepartmentList from "./components/DepartmentList";
 import { mapMutations, mapState } from "vuex";
 
 export default {

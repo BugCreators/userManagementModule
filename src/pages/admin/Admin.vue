@@ -79,7 +79,7 @@ export default {
       return Math.floor(Math.random() * 10000000);
     }
   },
-  created() {
+  async created() {
     if (document.cookie.indexOf("avueUser=null") !== -1) {
       MessageBox.confirm("请先登录！", "提示", {
         cancelButtonText: "回到首页",
@@ -98,40 +98,8 @@ export default {
         }
       });
     }
-    let loading = Loading.service();
-    this.getUserInfo().then(() => {
-      this.getItems({
-        url: this.$store.state.intoBackstage,
-        query: {
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            if (res.data.intoBackstage === 0) {
-              MessageBox.alert("你没有足够的权限进入后台", "提示", {
-                confirmButtonText: "确定",
-                type: "warning",
-                callback() {
-                  location.href = "index.html";
-                }
-              });
-            }
-          } else {
-            this.clearUserInfo().then(() => {
-              this.clearUserInfoM();
-            });
-            MessageBox.alert(res.msg, "提示", {
-              confirmButtonText: "确定",
-              type: "warning",
-              callback() {
-                location.href = "index.html";
-              }
-            });
-          }
-        }
-      });
-    });
+    await this.getUserInfo();
+    this.getBackIntoBackstage();
   },
   mounted() {
     let isCollapse = localStorage.getItem("isCollapse"),
@@ -154,10 +122,38 @@ export default {
     window.addEventListener("beforeunload", this.loadStore);
   },
   methods: {
-    ...mapActions(["getUserInfo", "getItems", "clearUserInfo"]),
+    ...mapActions(["getUserInfo", "clearUserInfo"]),
     ...mapMutations({
       clearUserInfoM: "clearUserInfo"
     }),
+    async getBackIntoBackstage() {
+      let loading = Loading.service();
+      const { data: res } = await this.$http.intoBackstage({
+        token: this.token
+      });
+      loading.close();
+      if (res.code === 200) {
+        if (res.data.intoBackstage === 0) {
+          MessageBox.alert("你没有足够的权限进入后台", "提示", {
+            confirmButtonText: "确定",
+            type: "warning",
+            callback() {
+              location.href = "index.html";
+            }
+          });
+        }
+      } else {
+        await this.clearUserInfo();
+        this.clearUserInfoM();
+        MessageBox.alert(res.msg, "提示", {
+          confirmButtonText: "确定",
+          type: "warning",
+          callback() {
+            location.href = "index.html";
+          }
+        });
+      }
+    },
     sidebarswitch() {
       this.isCollapse = !this.isCollapse;
     },

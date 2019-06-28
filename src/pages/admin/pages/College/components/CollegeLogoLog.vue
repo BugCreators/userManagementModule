@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     class="logoChange"
-    :before-close="closeLogoLog"
+    :before-close="switchLogoLog"
     :visible.sync="showLogoLog"
   >
     <div v-if="!fileList.length" class="logoMsg">暂无院徽~</div>
@@ -30,7 +30,7 @@
       <el-button class="deleteBtn" type="danger" @click="deleteLogoConfirm"
         >删除Logo</el-button
       >
-      <el-button @click="closeLogoLog">取 消</el-button>
+      <el-button @click="switchLogoLog">取 消</el-button>
       <el-button type="primary" @click="uploadSubmit">确 定</el-button>
     </div>
   </el-dialog>
@@ -38,7 +38,7 @@
 
 <script>
 import { Button, Dialog, Message, MessageBox, Upload } from "element-ui";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "collegeLogoChange",
@@ -72,50 +72,35 @@ export default {
     this.getCollegeLogo();
   },
   methods: {
-    ...mapActions(["getItems", "postItems"]),
-    getCollegeLogo() {
-      this.getItems({
-        url: this.$store.state.getCollegeLogo,
-        query: {
-          token: this.token,
-          id: this.collegeId
-        },
-        cb: res => {
-          if (res.code === 200) {
-            if (res.data.url != "" && res.data.url != null) {
-              res.data.url = this.$store.state.baseUrl + res.data.url;
-              this.fileList.push(res.data);
-            }
-          }
-        }
+    ...mapMutations(["switchLogoLog"]),
+    async getCollegeLogo() {
+      const { data: res } = await this.$http.getCollegeLogo({
+        token: this.token,
+        id: this.collegeId
       });
+      if (res.code === 200) {
+        if (res.data.url != "" && res.data.url != null) {
+          res.data.url = this.$store.state.baseUrl + res.data.url;
+          this.fileList.push(res.data);
+        }
+      }
     },
     uploadSubmit() {
       this.$refs.upload.submit();
     },
-    uploadIogo(param) {
+    async uploadIogo(param) {
       let data = new FormData();
       data.append("image", param.file);
       data.append("id", this.collegeId);
       data.append("token", this.token);
-      this.postItems({
-        url: this.$store.state.changeCollegeLogo,
-        query: data,
-        config: {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-        },
-        cb: res => {
-          if (res.code === 200) {
-            Message.success(res.msg);
-            this.$emit("logoChange", res.data);
-            this.closeLogoLog();
-          } else {
-            Message.error(res.msg);
-          }
-        }
-      });
+      const { data: res } = await this.$http.changeCollegeLogo(data);
+      if (res.code === 200) {
+        Message.success(res.msg);
+        this.$emit("logoChange", res.data);
+        this.switchLogoLog();
+      } else {
+        Message.error(res.msg);
+      }
     },
     handleChange() {
       this.isChange = true;
@@ -150,26 +135,18 @@ export default {
         }
       });
     },
-    deleteLogo() {
-      this.postItems({
-        url: this.$store.state.deleteCollegeLogo,
-        query: {
-          id: this.collegeId,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            Message.success(res.msg);
-            this.$emit("logoDelete", res.data);
-            this.closeLogoLog();
-          } else {
-            Message.error(res.msg);
-          }
-        }
+    async deleteLogo() {
+      const { data: res } = await this.$http.deleteCollegeLogo({
+        id: this.collegeId,
+        token: this.token
       });
-    },
-    closeLogoLog() {
-      this.$store.commit("switchLogoLog");
+      if (res.code === 200) {
+        Message.success(res.msg);
+        this.$emit("logoDelete", res.data);
+        this.switchLogoLog();
+      } else {
+        Message.error(res.msg);
+      }
     }
   }
 };

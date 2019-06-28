@@ -32,7 +32,7 @@
 
 <script>
 import { Message, Loading, Pagination, Table, TableColumn } from "element-ui";
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "authorityList",
@@ -69,28 +69,22 @@ export default {
     this.getAuthorityList();
   },
   methods: {
-    ...mapActions(["postItems"]),
-    getAuthorityList() {
+    async getAuthorityList() {
       let loading = Loading.service(this.loadingOpts);
-      return this.postItems({
-        url: this.$store.state.getAuthorityList,
-        query: {
-          pageSize: this.pageSize,
-          pageIndex: this.pageIndex,
-          searchValue: this.searchValue,
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            this.authorityList = res.data.list;
-            this.authorityListCount = res.data.count;
-            this.$emit("changeCount", this.authorityListCount);
-          } else {
-            Message.error(res.msg || "获取列表失败，请稍后再试");
-          }
-        }
+      const { data: res } = await this.$http.getAuthorityList({
+        pageSize: this.pageSize,
+        pageIndex: this.pageIndex,
+        searchValue: this.searchValue,
+        token: this.token
       });
+      loading.close();
+      if (res.code === 200) {
+        this.authorityList = res.data.list;
+        this.authorityListCount = res.data.count;
+        this.$emit("changeCount", this.authorityListCount);
+      } else {
+        Message.error(res.msg || "获取列表失败，请稍后再试");
+      }
     },
     selectedChange(selection) {
       this.selectedCollegeId = selection;

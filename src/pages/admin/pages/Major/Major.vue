@@ -27,8 +27,8 @@
 
 <script>
 import SearchBox from "./../../components/SearchBox/SearchBox";
-import MajorList from "./components/MajorList";
 import ListWarp from "./../components/ListWarp/ListWarp";
+import MajorList from "./components/MajorList";
 import { mapState, mapMutations } from "vuex";
 
 export default {

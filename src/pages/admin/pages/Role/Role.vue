@@ -32,8 +32,8 @@
 
 <script>
 import SearchBox from "./../../components/SearchBox/SearchBox";
-import RoleList from "./components/RoleList";
 import ListWarp from "./../components/ListWarp/ListWarp";
+import RoleList from "./components/RoleList";
 import { mapState, mapMutations } from "vuex";
 
 export default {

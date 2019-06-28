@@ -127,44 +127,31 @@ export default {
   methods: {
     ...mapState(["getItems", "postItems"]),
     ...mapMutations(["switchDetailLog"]),
-    getInfo() {
+    async getInfo() {
       let loading = Loading.service();
-      this.getItems({
-        url: this.$store.state.getDepartmentDetail,
-        query: {
-          id: this.dataId,
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            this.info = res.data;
-          } else {
-            Message.error(res.msg);
-            this.switchDetailLog();
-          }
-        }
+      const { data: res } = await this.$http.getDepartmentDetail({
+        id: this.dataId,
+        token: this.token
       });
-    },
-    getCollegeList() {
-      this.getItems({
-        url: this.$store.state.getCollegeList,
-        cb: res => {
-          if (res.code === 200) {
-            this.collegeList = res.data;
-          } else {
-            Message.error(res.msg);
-          }
-        }
-      });
-    },
-    formSubmit() {
-      let url = "";
-      if (this.dataId) {
-        url = this.$store.state.changeDepartment;
+      loading.close();
+      if (res.code === 200) {
+        this.info = res.data;
       } else {
-        url = this.$store.state.addDepartment;
+        Message.error(res.msg);
+        this.switchDetailLog();
       }
+    },
+    async getCollegeList() {
+      const { data: res } = await this.$http.getCollegeList();
+      if (res.code === 200) {
+        this.collegeList = res.data;
+      } else {
+        Message.error(res.msg);
+      }
+    },
+    async formSubmit() {
+      let data = {};
+
       if (this.info.name === "") {
         this.errorMsg = "院系名不能为空！";
         return;
@@ -175,27 +162,29 @@ export default {
         return;
       }
       this.errorMsg2 = "";
-
       let loading = Loading.service({
         target: document.getElementById("form")
       });
-      this.postItems({
-        url,
-        query: {
+      if (this.dataId) {
+        data = await this.$http.changeDepartment({
           data: this.info,
           token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            Message.success(res.msg);
-            this.$emit("listChange");
-            this.switchDetailLog();
-          } else {
-            Message.error(res.msg || "添加失败，请稍后重试");
-          }
-        }
-      });
+        });
+      } else {
+        data = await this.$http.addDepartment({
+          data: this.info,
+          token: this.token
+        });
+      }
+      let res = data.data;
+      loading.close();
+      if (res.code === 200) {
+        Message.success(res.msg);
+        this.$emit("listChange");
+        this.switchDetailLog();
+      } else {
+        Message.error(res.msg || "添加失败，请稍后重试");
+      }
     }
   }
 };

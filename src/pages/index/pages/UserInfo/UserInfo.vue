@@ -47,7 +47,7 @@ import {
   MessageBox,
   Radio
 } from "element-ui";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "userInfo",
@@ -149,22 +149,20 @@ export default {
     this.getUserInfo();
   },
   methods: {
-    ...mapActions(["postItems", "clearUserInfo"]),
-    getUserInfo() {
-      this.postItems({
-        url: this.$store.state.getUserInfo,
-        query: {
-          number: this.$store.state.userInfo.number,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            this.userInfo = res.data;
-          } else if (res.code === 402) {
-            this.reload();
-          }
-        }
+    ...mapActions(["clearUserInfo"]),
+    ...mapMutations({
+      clearUserInfoM: "clearUserInfo"
+    }),
+    async getUserInfo() {
+      const { data: res } = await this.$http.getUserInfo({
+        number: this.$store.state.userInfo.number,
+        token: this.token
       });
+      if (res.code === 200) {
+        this.userInfo = res.data;
+      } else if (res.code === 402) {
+        this.reload();
+      }
     },
     confirmChange() {
       MessageBox.confirm("确定进行修改？", "确认修改", {
@@ -183,32 +181,26 @@ export default {
         }
       });
     },
-    changeInfoByUser() {
-      this.postItems({
-        url: this.$store.state.changeUserInfoByUser,
-        query: {
-          number: this.userInfo.number,
-          email: this.userInfo.email,
-          sex: this.userInfo.sex,
-          address: this.userInfo.address,
-          description: this.userInfo.description,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            Message.success(res.msg);
-          } else if (res.code === 402) {
-            this.reload();
-          } else {
-            Message.error(res.msg);
-          }
-        }
+    async changeInfoByUser() {
+      const { data: res } = await this.$http.changeInfoByUser({
+        number: this.userInfo.number,
+        email: this.userInfo.email,
+        sex: this.userInfo.sex,
+        address: this.userInfo.address,
+        description: this.userInfo.description,
+        token: this.token
       });
+      if (res.code === 200) {
+        Message.success(res.msg);
+      } else if (res.code === 402) {
+        this.reload();
+      } else {
+        Message.error(res.msg);
+      }
     },
-    reload() {
-      this.clearUserInfo().then(() => {
-        this.$store.commit("clearUserInfo");
-      });
+    async reload() {
+      await this.clearUserInfo();
+      this.clearUserInfoM();
       MessageBox.confirm("会话已过期，要进行操作请重新登陆！", "会话过期", {
         cancelButtonText: "回到首页",
         confirmButtonText: "登录",

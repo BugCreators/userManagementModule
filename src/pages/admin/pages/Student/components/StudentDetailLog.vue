@@ -136,7 +136,7 @@ import {
   Radio,
   RadioGroup
 } from "element-ui";
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "studentDetailLog",
@@ -220,85 +220,65 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["getItems", "postItems"]),
     ...mapMutations(["switchDetailLog"]),
-    getInfo() {
+    async getInfo() {
       let loading = Loading.service();
-      this.getItems({
-        url: this.$store.state.getStudentDetail,
-        query: {
-          id: this.dataId,
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            this.info = res.data;
-            this.info.number = Number(this.info.number);
-            this.getMajorList();
-          } else {
-            Message.error(res.msg);
-            this.switchDetailLog();
-          }
-        }
+      const { data: res } = await this.$http.getStudentDetail({
+        id: this.dataId,
+        token: this.token
       });
+      loading.close();
+      if (res.code === 200) {
+        this.info = res.data;
+        this.info.number = Number(this.info.number);
+        this.getMajorList();
+      } else {
+        Message.error(res.msg);
+        this.switchDetailLog();
+      }
     },
-    getCollegeList() {
-      this.getItems({
-        url: this.$store.state.getCollegeList,
-        cb: res => {
-          if (res.code === 200) {
-            this.collegeList = res.data;
-          } else {
-            Message.error(res.msg);
-          }
-        }
-      });
+    async getCollegeList() {
+      const { data: res } = await this.$http.getCollegeList();
+      if (res.code === 200) {
+        this.collegeList = res.data;
+      } else {
+        Message.error(res.msg);
+      }
     },
-    getMajorList(isChange) {
-      this.getItems({
-        url: this.$store.state.getMajorListBycollegeId,
-        query: {
-          id: this.info.college_id,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            if (res.data.length > 0) {
-              this.majorList = res.data;
-              isChange ? (this.info.major_id = this.majorList[0].id) : "";
-            } else {
-              this.majorList = {};
-              this.info.major_id = "";
-            }
-            this.getClassList();
-          } else {
-            Message.error(res.msg);
-          }
-        }
+    async getMajorList(isChange) {
+      const { data: res } = await this.$http.getMajorListBycollegeId({
+        id: this.info.college_id,
+        token: this.token
       });
+      if (res.code === 200) {
+        if (res.data.length > 0) {
+          this.majorList = res.data;
+          isChange ? (this.info.major_id = this.majorList[0].id) : "";
+        } else {
+          this.majorList = {};
+          this.info.major_id = "";
+        }
+        this.getClassList();
+      } else {
+        Message.error(res.msg);
+      }
     },
-    getClassList(isChange) {
-      this.getItems({
-        url: this.$store.state.getClassListByMajorId,
-        query: {
-          id: this.info.major_id,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            if (res.data.length > 0) {
-              this.classList = res.data;
-              isChange ? (this.info.class_id = this.classList[0].id) : "";
-            } else {
-              this.classList = {};
-              this.info.class_id = "";
-            }
-          } else {
-            Message.error(res.msg);
-          }
-        }
+    async getClassList(isChange) {
+      const { data: res } = await this.$http.getClassListByMajorId({
+        id: this.info.major_id,
+        token: this.token
       });
+      if (res.code === 200) {
+        if (res.data.length > 0) {
+          this.classList = res.data;
+          isChange ? (this.info.class_id = this.classList[0].id) : "";
+        } else {
+          this.classList = {};
+          this.info.class_id = "";
+        }
+      } else {
+        Message.error(res.msg);
+      }
     },
     collegeChange() {
       this.getMajorList(true);
@@ -306,13 +286,8 @@ export default {
     majorChange() {
       this.getClassList(true);
     },
-    formSubmit() {
-      let url;
-      if (this.dataId) {
-        url = this.$store.state.changeStudent;
-      } else {
-        url = this.$store.state.addStudent;
-      }
+    async formSubmit() {
+      let data = {};
       if (this.info.realname === "") {
         this.errorMsg = "姓名不能为空！";
         return;
@@ -332,23 +307,26 @@ export default {
       let loading = Loading.service({
         target: document.getElementById("form")
       });
-      this.postItems({
-        url,
-        query: {
+      if (this.dataId) {
+        data = await this.$http.changeStudent({
           data: this.info,
           token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            Message.success(res.msg);
-            this.$emit("listChange");
-            this.switchDetailLog();
-          } else {
-            Message.error(res.msg || "添加失败，请稍后重试");
-          }
-        }
-      });
+        });
+      } else {
+        data = await this.$http.addStudent({
+          data: this.info,
+          token: this.token
+        });
+      }
+      let res = data.data;
+      loading.close();
+      if (res.code === 200) {
+        Message.success(res.msg);
+        this.$emit("listChange");
+        this.switchDetailLog();
+      } else {
+        Message.error(res.msg || "添加失败，请稍后重试");
+      }
     }
   }
 };

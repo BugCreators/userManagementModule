@@ -125,39 +125,34 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["getItems", "postItems", "clearUserInfo"]),
+    ...mapActions(["clearUserInfo"]),
     ...mapMutations({
       clearUserInfoM: "clearUserInfo"
     }),
-    getList() {
+    async getList() {
       let loading = Loading.service(this.loadingOpts);
-      return this.postItems({
-        url: this.$store.state.getTeacherList,
-        query: {
-          pageSize: this.pageSize,
-          pageIndex: this.pageIndex,
-          searchValue: this.searchValue,
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            let listTemp = res.data.list.map(item => {
-              if (item.sex) {
-                item.sex = "男";
-              } else {
-                item.sex = "女";
-              }
-              return item;
-            });
-            this.list = listTemp;
-            this.listCount = res.data.count;
-            this.$emit("changeCount", this.listCount);
-          } else {
-            Message.error(res.msg);
-          }
-        }
+      const { data: res } = await this.$http.getTeacherList({
+        pageSize: this.pageSize,
+        pageIndex: this.pageIndex,
+        searchValue: this.searchValue,
+        token: this.token
       });
+      loading.close();
+      if (res.code === 200) {
+        let listTemp = res.data.list.map(item => {
+          if (item.sex) {
+            item.sex = "男";
+          } else {
+            item.sex = "女";
+          }
+          return item;
+        });
+        this.list = listTemp;
+        this.listCount = res.data.count;
+        this.$emit("changeCount", this.listCount);
+      } else {
+        Message.error(res.msg);
+      }
     },
     selectedChange(selection) {
       this.selectedId = selection.map(item => item.id);
@@ -180,42 +175,37 @@ export default {
         }
       });
     },
-    resetPw(id) {
-      this.getItems({
-        url: this.$store.state.resetPwTeacher,
-        query: {
-          id: id,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            Message.success(res.msg);
-            if (res.data.changeByOwn) {
-              this.clearUserInfo().then(() => {
-                this.clearUserInfoM();
-              });
-              MessageBox.confirm("当前用户密码已重置，请重新登录", "密码重置", {
-                cancelButtonText: "回到首页",
-                confirmButtonText: "登录",
-                type: "warning",
-                callback: action => {
-                  switch (action) {
-                    case "cancel":
-                    case "close":
-                      location.href = "index.html";
-                      break;
-                    case "confirm":
-                      location.href = "login.html";
-                      break;
-                  }
-                }
-              });
-            }
-          } else {
-            Message.error(res.msg);
-          }
-        }
+    async resetPw(id) {
+      const { data: res } = await this.$http.resetPwTeacher({
+        id: id,
+        token: this.token
       });
+      if (res.code === 200) {
+        Message.success(res.msg);
+        if (res.data.changeByOwn) {
+          this.clearUserInfo().then(() => {
+            this.clearUserInfoM();
+          });
+          MessageBox.confirm("当前用户密码已重置，请重新登录", "密码重置", {
+            cancelButtonText: "回到首页",
+            confirmButtonText: "登录",
+            type: "warning",
+            callback: action => {
+              switch (action) {
+                case "cancel":
+                case "close":
+                  location.href = "index.html";
+                  break;
+                case "confirm":
+                  location.href = "login.html";
+                  break;
+              }
+            }
+          });
+        }
+      } else {
+        Message.error(res.msg);
+      }
     },
     editData(id) {
       this.$emit("openDetailLog", id);
@@ -244,25 +234,20 @@ export default {
         }
       });
     },
-    datasDelete(ids) {
-      this.postItems({
-        url: this.$store.state.delTeachers,
-        query: {
-          teachersId: ids,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            Message.success(res.msg);
-            if (this.list.length % this.pageSize == ids.length) {
-              this.pageIndex--;
-            }
-            this.getList();
-          } else {
-            Message.error(res.msg);
-          }
-        }
+    async datasDelete(ids) {
+      const { data: res } = await this.$http.delTeachers({
+        teachersId: ids,
+        token: this.token
       });
+      if (res.code === 200) {
+        Message.success(res.msg);
+        if (this.list.length % this.pageSize == ids.length) {
+          this.pageIndex--;
+        }
+        this.getList();
+      } else {
+        Message.error(res.msg);
+      }
     },
     listExportConfirm() {
       MessageBox.confirm("确认导出当前列表数据？", "提示", {
@@ -282,38 +267,33 @@ export default {
         }
       });
     },
-    listExport() {
+    async listExport() {
       let allList;
       let loading = Loading.service({
         text: "获取数据导出中，请稍候..."
       });
-      return this.postItems({
-        url: this.$store.state.getAllTeacherList,
-        query: {
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            if (res.data.length) {
-              let listTemp = res.data;
-              allList = listTemp.map(item => {
-                if (item[this.i18n["sex"]] == 1) {
-                  item[this.i18n["sex"]] = "男";
-                } else {
-                  item[this.i18n["sex"]] = "女";
-                }
-                return item;
-              });
-              downloadExl(allList, "xlsx", "教师列表");
-            } else {
-              Message.info("暂无教师信息");
-            }
-          } else {
-            Message.error(res.msg);
-          }
-          loading.close();
-        }
+      const { data: res } = await this.$http.getAllTeacherList({
+        token: this.token
       });
+      if (res.code === 200) {
+        if (res.data.length) {
+          let listTemp = res.data;
+          allList = listTemp.map(item => {
+            if (item[this.i18n["sex"]] == 1) {
+              item[this.i18n["sex"]] = "男";
+            } else {
+              item[this.i18n["sex"]] = "女";
+            }
+            return item;
+          });
+          downloadExl(allList, "xlsx", "教师列表");
+        } else {
+          Message.info("暂无教师信息");
+        }
+      } else {
+        Message.error(res.msg);
+      }
+      loading.close();
     },
     importListChange() {
       this.list = this.listExcel.slice(

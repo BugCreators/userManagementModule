@@ -34,7 +34,7 @@
 
 <script>
 import { Button, Dialog, Input, Message, Upload } from "element-ui";
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "carouseLog",
@@ -68,21 +68,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["getItems", "postItems"]),
-    getCarouselItem() {
-      this.getItems({
-        url: this.$store.state.getCarouselItem,
-        query: {
-          index: this.dataIndex,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            this.item = res.data;
-            this.item.url = this.$store.state.baseUrl + this.item.url;
-          }
-        }
+    async getCarouselItem() {
+      const { data: res } = await this.$http.getCarouselItem({
+        index: this.dataIndex,
+        token: this.token
       });
+      if (res.code === 200) {
+        this.item = res.data;
+        this.item.url = this.$store.state.baseUrl + this.item.url;
+      }
     },
     closeLog() {
       this.$emit("closeLog");
@@ -103,60 +97,29 @@ export default {
     uploadSubmit() {
       this.$refs.upload.submit();
     },
-    uploadCarousel(param) {
-      let url = "";
-      let data = new FormData();
-      data.append("image", param.file);
-      data.append("token", this.token);
+    async uploadCarousel(param) {
+      let data = {};
+      let formData = new FormData();
+      formData.append("image", param.file);
+      formData.append("token", this.token);
       if (this.dataIndex) {
-        data.append("index", this.dataIndex);
-        url = this.$store.state.changeCarouselItemPicture;
+        formData.append("index", this.dataIndex);
+        data = await this.$http.changeCarouselItemPicture(formData);
       } else {
-        data.append("website", this.item.href);
-        url = this.$store.state.addCarouselItem;
+        formData.append("website", this.item.href);
+        data = await this.$http.addCarouselItem(formData);
       }
-      this.postItems({
-        url,
-        query: data,
-        config: {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-        },
-        cb: res => {
-          if (res.code === 200) {
-            Message.success(res.msg);
-            this.$emit("settingChange");
-            this.closeLog();
-          } else {
-            Message.error(res.msg);
-          }
-        }
-      });
+      let res = data.data;
+      if (res.code === 200) {
+        Message.success(res.msg);
+        this.$emit("settingChange");
+        this.closeLog();
+      } else {
+        Message.error(res.msg);
+      }
     }
   }
 };
 </script>
 
-<style lang="less" scope>
-.website {
-  margin-bottom: 20px;
-  .el-input {
-    width: 50%;
-  }
-}
-.el-upload {
-  &-list--picture &-list__item {
-    height: auto;
-  }
-  &-list--picture &-list__item-thumbnail {
-    height: auto;
-    min-height: 70px;
-    width: auto;
-  }
-  &__tip {
-    display: inline-block;
-    margin-left: 10px;
-  }
-}
-</style>
+<style lang="less" src="./CarouselLog.less" scope></style>

@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :before-close="closeImportLog"
+    :before-close="switchImportLog"
     :title="title"
     :visible.sync="showImportLog"
   >
@@ -9,7 +9,7 @@
         <el-select
           v-model="data.college_id"
           placeholder="请选择学院"
-          @change="collegeChange"
+          @change="getMajorList"
         >
           <el-option
             v-for="item in collegeList"
@@ -24,7 +24,7 @@
         <el-select
           v-model="data.major_id"
           placeholder="暂无专业"
-          @change="majorChange"
+          @change="getClassList"
         >
           <el-option
             v-for="item in majorList"
@@ -76,7 +76,7 @@
       <el-button type="primary" @click="importExcel" :disabled="isImport"
         >导入</el-button
       >
-      <el-button @click="closeImportLog">取消</el-button>
+      <el-button @click="switchImportLog">取消</el-button>
     </div>
   </el-dialog>
 </template>
@@ -95,7 +95,7 @@ import {
 } from "element-ui";
 import StudentList from "./StudentList";
 import { downloadExl, changeExlHaed, XLSX } from "@/assets/js/tool";
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "studentListImport",
@@ -153,73 +153,49 @@ export default {
     this.getCollegeList();
   },
   methods: {
-    ...mapActions(["getItems", "postItems"]),
     ...mapMutations(["switchImportLog"]),
-    closeImportLog() {
-      this.switchImportLog();
+    async getCollegeList() {
+      const { data: res } = await this.$http.getCollegeList();
+      if (res.code === 200) {
+        this.collegeList = res.data;
+      } else {
+        Message.error(res.msg);
+      }
     },
-    getCollegeList() {
-      this.getItems({
-        url: this.$store.state.getCollegeList,
-        cb: res => {
-          if (res.code === 200) {
-            this.collegeList = res.data;
-          } else {
-            Message.error(res.msg);
-          }
-        }
+    async getMajorList() {
+      const { data: res } = await this.$http.getMajorListBycollegeId({
+        id: this.data.college_id,
+        token: this.token
       });
-    },
-    getMajorList() {
-      this.getItems({
-        url: this.$store.state.getMajorListBycollegeId,
-        query: {
-          id: this.data.college_id,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            if (res.data.length > 0) {
-              this.majorList = res.data;
-              this.data.major_id = this.majorList[0].id;
-            } else {
-              this.majorList = {};
-              this.data.major_id = "";
-            }
-            this.getClassList();
-          } else {
-            Message.error(res.msg);
-          }
+      if (res.code === 200) {
+        if (res.data.length > 0) {
+          this.majorList = res.data;
+          this.data.major_id = this.majorList[0].id;
+        } else {
+          this.majorList = {};
+          this.data.major_id = "";
         }
-      });
+        this.getClassList();
+      } else {
+        Message.error(res.msg);
+      }
     },
-    getClassList() {
-      this.getItems({
-        url: this.$store.state.getClassListByMajorId,
-        query: {
-          id: this.data.major_id,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            if (res.data.length > 0) {
-              this.classList = res.data;
-              this.data.class_id = this.classList[0].id;
-            } else {
-              this.classList = {};
-              this.data.class_id = "";
-            }
-          } else {
-            Message.error(res.msg);
-          }
+    async getClassList() {
+      const { data: res } = await this.$http.getClassListByMajorId({
+        id: this.data.major_id,
+        token: this.token
+      });
+      if (res.code === 200) {
+        if (res.data.length > 0) {
+          this.classList = res.data;
+          this.data.class_id = this.classList[0].id;
+        } else {
+          this.classList = {};
+          this.data.class_id = "";
         }
-      });
-    },
-    collegeChange() {
-      this.getMajorList();
-    },
-    majorChange() {
-      this.getClassList();
+      } else {
+        Message.error(res.msg);
+      }
     },
     templateDownload() {
       let listHead = new Object(),
@@ -282,7 +258,7 @@ export default {
       this.listExcel = [];
       this.isImport = true;
     },
-    importExcel() {
+    async importExcel() {
       if (this.data.college_id == "") {
         this.message = "学院不能为空！";
         return;
@@ -307,24 +283,19 @@ export default {
         item.class_id = this.data.class_id;
         return item;
       });
-      this.postItems({
-        url: this.$store.state.importStudentList,
-        query: {
-          data: this.data,
-          studentList: newList,
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            Message.success(res.msg);
-            this.$emit("listChange");
-            this.closeImportLog();
-          } else {
-            Message.error(res.msg);
-          }
-        }
+      const { data: res } = await this.$http.importStudentList({
+        data: this.data,
+        studentList: newList,
+        token: this.token
       });
+      loading.close();
+      if (res.code === 200) {
+        Message.success(res.msg);
+        this.$emit("listChange");
+        this.switchImportLog();
+      } else {
+        Message.error(res.msg);
+      }
     }
   }
 };

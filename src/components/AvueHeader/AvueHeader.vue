@@ -63,7 +63,7 @@
 <script>
 import AvueImage from "../AvueImage/AvueImage";
 import { Dropdown, DropdownMenu, DropdownItem } from "element-ui";
-import { mapActions } from "vuex";
+import { mapActions, mapMutations } from "vuex";
 
 export default {
   name: "AvueHeader",
@@ -105,6 +105,9 @@ export default {
   },
   methods: {
     ...mapActions(["clearUserInfo"]),
+    ...mapMutations({
+      clearUserInfoM: "clearUserInfo"
+    }),
     handleCommand(command) {
       switch (command) {
         case "userInfo":
@@ -128,10 +131,9 @@ export default {
           break;
       }
     },
-    logout() {
-      this.clearUserInfo().then(() => {
-        this.$store.commit("clearUserInfo");
-      });
+    async logout() {
+      await this.clearUserInfo();
+      this.clearUserInfoM();
       location.href = "index.html";
     }
   }

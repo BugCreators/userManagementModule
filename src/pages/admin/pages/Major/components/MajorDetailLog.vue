@@ -118,7 +118,7 @@ import {
   Option,
   Select
 } from "element-ui";
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "majorDetailLog",
@@ -186,74 +186,52 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["getItems", "postItems"]),
     ...mapMutations(["switchDetailLog"]),
-    getInfo() {
+    async getInfo() {
       let loading = Loading.service();
-      this.getItems({
-        url: this.$store.state.getMajorDetail,
-        query: {
-          id: this.dataId,
-          token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            this.info = res.data;
-            this.getDepartmentList();
-          } else {
-            Message.error(res.msg);
-            this.switchDetailLog();
-          }
-        }
+      const { data: res } = await this.$http.getMajorDetail({
+        id: this.dataId,
+        token: this.token
       });
+      loading.close();
+      if (res.code === 200) {
+        this.info = res.data;
+        this.getDepartmentList();
+      } else {
+        Message.error(res.msg);
+        this.switchDetailLog();
+      }
     },
-    getCollegeList() {
-      this.getItems({
-        url: this.$store.state.getCollegeList,
-        cb: res => {
-          if (res.code === 200) {
-            this.collegeList = res.data;
-          } else {
-            Message.error(res.msg);
-          }
-        }
-      });
+    async getCollegeList() {
+      const { data: res } = await this.$http.getCollegeList();
+      if (res.code === 200) {
+        this.collegeList = res.data;
+      } else {
+        Message.error(res.msg);
+      }
     },
-    getDepartmentList(isChange) {
-      this.getItems({
-        url: this.$store.state.getDepartmentListByCollegeId,
-        query: {
-          id: this.info.college_id,
-          token: this.token
-        },
-        cb: res => {
-          if (res.code === 200) {
-            if (res.data.length > 0) {
-              this.departmentList = res.data;
-              isChange
-                ? (this.info.department_id = this.departmentList[0].id)
-                : "";
-            } else {
-              this.departmentList = {};
-              this.info.department_id = "";
-            }
-          } else {
-            Message.error(res.msg);
-          }
-        }
+    async getDepartmentList(isChange) {
+      const { data: res } = await this.$http.getDepartmentListByCollegeId({
+        id: this.info.college_id,
+        token: this.token
       });
+      if (res.code === 200) {
+        if (res.data.length > 0) {
+          this.departmentList = res.data;
+          isChange ? (this.info.department_id = this.departmentList[0].id) : "";
+        } else {
+          this.departmentList = {};
+          this.info.department_id = "";
+        }
+      } else {
+        Message.error(res.msg);
+      }
     },
     collegeChange() {
       this.getDepartmentList(true);
     },
-    formSubmit() {
-      let url = "";
-      if (this.dataId) {
-        url = this.$store.state.changeMajor;
-      } else {
-        url = this.$store.state.addMajor;
-      }
+    async formSubmit() {
+      let data = {};
       if (this.info.name === "") {
         this.errorMsg = "专业名不能为空！";
         return;
@@ -268,23 +246,26 @@ export default {
       let loading = Loading.service({
         target: document.getElementById("form")
       });
-      this.postItems({
-        url,
-        query: {
+      if (this.dataId) {
+        data = await this.$http.changeMajor({
           data: this.info,
           token: this.token
-        },
-        cb: res => {
-          loading.close();
-          if (res.code === 200) {
-            Message.success(res.msg);
-            this.$emit("listChange");
-            this.switchDetailLog();
-          } else {
-            Message.error(res.msg || "添加失败，请稍后重试");
-          }
-        }
-      });
+        });
+      } else {
+        data = await this.$http.addMajor({
+          data: this.info,
+          token: this.token
+        });
+      }
+      let res = data.data;
+      loading.close();
+      if (res.code === 200) {
+        Message.success(res.msg);
+        this.$emit("listChange");
+        this.switchDetailLog();
+      } else {
+        Message.error(res.msg || "添加失败，请稍后重试");
+      }
     }
   }
 };

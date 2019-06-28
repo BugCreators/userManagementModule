@@ -49,7 +49,7 @@
 import { Input, Checkbox, Button } from "element-ui";
 import md5 from "md5";
 import { getUrlParam } from "@/assets/js/tool";
-import { mapActions, mapMutations } from "vuex";
+import { mapMutations } from "vuex";
 
 export default {
   name: "loginFrame",
@@ -66,24 +66,19 @@ export default {
       remember: "",
       logining: false,
       userInfo: {},
-      setting: "",
       isEncrypt: false,
       isShowPage: false
     };
   },
-  created() {
-    new Promise(res => res())
-      .then(() => this.getSetting())
-      .then(() => {
-        let userInfo = localStorage.getItem("avueUser");
-        if (userInfo != null) {
-          userInfo = JSON.parse(userInfo);
-          (this.number = userInfo.number), (this.password = userInfo.password);
-          this.remember = true;
-          this.isEncrypt = true;
-        }
-        return true;
-      });
+  async created() {
+    await this.getSetting();
+    let userInfo = localStorage.getItem("avueUser");
+    if (userInfo != null) {
+      userInfo = JSON.parse(userInfo);
+      (this.number = userInfo.number), (this.password = userInfo.password);
+      this.remember = true;
+      this.isEncrypt = true;
+    }
   },
   watch: {
     password(newV, oldV) {
@@ -91,19 +86,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["getItems", "postItems"]),
     ...mapMutations(["setSetting"]),
     clickForgetPwd() {},
-    getSetting() {
-      this.getItems({
-        url: this.$store.state.getSysSetting,
-        cb: res => {
-          this.setting = res.data;
-          this.setSetting(this.setting);
-        }
-      });
+    async getSetting() {
+      const { data: res } = await this.$http.getSysSetting();
+      this.setSetting(res.data);
     },
-    login() {
+    async login() {
       this.errMes = "";
       if (this.number == "") {
         this.errMes = "账号不能为空";
@@ -114,46 +103,39 @@ export default {
         return;
       }
       this.logining = true;
-      this.postItems({
-        url: this.$store.state.login,
-        query: {
-          number: this.number,
-          password: this.isEncrypt ? this.password : md5(this.password)
-        },
-        cb: res => {
-          if (res.code === 200) {
-            /********** 记住密码 START ********/
-            if (this.remember) {
-              let obj = {
-                number: this.number,
-                password: this.isEncrypt ? this.password : md5(this.password)
-              };
-              let objStr = JSON.stringify(obj);
-              localStorage.setItem("avueUser", objStr);
-            } else {
-              localStorage.removeItem("avueUser");
-            }
-            /************** END **************/
-            let userObj = res.data;
-            userObj.password = this.isEncrypt
-              ? this.password
-              : md5(this.password);
-            let userInfo = JSON.stringify(userObj);
-            document.cookie = "avueUser=" + encodeURIComponent(userInfo) + ";";
-
-            let fromUrl = getUrlParam("fromUrl");
-            if (fromUrl != "" && fromUrl != null) {
-              location.href = fromUrl;
-            } else {
-              location = "index.html";
-            }
-          } else {
-            this.logining = false;
-            this.loading = false;
-            this.errMes = res.msg;
-          }
-        }
+      const { data: res } = await this.$http.login({
+        number: this.number,
+        password: this.isEncrypt ? this.password : md5(this.password)
       });
+      if (res.code === 200) {
+        /********** 记住密码 START ********/
+        if (this.remember) {
+          let obj = {
+            number: this.number,
+            password: this.isEncrypt ? this.password : md5(this.password)
+          };
+          let objStr = JSON.stringify(obj);
+          localStorage.setItem("avueUser", objStr);
+        } else {
+          localStorage.removeItem("avueUser");
+        }
+        /************** END **************/
+        let userObj = res.data;
+        userObj.password = this.isEncrypt ? this.password : md5(this.password);
+        let userInfo = JSON.stringify(userObj);
+        document.cookie = "avueUser=" + encodeURIComponent(userInfo) + ";";
+
+        let fromUrl = getUrlParam("fromUrl");
+        if (fromUrl != "" && fromUrl != null) {
+          location.href = fromUrl;
+        } else {
+          location = "index.html";
+        }
+      } else {
+        this.logining = false;
+        this.loading = false;
+        this.errMes = res.msg;
+      }
     }
   }
 };
