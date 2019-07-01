@@ -103,16 +103,17 @@ export default {
         return;
       }
       this.logining = true;
+      let password = this.isEncrypt ? this.password : md5(this.password);
       const { data: res } = await this.$http.login({
         number: this.number,
-        password: this.isEncrypt ? this.password : md5(this.password)
+        password
       });
       if (res.code === 200) {
         /********** 记住密码 START ********/
         if (this.remember) {
           let obj = {
             number: this.number,
-            password: this.isEncrypt ? this.password : md5(this.password)
+            password
           };
           let objStr = JSON.stringify(obj);
           localStorage.setItem("avueUser", objStr);
@@ -121,7 +122,7 @@ export default {
         }
         /************** END **************/
         let userObj = res.data;
-        userObj.password = this.isEncrypt ? this.password : md5(this.password);
+        userObj.password = password;
         let userInfo = JSON.stringify(userObj);
         document.cookie = "avueUser=" + encodeURIComponent(userInfo) + ";";
 

@@ -12,7 +12,8 @@
 <script>
 import AvueHeader from "@/components/AvueHeader/AvueHeader";
 import AvueFooter from "@/components/AvueFooter/AvueFooter";
-import { Loading, MessageBox } from "element-ui";
+import { Loading } from "element-ui";
+import avueMsgBox from "@/components/avueMsgBox/avueMsgBox";
 import { mapActions, mapMutations } from "vuex";
 
 export default {
@@ -29,10 +30,13 @@ export default {
     if (res.code === 200) {
       this.setSetting(res.data);
     } else {
-      MessageBox.alert(`读取系统配置出错，请稍候重试`, `系统出错`, {
-        type: `error`,
-        confirmButtonText: `确定`
-      });
+      avueMsgBox(
+        {
+          message: "读取系统配置出错，请稍候重试",
+          title: "系统出错"
+        },
+        2
+      );
     }
   },
   methods: {

@@ -37,7 +37,8 @@
 </template>
 
 <script>
-import { Button, Dialog, Message, MessageBox, Upload } from "element-ui";
+import { Button, Dialog, Message, Upload } from "element-ui";
+import avueMsgBox from "@/components/avueMsgBox/avueMsgBox";
 import { mapState, mapMutations } from "vuex";
 
 export default {
@@ -118,22 +119,11 @@ export default {
       return isJPG && isLt1M;
     },
     deleteLogoConfirm() {
-      MessageBox.confirm("确定删除该学院现在的院徽？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-        callback: action => {
-          switch (action) {
-            case "cancel":
-            case "close":
-              Message.info("取消删除");
-              break;
-            case "confirm":
-              this.deleteLogo();
-              break;
-          }
-        }
-      });
+      avueMsgBox({
+        message: "确定删除该学院现在的院徽？"
+      })
+        .then(() => this.deleteLogo())
+        .catch(() => Message.info("取消删除"));
     },
     async deleteLogo() {
       const { data: res } = await this.$http.deleteCollegeLogo({

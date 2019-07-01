@@ -59,14 +59,8 @@
 </template>
 
 <script>
-import {
-  Loading,
-  Message,
-  MessageBox,
-  Pagination,
-  Table,
-  TableColumn
-} from "element-ui";
+import { Loading, Message, Pagination, Table, TableColumn } from "element-ui";
+import avueMsgBox from "@/components/avueMsgBox/avueMsgBox";
 import { mapState, mapActions, mapMutations } from "vuex";
 
 export default {
@@ -147,29 +141,14 @@ export default {
       this.selectedId = selection.map(item => item.id);
     },
     resetPwConfirm(id) {
-      MessageBox.confirm(
-        "此操作将重置该管理员密码为职工号，是否继续？",
-        "提示",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-          callback: action => {
-            switch (action) {
-              case "cancel":
-              case "close":
-                Message.info("取消重置");
-                break;
-              case "confirm":
-                this.resetPw(id);
-                break;
-            }
-          }
-        }
-      );
+      avueMsgBox({
+        message: "此操作将重置该管理员密码为职工号，是否继续？"
+      })
+        .then(() => this.resetPw(id))
+        .catch(() => Message.info("取消重置"));
     },
     async resetPw(id) {
-      const { data: res } = await this.$http.resetPw({
+      const { data: res } = await this.$http.resetPwAdmin({
         id: id,
         token: this.token
       });
@@ -178,22 +157,15 @@ export default {
         if (res.data.changeByOwn) {
           await this.clearUserInfo();
           this.clearUserInfoM();
-          MessageBox.confirm("当前用户密码已重置，请重新登录", "密码重置", {
-            cancelButtonText: "回到首页",
-            confirmButtonText: "登录",
-            type: "warning",
-            callback: action => {
-              switch (action) {
-                case "cancel":
-                case "close":
-                  location.href = "index.html";
-                  break;
-                case "confirm":
-                  location.href = "login.html";
-                  break;
-              }
-            }
-          });
+          avueMsgBox(
+            {
+              message: "当前用户密码已重置，请重新登录",
+              title: "密码重置"
+            },
+            1
+          )
+            .then(() => (location.href = "login.html"))
+            .catch(() => (location.href = "index.html"));
         }
       } else {
         Message.error(res.msg);
@@ -209,22 +181,11 @@ export default {
         });
         return;
       }
-      MessageBox.confirm("此操作将删除所选管理员，是否继续？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-        callback: action => {
-          switch (action) {
-            case "cancel":
-            case "close":
-              Message.info("取消删除");
-              break;
-            case "confirm":
-              this.datasDelete(ids);
-              break;
-          }
-        }
-      });
+      avueMsgBox({
+        message: "此操作将删除所选管理员，是否继续？"
+      })
+        .then(() => this.datasDelete(ids))
+        .catch(() => Message.info("取消删除"));
     },
     async datasDelete(ids) {
       const { data: res } = await this.$http.delAdministrators({

@@ -36,7 +36,8 @@
 <script>
 import AvueHeader from "@/components/AvueHeader/AvueHeader";
 import AvueSidebar from "./components/AvueSidebar/AvueSidebar";
-import { Loading, MessageBox, Tabs, TabPane } from "element-ui";
+import { Loading, Tabs, TabPane } from "element-ui";
+import avueMsgBox from "@/components/avueMsgBox/avueMsgBox";
 import { mapMutations, mapActions, mapState } from "vuex";
 
 export default {
@@ -81,22 +82,14 @@ export default {
   },
   async created() {
     if (document.cookie.indexOf("avueUser=null") !== -1) {
-      MessageBox.confirm("请先登录！", "提示", {
-        cancelButtonText: "回到首页",
-        confirmButtonText: "登录",
-        type: "warning",
-        callback: action => {
-          switch (action) {
-            case "cancel":
-            case "close":
-              location.href = "index.html";
-              break;
-            case "confirm":
-              location.href = "login.html";
-              break;
-          }
-        }
-      });
+      avueMsgBox(
+        {
+          message: "请先登录！"
+        },
+        1
+      )
+        .then(() => (location.href = "login.html"))
+        .catch(() => (location.href = "index.html"));
     }
     await this.getUserInfo();
     this.getBackIntoBackstage();
@@ -134,24 +127,22 @@ export default {
       loading.close();
       if (res.code === 200) {
         if (res.data.intoBackstage === 0) {
-          MessageBox.alert("你没有足够的权限进入后台", "提示", {
-            confirmButtonText: "确定",
-            type: "warning",
-            callback() {
-              location.href = "index.html";
-            }
-          });
+          avueMsgBox(
+            {
+              message: "你没有足够的权限进入后台"
+            },
+            2
+          ).then(() => (location.href = "index.html"));
         }
       } else {
         await this.clearUserInfo();
         this.clearUserInfoM();
-        MessageBox.alert(res.msg, "提示", {
-          confirmButtonText: "确定",
-          type: "warning",
-          callback() {
-            location.href = "index.html";
-          }
-        });
+        avueMsgBox(
+          {
+            message: res.msg
+          },
+          2
+        ).then(() => (location.href = "index.html"));
       }
     },
     sidebarswitch() {

@@ -62,10 +62,10 @@ import {
   FormItem,
   Loading,
   Message,
-  MessageBox,
   Select,
   Option
 } from "element-ui";
+import avueMsgBox from "@/components/avueMsgBox/avueMsgBox";
 import { downloadExl } from "@/assets/js/tool";
 import { mapState } from "vuex";
 
@@ -176,22 +176,11 @@ export default {
       }
     },
     listExportConfirm() {
-      MessageBox.confirm("确认导出当前列表数据？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-        callback: action => {
-          switch (action) {
-            case "cancel":
-            case "close":
-              Message.info("取消导出");
-              break;
-            case "confirm":
-              this.listExport();
-              break;
-          }
-        }
-      });
+      avueMsgBox({
+        message: "确认导出当前列表数据？"
+      })
+        .then(() => this.listExport())
+        .catch(() => Message.info("取消导出"));
     },
     async listExport() {
       let allList;

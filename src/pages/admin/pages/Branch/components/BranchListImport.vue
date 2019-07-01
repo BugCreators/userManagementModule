@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :before-close="closeImportLog"
+    :before-close="switchImportLog"
     :title="title"
     :visible.sync="showImportLog"
   >
@@ -32,7 +32,7 @@
       <el-button type="primary" @click="importExcel" :disabled="isImport"
         >导入</el-button
       >
-      <el-button @click="closeImportLog">取消</el-button>
+      <el-button @click="switchImportLog">取消</el-button>
     </div>
   </el-dialog>
 </template>
@@ -40,7 +40,7 @@
 <script>
 import { Button, Dialog, Loading, Message, Upload } from "element-ui";
 import BranchList from "./BranchList";
-import { XLSX, downloadExl, changeExlHaed } from "@/assets/js/tool";
+import { read, utils, downloadExl, changeExlHaed } from "@/assets/js/tool";
 import { mapState, mapMutations } from "vuex";
 
 export default {
@@ -77,9 +77,6 @@ export default {
   },
   methods: {
     ...mapMutations(["switchImportLog"]),
-    closeImportLog() {
-      this.switchImportLog();
-    },
     templateDownload() {
       let listHead = new Object(),
         listHeadArr = new Array();
@@ -102,12 +99,12 @@ export default {
         try {
           let sheetArray;
           const data = ev.target.result;
-          const workbook = XLSX.read(data, {
+          const workbook = read(data, {
             type: "binary"
           });
           for (let sheet in workbook.Sheets) {
             changeExlHaed(workbook.Sheets[sheet], Object.keys(this.i18n));
-            sheetArray = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
+            sheetArray = utils.sheet_to_json(workbook.Sheets[sheet]);
           }
           sheetArray.forEach(item => {
             this.isImport = false;
@@ -155,7 +152,7 @@ export default {
       if (res.code === 200) {
         Message.success(res.msg);
         this.$emit("listChange");
-        this.closeImportLog();
+        this.switchImportLog();
       } else {
         Message.error(res.msg);
       }

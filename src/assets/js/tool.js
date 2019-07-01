@@ -1,4 +1,4 @@
-import XLSX from "xlsx";
+import { write, read, utils } from "xlsx";
 
 // 解析url参数
 function getUrlParam(name) {
@@ -81,7 +81,7 @@ function downloadExl(json, type, fileName) {
   let tmpDown = new Blob(
     [
       s2ab(
-        XLSX.write(
+        write(
           tmpWB,
           {
             bookType: type == undefined ? "xlsx" : type,
@@ -136,4 +136,4 @@ function changeExlHaed(Sheets, header) {
     i++;
   }
 }
-export { getUrlParam, downloadExl, changeExlHaed, XLSX };
+export { getUrlParam, downloadExl, changeExlHaed, read, utils };

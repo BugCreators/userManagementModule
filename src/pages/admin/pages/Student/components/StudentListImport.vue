@@ -94,7 +94,7 @@ import {
   Upload
 } from "element-ui";
 import StudentList from "./StudentList";
-import { downloadExl, changeExlHaed, XLSX } from "@/assets/js/tool";
+import { downloadExl, changeExlHaed, read, utils } from "@/assets/js/tool";
 import { mapState, mapMutations } from "vuex";
 
 export default {
@@ -219,12 +219,12 @@ export default {
         try {
           let sheetArray;
           const data = ev.target.result;
-          const workbook = XLSX.read(data, {
+          const workbook = read(data, {
             type: "binary"
           });
           for (let sheet in workbook.Sheets) {
             changeExlHaed(workbook.Sheets[sheet], Object.keys(this.i18n));
-            sheetArray = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
+            sheetArray = utils.sheet_to_json(workbook.Sheets[sheet]);
           }
           sheetArray.forEach(item => {
             this.isImport = false;

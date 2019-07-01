@@ -62,7 +62,8 @@
 </template>
 
 <script>
-import { Card, Form, FormItem, Loading, MessageBox } from "element-ui";
+import { Card, Form, FormItem, Loading } from "element-ui";
+import avueMsgBox from "@/components/avueMsgBox/avueMsgBox";
 import { mapMutations } from "vuex";
 
 export default {
@@ -121,10 +122,13 @@ export default {
         });
         this.setSetting(res.data);
       } else {
-        MessageBox.alert(`读取系统配置出错，请稍候重试`, `系统出错`, {
-          type: `error`,
-          confirmButtonText: `确定`
-        });
+        avueMsgBox(
+          {
+            message: "读取系统配置出错，请稍候重试",
+            title: "系统出错"
+          },
+          2
+        );
       }
     },
     openSystemLog() {

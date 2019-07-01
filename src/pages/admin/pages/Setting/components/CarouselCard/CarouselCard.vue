@@ -34,7 +34,8 @@
 </template>
 
 <script>
-import { Card, Loading, Message, MessageBox } from "element-ui";
+import { Card, Loading, Message } from "element-ui";
+import avueMsgBox from "@/components/avueMsgBox/avueMsgBox";
 import AvueImage from "@/components/AvueImage/AvueImage";
 import { mapState } from "vuex";
 
@@ -66,20 +67,11 @@ export default {
       this.$emit("openLog", index);
     },
     deleteItemConfirm() {
-      MessageBox.confirm(`确认删除该图片？`, `确认删除`, {
-        type: "warning",
-        callback: action => {
-          switch (action) {
-            case "confirm":
-              this.deleteItem();
-              break;
-            case "cancel":
-            case "close":
-              Message.info(`取消删除`);
-              break;
-          }
-        }
-      });
+      avueMsgBox({
+        message: "确认删除该图片？"
+      })
+        .then(() => this.deleteItem())
+        .catch(() => Message.info(`取消删除`));
     },
     async deleteItem() {
       let loading = Loading.service();

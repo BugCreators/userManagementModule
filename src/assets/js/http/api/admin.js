@@ -18,7 +18,6 @@ import teacherApi from "./admin/account/Teacher";
 import settingApi from "./admin/Setting";
 
 Vue.prototype.$http = {
-  /******************************管理页Api BEGIN*****************************/
   /**
    * @description 管理页-获取进入后台权限
    */
@@ -66,5 +65,4 @@ Vue.prototype.$http = {
   ...teacherApi,
   /************************系统设置 ************************/
   ...settingApi
-  /******************************管理页Api END*****************************/
 };

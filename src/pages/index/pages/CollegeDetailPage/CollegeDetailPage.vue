@@ -41,7 +41,8 @@
 </template>
 
 <script>
-import { Breadcrumb, BreadcrumbItem, MessageBox } from "element-ui";
+import { Breadcrumb, BreadcrumbItem } from "element-ui";
+import avueMsgBox from "@/components/avueMsgBox/avueMsgBox";
 import AvueImage from "@/components/AvueImage/AvueImage";
 
 export default {
@@ -85,12 +86,13 @@ export default {
           this.isShow = true;
         }
       } else {
-        MessageBox.alert(res.msg, res.code + `错误`, {
-          type: "error",
-          callback() {
-            location.href = "/index.html";
-          }
-        });
+        avueMsgBox(
+          {
+            message: res.msg,
+            title: `${res.code}错误`
+          },
+          2
+        ).then(() => (location.href = "/index.html"));
       }
     },
     showMore() {

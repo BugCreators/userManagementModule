@@ -44,9 +44,9 @@ import {
   FormItem,
   Input,
   Message,
-  MessageBox,
   Radio
 } from "element-ui";
+import avueMsgBox from "@/components/avueMsgBox/avueMsgBox";
 import { mapState, mapActions, mapMutations } from "vuex";
 
 export default {
@@ -129,22 +129,14 @@ export default {
   },
   created() {
     if (document.cookie.indexOf("avueUser=null") !== -1) {
-      MessageBox.confirm("请先登录！", "提示", {
-        cancelButtonText: "回到首页",
-        confirmButtonText: "登录",
-        type: "warning",
-        callback: action => {
-          switch (action) {
-            case "cancel":
-            case "close":
-              location.href = "index.html";
-              break;
-            case "confirm":
-              location.href = "login.html";
-              break;
-          }
-        }
-      });
+      avueMsgBox(
+        {
+          message: "请先登录！"
+        },
+        1
+      )
+        .then(() => (location.href = "login.html"))
+        .catch(() => (location.href = "index.html"));
     }
     this.getUserInfo();
   },
@@ -165,21 +157,11 @@ export default {
       }
     },
     confirmChange() {
-      MessageBox.confirm("确定进行修改？", "确认修改", {
-        type: "warning",
-        callback: action => {
-          switch (action) {
-            default:
-            case "cancel":
-            case "close":
-              Message.info("取消修改");
-              break;
-            case "confirm":
-              this.changeInfoByUser();
-              break;
-          }
-        }
-      });
+      avueMsgBox({
+        message: "确定进行修改？"
+      })
+        .then(() => this.changeInfoByUser())
+        .catch(() => Message.info("取消修改"));
     },
     async changeInfoByUser() {
       const { data: res } = await this.$http.changeInfoByUser({
@@ -201,22 +183,14 @@ export default {
     async reload() {
       await this.clearUserInfo();
       this.clearUserInfoM();
-      MessageBox.confirm("会话已过期，要进行操作请重新登陆！", "会话过期", {
-        cancelButtonText: "回到首页",
-        confirmButtonText: "登录",
-        type: "warning",
-        callback: action => {
-          switch (action) {
-            case "cancel":
-            case "close":
-              location.href = "index.html";
-              break;
-            case "confirm":
-              location.href = "login.html";
-              break;
-          }
-        }
-      });
+      avueMsgBox(
+        {
+          message: "会话已过期，要进行操作请重新登陆！"
+        },
+        1
+      )
+        .then(() => (location.href = "login.html"))
+        .catch(() => (location.href = "index.html"));
     }
   }
 };

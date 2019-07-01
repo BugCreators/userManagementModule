@@ -59,14 +59,8 @@
 </template>
 
 <script>
-import {
-  Loading,
-  Message,
-  MessageBox,
-  Pagination,
-  Table,
-  TableColumn
-} from "element-ui";
+import { Loading, Message, Pagination, Table, TableColumn } from "element-ui";
+import avueMsgBox from "@/components/avueMsgBox/avueMsgBox";
 import { mapState } from "vuex";
 
 export default {
@@ -150,22 +144,11 @@ export default {
         });
         return;
       }
-      MessageBox.confirm("此操作将删除所选角色，是否继续？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-        callback: action => {
-          switch (action) {
-            case "cancel":
-            case "close":
-              Message.info("取消删除");
-              break;
-            case "confirm":
-              this.datasDelete(ids);
-              break;
-          }
-        }
-      });
+      avueMsgBox({
+        message: "此操作将删除所选角色，是否继续？"
+      })
+        .then(() => this.datasDelete(ids))
+        .catch(() => Message.info("取消删除"));
     },
     async datasDelete(ids) {
       const { data: res } = await this.$http.delRoles({

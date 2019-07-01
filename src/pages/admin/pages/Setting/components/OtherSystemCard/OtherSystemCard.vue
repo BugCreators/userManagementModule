@@ -21,7 +21,8 @@
 </template>
 
 <script>
-import { Button, Card, Message, MessageBox } from "element-ui";
+import { Button, Card, Message } from "element-ui";
+import avueMsgBox from "@/components/avueMsgBox/avueMsgBox";
 import { mapState } from "vuex";
 
 export default {
@@ -77,19 +78,11 @@ export default {
       }
     },
     deleteItemConfirm() {
-      MessageBox.confirm(`确认删除该系统链接？`, `确认删除`, {
-        type: "warning",
-        callback: action => {
-          switch (action) {
-            case "cancel":
-            case "close":
-              Message.info(`取消删除`);
-              break;
-            case "confirm":
-              this.deleteItem();
-          }
-        }
-      });
+      avueMsgBox({
+        message: "确认删除该系统链接？"
+      })
+        .then(() => this.deleteItem())
+        .catch(() => Message.info(`取消删除`));
     },
     async deleteItem() {
       const { data: res } = await this.$http.deleteSystemItem({
