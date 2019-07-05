@@ -156,7 +156,7 @@ export default {
     },
     async resetPw(id) {
       const { data: res } = await this.$http.resetPwStudent({
-        id: id,
+        id,
         token: this.token
       });
       if (res.code === 200) {

@@ -135,13 +135,13 @@ export default {
       localStorage.setItem("currentPageActive", this.editableTabsValue);
       localStorage.setItem("isCollapse", this.isCollapse);
     },
-    addTab(item) {
+    addTab({ title, href }) {
       const newTabName = Math.floor(Math.random() * 10000000) + "";
       this.editableTabs.push({
         closable: "closable",
-        title: item.title,
         name: newTabName,
-        href: item.href
+        title,
+        href
       });
       this.editableTabsValue = newTabName;
     },
@@ -181,16 +181,16 @@ export default {
         this.editableTabsValue = activeName;
       }
     },
-    switchComponents(item) {
+    switchComponents({ name }) {
       const tabs = this.editableTabs;
       let switchPath;
       tabs.map(tab => {
-        if (tab.name === item.name) {
+        if (tab.name === name) {
           switchPath = tab.href;
           return;
         }
       });
-      this.$router.push({ path: switchPath });
+      this.$router.push(switchPath);
     }
   }
 };

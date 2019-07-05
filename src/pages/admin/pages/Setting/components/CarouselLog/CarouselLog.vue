@@ -97,10 +97,10 @@ export default {
     uploadSubmit() {
       this.$refs.upload.submit();
     },
-    async uploadCarousel(param) {
+    async uploadCarousel({ file }) {
       let data = {};
       const formData = new FormData();
-      formData.append("image", param.file);
+      formData.append("image", file);
       formData.append("token", this.token);
       if (this.dataIndex) {
         formData.append("index", this.dataIndex);

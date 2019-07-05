@@ -146,7 +146,7 @@ export default {
     },
     async resetPw(id) {
       const { data: res } = await this.$http.resetPwAdmin({
-        id: id,
+        id,
         token: this.token
       });
       if (res.code === 200) {

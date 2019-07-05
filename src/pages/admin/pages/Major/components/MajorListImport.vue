@@ -84,11 +84,11 @@ export default {
       listHeadArr.push(listHead);
       downloadExl(listHeadArr, "xlsx", "专业列表模板");
     },
-    readExcel(file) {
+    readExcel({ raw }) {
       const xls = "application/vnd.ms-excel",
         xlsx =
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-      if (file.raw.type !== xls && file.raw.type !== xlsx) {
+      if (raw.type !== xls && raw.type !== xlsx) {
         Message.error("请选择Excel格式的文件！");
         return false;
       }
@@ -124,7 +124,7 @@ export default {
           return false;
         }
       };
-      fileReader.readAsBinaryString(file.raw);
+      fileReader.readAsBinaryString(raw);
     },
     removeExcel() {
       this.listExcel = [];

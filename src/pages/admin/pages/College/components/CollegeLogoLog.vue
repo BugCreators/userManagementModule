@@ -88,9 +88,9 @@ export default {
     uploadSubmit() {
       this.$refs.upload.submit();
     },
-    async uploadIogo(param) {
+    async uploadIogo({ file }) {
       const data = new FormData();
-      data.append("image", param.file);
+      data.append("image", file);
       data.append("id", this.collegeId);
       data.append("token", this.token);
       const { data: res } = await this.$http.changeCollegeLogo(data);
@@ -102,10 +102,10 @@ export default {
         Message.error(res.msg);
       }
     },
-    validateForm(file) {
-      const fileType = file.raw.type;
+    validateForm({ raw, size }) {
+      const fileType = raw.type;
       const isJPG = fileType === "image/jpg" || fileType === "image/png";
-      const isLt1M = file.size / 1024 / 1024 < 2;
+      const isLt1M = size / 1024 / 1024 < 2;
       if (!isJPG) {
         Message.error("只能上传jpg/png文件!");
       }
