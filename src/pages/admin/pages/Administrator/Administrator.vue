@@ -8,9 +8,7 @@
       :basisOfRole="true"
     />
     <ListWarp
-      :addFuncName="addFuncName"
       :count="count"
-      :delFuncName="delFuncName"
       :moduleName="moduleName"
       :showImport="false"
       :showExport="false"
@@ -50,9 +48,7 @@ export default {
     return {
       count: 0,
       currentId: undefined,
-      moduleName: "administrator",
-      addFuncName: "openDetailLog",
-      delFuncName: "datasDeleteConfirm"
+      moduleName: "administrator"
     };
   },
   computed: {

@@ -2,10 +2,7 @@
   <div>
     <SearchBox :moduleName="moduleName" />
     <ListWarp
-      :addFuncName="addFuncName"
       :count="count"
-      :delFuncName="delFuncName"
-      :exportFuncName="exportFuncName"
       :moduleName="moduleName"
       @datasDeleteConfirm="datasDelete"
       @openDetailLog="openDetailLog"
@@ -54,10 +51,7 @@ export default {
     return {
       count: 0,
       currentId: undefined,
-      moduleName: "college",
-      addFuncName: "openDetailLog",
-      delFuncName: "datasDeleteConfirm",
-      exportFuncName: "listExportConfirm"
+      moduleName: "college"
     };
   },
   computed: {

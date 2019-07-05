@@ -6,10 +6,7 @@
       :basisOfGrade="true"
     />
     <ListWarp
-      :addFuncName="addFuncName"
       :count="count"
-      :delFuncName="delFuncName"
-      :exportFuncName="exportFuncName"
       :moduleName="moduleName"
       @datasDeleteConfirm="datasDelete"
       @openDetailLog="openDetailLog"
@@ -51,10 +48,7 @@ export default {
     return {
       count: 0,
       currentId: undefined,
-      moduleName: "class",
-      addFuncName: "openDetailLog",
-      delFuncName: "datasDeleteConfirm",
-      exportFuncName: "listExportConfirm"
+      moduleName: "class"
     };
   },
   computed: {

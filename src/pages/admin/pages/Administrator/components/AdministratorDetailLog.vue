@@ -212,7 +212,7 @@ export default {
       token: state => state.userInfo.token
     }),
     logTitle() {
-      return `${this.dataId ? "编辑" : "添加"}角色`;
+      return `${this.dataId ? "编辑" : "添加"}管理员`;
     }
   },
   methods: {

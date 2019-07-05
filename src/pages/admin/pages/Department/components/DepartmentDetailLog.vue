@@ -115,7 +115,7 @@ export default {
       token: state => state.userInfo.token
     }),
     logTitle() {
-      return `${this.dataId ? "编辑" : "添加"}专业`;
+      return `${this.dataId ? "编辑" : "添加"}院系`;
     }
   },
   mounted() {

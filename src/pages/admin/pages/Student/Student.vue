@@ -2,10 +2,7 @@
   <div>
     <SearchBox :moduleName="moduleName" :basisOfClass="true" />
     <ListWarp
-      :addFuncName="addFuncName"
       :count="count"
-      :delFuncName="delFuncName"
-      :exportFuncName="exportFuncName"
       :moduleName="moduleName"
       @datasDeleteConfirm="datasDelete"
       @openDetailLog="openDetailLog"
@@ -54,9 +51,6 @@ export default {
       count: 0,
       currentId: undefined,
       moduleName: "student",
-      addFuncName: "openDetailLog",
-      delFuncName: "datasDeleteConfirm",
-      exportFuncName: "switchExportLog",
       showExportLog: false
     };
   },

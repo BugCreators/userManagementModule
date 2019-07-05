@@ -30,9 +30,18 @@ export default {
       type: Number,
       default: 0
     },
-    addFuncName: String,
-    delFuncName: String,
-    exportFuncName: String,
+    addFuncName: {
+      type: String,
+      default: "openDetailLog"
+    },
+    delFuncName: {
+      type: String,
+      default: "datasDeleteConfirm"
+    },
+    exportFuncName: {
+      type: String,
+      default: "listExportConfirm"  
+    },
     moduleName: String,
     showDeleted: {
       type: Boolean,
