@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     async getAuthorityList() {
-      let loading = Loading.service(this.loadingOpts);
+      const loading = Loading.service(this.loadingOpts);
       const { data: res } = await this.$http.getAuthorityList({
         pageSize: this.pageSize,
         pageIndex: this.pageIndex,

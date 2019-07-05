@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     logoUrl(url) {
-      return url == "" || url == null
+      return url === "" || url === null
         ? this.$store.state.defaultCollege
         : this.$store.state.baseUrl + url;
     }

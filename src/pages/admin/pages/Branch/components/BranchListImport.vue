@@ -135,12 +135,12 @@ export default {
       this.isImport = true;
     },
     async importExcel() {
-      let loading = Loading.service({
+      const loading = Loading.service({
         text: "导入中，请稍候···"
       });
-      let listCopy = JSON.parse(JSON.stringify(this.listExcel));
-      let newList = listCopy.map(item => {
-        let level = item.level;
+      const listCopy = JSON.parse(JSON.stringify(this.listExcel));
+      const newList = listCopy.map(item => {
+        const level = item.level;
         item.level = this.level[level];
         return item;
       });

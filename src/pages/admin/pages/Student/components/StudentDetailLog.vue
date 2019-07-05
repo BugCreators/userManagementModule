@@ -222,7 +222,7 @@ export default {
   methods: {
     ...mapMutations(["switchDetailLog"]),
     async getInfo() {
-      let loading = Loading.service();
+      const loading = Loading.service();
       const { data: res } = await this.$http.getStudentDetail({
         id: this.dataId,
         token: this.token
@@ -304,7 +304,7 @@ export default {
       }
       this.errorMsg2 = "";
 
-      let loading = Loading.service({
+      const loading = Loading.service({
         target: document.getElementById("form")
       });
       if (this.dataId) {
@@ -318,7 +318,7 @@ export default {
           token: this.token
         });
       }
-      let res = data.data;
+      const { data: res } = data;
       loading.close();
       if (res.code === 200) {
         Message.success(res.msg);

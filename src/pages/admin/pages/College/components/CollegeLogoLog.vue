@@ -59,7 +59,6 @@ export default {
         size: "",
         type: ""
       },
-      isChange: false,
       fileList: []
     };
   },
@@ -90,24 +89,21 @@ export default {
       this.$refs.upload.submit();
     },
     async uploadIogo(param) {
-      let data = new FormData();
+      const data = new FormData();
       data.append("image", param.file);
       data.append("id", this.collegeId);
       data.append("token", this.token);
       const { data: res } = await this.$http.changeCollegeLogo(data);
       if (res.code === 200) {
         Message.success(res.msg);
-        this.$emit("logoChange", res.data);
+        this.$emit("listChange");
         this.switchLogoLog();
       } else {
         Message.error(res.msg);
       }
     },
-    handleChange() {
-      this.isChange = true;
-    },
     validateForm(file) {
-      let fileType = file.raw.type;
+      const fileType = file.raw.type;
       const isJPG = fileType === "image/jpg" || fileType === "image/png";
       const isLt1M = file.size / 1024 / 1024 < 2;
       if (!isJPG) {
@@ -116,7 +112,6 @@ export default {
       if (!isLt1M) {
         Message.error(`文件大小不能超过2MB!`);
       }
-      return isJPG && isLt1M;
     },
     deleteLogoConfirm() {
       avueMsgBox({
@@ -132,7 +127,7 @@ export default {
       });
       if (res.code === 200) {
         Message.success(res.msg);
-        this.$emit("logoDelete", res.data);
+        this.$emit("listChange");
         this.switchLogoLog();
       } else {
         Message.error(res.msg);

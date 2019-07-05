@@ -21,8 +21,7 @@
     <CollegeLogoLog
       v-if="showLogoLog"
       :collegeId="currentId"
-      @logoDelete="logoDelete"
-      @logoChange="logoChange"
+      @listChange="listChange"
     />
     <CollegeDetailLog
       v-if="showDetailLog"
@@ -85,12 +84,6 @@ export default {
     ...mapMutations(["setSearchValue", "switchLogoLog", "switchDetailLog"]),
     changeCount(count) {
       this.count = count;
-    },
-    logoChange(data) {
-      this.$refs["list"].logoChange(data);
-    },
-    logoDelete(data) {
-      this.$refs["list"].logoDelete(data);
     },
     listChange() {
       this.$refs["list"].getList();

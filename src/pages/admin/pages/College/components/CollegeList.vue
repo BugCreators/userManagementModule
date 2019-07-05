@@ -154,7 +154,7 @@ export default {
   },
   methods: {
     async getList() {
-      let loading = Loading.service(this.loadingOpts);
+      const loading = Loading.service(this.loadingOpts);
       const { data: res } = await this.$http.getCollegeListByAdmin({
         pageSize: this.pageSize,
         pageIndex: this.pageIndex,
@@ -174,39 +174,15 @@ export default {
       this.selectedId = selection.map(item => item.id);
     },
     logoUrl(url) {
-      if (url == "" || url == null) {
-        return this.$store.state.defaultCollege;
-      } else {
-        return this.$store.state.baseUrl + url;
-      }
+      return url === "" || url === null
+        ? this.$store.state.defaultCollege
+        : this.$store.state.baseUrl + url;
     },
     changeLogo(id) {
       this.$emit("openLogoLog", id);
     },
     editData(id) {
       this.$emit("openDetailLog", id);
-    },
-    logoChange(data) {
-      let loading = Loading.service(this.loadingOpts);
-      for (let i = 0, len = this.list.length; i < len; i++) {
-        if (this.list[i].id == data.id) {
-          this.list[i].logo = data.url;
-          loading.close();
-          return;
-        }
-      }
-      loading.close();
-    },
-    logoDelete(data) {
-      let loading = Loading.service(this.loadingOpts);
-      for (let i = 0, len = this.list.length; i < len; i++) {
-        if (this.list[i].id == data) {
-          this.list[i].logo = null;
-          loading.close();
-          return;
-        }
-      }
-      loading.close();
     },
     datasDeleteConfirm(ids) {
       if (ids.length <= 0) {
@@ -228,7 +204,7 @@ export default {
       });
       if (res.code === 200) {
         Message.success(res.msg);
-        if (this.list.length % this.pageSize == ids.length) {
+        if (this.list.length % this.pageSize === ids.length) {
           this.pageIndex--;
         }
         this.getList();
@@ -245,19 +221,19 @@ export default {
     },
     async listExport() {
       let allList;
-      let loading = Loading.service({
+      const loading = Loading.service({
         text: "获取数据导出中，请稍候..."
       });
       const { data: res } = await this.$http.getAllCollegeList({
         token: this.token
       });
+      loading.close();
       if (res.code === 200) {
         allList = res.data;
         downloadExl(allList, "xlsx", "学院列表");
       } else {
         Message.error(res.msg);
       }
-      loading.close();
     },
     importListChange() {
       this.list = this.listExcel.slice(

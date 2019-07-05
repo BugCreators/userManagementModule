@@ -146,7 +146,7 @@ export default {
   },
   methods: {
     async getList() {
-      let loading = Loading.service(this.loadingOpts);
+      const loading = Loading.service(this.loadingOpts);
       const { data: res } = await this.$http.getMajorList({
         pageSize: this.pageSize,
         pageIndex: this.pageIndex,
@@ -168,16 +168,6 @@ export default {
     editData(id) {
       this.$emit("openDetailLog", id);
     },
-    dataChange(data) {
-      let loading = Loading.service(this.loadingOpts);
-      for (let i = 0, len = this.list.length; i < len; i++) {
-        if (this.list[i].id == data.id) {
-          this.list[i] = data;
-          return;
-        }
-      }
-      loading.close();
-    },
     datasDeleteConfirm(ids) {
       if (ids.length <= 0) {
         Message.warning({
@@ -198,7 +188,7 @@ export default {
       });
       if (res.code === 200) {
         Message.success(res.msg);
-        if (this.list.length % this.pageSize == ids.length) {
+        if (this.list.length % this.pageSize === ids.length) {
           this.pageIndex--;
         }
         this.getList();
@@ -215,19 +205,19 @@ export default {
     },
     async listExport() {
       let allList;
-      let loading = Loading.service({
+      const loading = Loading.service({
         text: "获取数据导出中，请稍候..."
       });
       const { data: res } = await this.$http.getAllMajorList({
         token: this.token
       });
+      loading.close();
       if (res.code === 200) {
         allList = res.data;
         downloadExl(allList, "xlsx", "专业列表");
       } else {
         Message.error(res.msg);
       }
-      loading.close();
     },
     importListChange() {
       this.list = this.listExcel.slice(

@@ -184,22 +184,19 @@ export default {
     },
     async listExport() {
       let allList;
-      let loading = Loading.service({
+      const loading = Loading.service({
         text: "获取数据导出中，请稍候..."
       });
       const { data: res } = await this.$http.getAllStudentList({
         data: this.info,
         token: this.token
       });
+      loading.close();
       if (res.code === 200) {
         if (res.data.length) {
-          let listTemp = res.data;
+          const listTemp = res.data;
           allList = listTemp.map(item => {
-            if (item[this.i18n["sex"]] == 1) {
-              item[this.i18n["sex"]] = "男";
-            } else {
-              item[this.i18n["sex"]] = "女";
-            }
+            item[this.i18n["sex"]] = item[this.i18n["sex"]] ? "男" : "女";
             return item;
           });
           downloadExl(allList, "xlsx", "学生列表");
@@ -209,7 +206,6 @@ export default {
       } else {
         Message.error(res.msg);
       }
-      loading.close();
     }
   }
 };

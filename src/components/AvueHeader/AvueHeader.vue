@@ -74,13 +74,16 @@ export default {
     elDropdownItem: DropdownItem
   },
   props: {
-    isAdmin: Boolean
+    isAdmin: {
+      type: Boolean,
+      default: false
+    }
   },
   mounted() {
     if (!this.isAdmin) {
-      let navHeight = document.getElementsByClassName("header")[0].offsetHeight;
+      const navHeight = document.getElementsByClassName("header")[0].offsetHeight;
       onscroll = function() {
-        let scrolltop =
+        const scrolltop =
           document.documentElement.scrollTop || document.body.scrollTop;
         if (scrolltop > navHeight) {
           document.querySelector(".header").classList.add("headerScroll");

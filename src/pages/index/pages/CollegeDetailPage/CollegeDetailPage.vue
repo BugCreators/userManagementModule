@@ -23,7 +23,7 @@
           </div>
         </div>
         <div id="college-des">
-          {{ info.description ? info.description : "暂无概况~" }}
+          {{ info.description || "暂无概况~" }}
         </div>
         <div class="showMore" v-if="isShow" @click="showMore">
           <span :class="[!isShowMore ? `icon-expand` : `icon-fold`]"></span>
@@ -78,7 +78,7 @@ export default {
   methods: {
     async getCollegeDetail(id) {
       const { data: res } = await this.$http.getCollegeDetail({
-        id: id ? id : this.collegeId
+        id: id || this.collegeId
       });
       if (res.code === 200) {
         this.info = res.data;
@@ -96,7 +96,7 @@ export default {
       }
     },
     showMore() {
-      let el = document.getElementById("college-des");
+      const el = document.getElementById("college-des");
       if (this.isShowMore) {
         el.style.display = `-webkit-box`;
       } else {
@@ -105,7 +105,7 @@ export default {
       this.isShowMore = !this.isShowMore;
     },
     logoUrl(url) {
-      return url == "" || url == null
+      return url === "" || url === null
         ? this.$store.state.defaultCollege
         : this.$store.state.baseUrl + url;
     }

@@ -26,7 +26,10 @@ export default {
     elButton: Button
   },
   props: {
-    count: Number,
+    count: {
+      type: Number,
+      default: 0
+    },
     addFuncName: String,
     delFuncName: String,
     exportFuncName: String,

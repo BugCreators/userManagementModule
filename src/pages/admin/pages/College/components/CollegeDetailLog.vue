@@ -116,7 +116,7 @@ export default {
   methods: {
     ...mapMutations(["switchDetailLog"]),
     async getInfo() {
-      let loading = Loading.service();
+      const loading = Loading.service();
       const { data: res } = await this.$http.getCollegeDetailByAdmin({
         id: this.dataId,
         token: this.token
@@ -130,14 +130,13 @@ export default {
       }
     },
     async formSubmit() {
-      let data = {},
-        res = {};
+      let data = {};
       if (this.info.name === "") {
         this.errorMsg = "学院名不能为空！";
         return;
       }
       this.errorMsg = "";
-      let loading = Loading.service({
+      const loading = Loading.service({
         target: document.getElementById("form")
       });
       if (this.dataId) {
@@ -151,7 +150,7 @@ export default {
           token: this.token
         });
       }
-      res = data.data;
+      const { data: res } = data;
       loading.close();
       if (res.code === 200) {
         Message.success(res.msg);

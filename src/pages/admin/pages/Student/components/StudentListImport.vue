@@ -233,12 +233,12 @@ export default {
               item.message = "姓名不能为空！";
               this.isImport = true;
             }
-            if (item.number.toString().length != 11) {
+            if (item.number.toString().length !== 11) {
               item.message += "学号格式错误：11位数字";
               this.isImport = true;
             }
             if (item.sex) {
-              if (item.sex != "男" && item.sex != "女") {
+              if (item.sex !== "男" && item.sex !== "女") {
                 item.message = "性别错误！例：男";
                 this.isImport = true;
               }
@@ -259,24 +259,24 @@ export default {
       this.isImport = true;
     },
     async importExcel() {
-      if (this.data.college_id == "") {
+      if (this.data.college_id === "") {
         this.message = "学院不能为空！";
         return;
       }
-      if (this.data.major_id == "") {
+      if (this.data.major_id === "") {
         this.message = "专业不能为空！";
         return;
       }
-      if (this.data.class_id == "") {
+      if (this.data.class_id === "") {
         this.message = "班级不能为空！";
         return;
       }
-      let loading = Loading.service({
+      const loading = Loading.service({
         text: "导入中，请稍候···"
       });
-      let listCopy = JSON.parse(JSON.stringify(this.listExcel));
-      let newList = listCopy.map(item => {
-        let sex = item.sex;
+      const listCopy = JSON.parse(JSON.stringify(this.listExcel));
+      const newList = listCopy.map(item => {
+        const sex = item.sex;
         item.sex = this.sex[sex];
         item.role_id = 2;
         item.college_id = this.data.college_id;

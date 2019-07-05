@@ -131,7 +131,7 @@ export default {
       this.isImport = true;
     },
     async importExcel() {
-      let loading = Loading.service({
+      const loading = Loading.service({
         text: "导入中，请稍候···"
       });
       const { data: res } = await this.$http.importClassList({

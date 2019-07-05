@@ -113,7 +113,7 @@ export default {
   },
   methods: {
     async getList() {
-      let loading = Loading.service(this.loadingOpts);
+      const loading = Loading.service(this.loadingOpts);
       const { data: res } = await this.$http.getDepartmentList({
         pageSize: this.pageSize,
         pageIndex: this.pageIndex,
@@ -172,19 +172,19 @@ export default {
     },
     async listExport() {
       let allList;
-      let loading = Loading.service({
+      const loading = Loading.service({
         text: "获取数据导出中，请稍候..."
       });
       const { data: res } = await this.$http.getAllDepartmentList({
         token: this.token
       });
+      loading.close();
       if (res.code === 200) {
         allList = res.data;
         downloadExl(allList, "xlsx", "院系列表");
       } else {
         Message.error(res.msg);
       }
-      loading.close();
     },
     importListChange() {
       this.list = this.listExcel.slice(

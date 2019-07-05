@@ -28,14 +28,12 @@ export default {
     },
     className: {
       type: Array,
-      default: function() {
-        return [""];
-      }
+      default: () => [""]
     }
   },
   watch: {
     // eslint-disable-next-line
-    srcImage: function(newV, oldV) {
+    srcImage(newV, oldV) {
       this.imageUri = newV || this.replaceImage;
     }
   },

@@ -68,16 +68,8 @@ export default {
     currentName() {
       return this.$route.name;
     },
-    currentComponent: {
-      get() {
-        return this.currentName == "admin" ? "/" : this.currentName;
-      },
-      set(value) {
-        return value;
-      }
-    },
-    tabIndex() {
-      return Math.floor(Math.random() * 10000000);
+    currentComponent() {
+      return this.currentName === "admin" ? "/" : this.currentName;
     }
   },
   async created() {
@@ -95,23 +87,17 @@ export default {
     this.getBackIntoBackstage();
   },
   mounted() {
-    let isCollapse = localStorage.getItem("isCollapse"),
+    const isCollapse = localStorage.getItem("isCollapse"),
       editableTabs = localStorage.getItem("currentPageTab"),
       editableTabsValue = localStorage.getItem("currentPageActive");
     this.editableTabs = editableTabs
       ? JSON.parse(editableTabs)
       : this.editableTabs;
-    this.editableTabsValue = editableTabsValue
-      ? editableTabsValue
-      : this.editableTabsValue;
+    this.editableTabsValue = editableTabsValue || this.editableTabsValue;
     this.switchComponents({
       name: this.editableTabsValue
     });
-    if (isCollapse) {
-      this.isCollapse = isCollapse === "true" ? true : false;
-    } else {
-      this.isCollapse = false;
-    }
+    this.isCollapse = isCollapse === "true" ? true : false;
     window.addEventListener("beforeunload", this.loadStore);
   },
   methods: {
@@ -120,7 +106,7 @@ export default {
       clearUserInfoM: "clearUserInfo"
     }),
     async getBackIntoBackstage() {
-      let loading = Loading.service();
+      const loading = Loading.service();
       const { data: res } = await this.$http.intoBackstage({
         token: this.token
       });
@@ -154,7 +140,7 @@ export default {
       localStorage.setItem("isCollapse", this.isCollapse);
     },
     addTab(item) {
-      let newTabName = Math.floor(Math.random() * 10000000) + "";
+      const newTabName = Math.floor(Math.random() * 10000000) + "";
       this.editableTabs.push({
         closable: "closable",
         title: item.title,
@@ -164,12 +150,12 @@ export default {
       this.editableTabsValue = newTabName;
     },
     removeTab(targetName) {
-      let tabs = this.editableTabs,
-        activeName = this.editableTabsValue;
+      const tabs = this.editableTabs;
+      let activeName = this.editableTabsValue;
       if (activeName === targetName) {
         tabs.forEach((tab, index) => {
           if (tab.name === targetName) {
-            let nextTab = tabs[index + 1] || tabs[index - 1];
+            const nextTab = tabs[index + 1] || tabs[index - 1];
             if (nextTab) {
               activeName = nextTab.name;
             }
@@ -184,8 +170,8 @@ export default {
     },
     switchtab(item) {
       let tabExisted = true,
-        tabs = this.editableTabs;
-      let activeName;
+        activeName;
+      const tabs = this.editableTabs;
       tabs.map(tab => {
         if (tab.title === item.title) {
           tabExisted = false;
@@ -200,7 +186,7 @@ export default {
       }
     },
     switchComponents(item) {
-      let tabs = this.editableTabs;
+      const tabs = this.editableTabs;
       let switchPath;
       tabs.map(tab => {
         if (tab.name === item.name) {

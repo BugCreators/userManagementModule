@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 导航栏 -->
-    <AvueHeader :isAdmin="false" />
+    <AvueHeader />
     <!-- 路由视图 -->
     <RouterView />
     <!-- 页脚 -->
@@ -23,7 +23,7 @@ export default {
     AvueFooter
   },
   async created() {
-    let loading = Loading.service();
+    const loading = Loading.service();
     await this.getUserInfo();
     const { data: res } = await this.$http.getSysSetting();
     loading.close();

@@ -130,7 +130,7 @@ export default {
   methods: {
     ...mapMutations(["switchDetailLog"]),
     async getInfo() {
-      let loading = Loading.service();
+      const loading = Loading.service();
       const { data: res } = await this.$http.getBranchDetail({
         id: this.dataId,
         token: this.token
@@ -150,7 +150,7 @@ export default {
         return;
       }
       this.errorMsg = "";
-      let loading = Loading.service({
+      const loading = Loading.service({
         target: document.getElementById("form")
       });
       if (this.dataId) {
@@ -164,13 +164,11 @@ export default {
           token: this.token
         });
       }
-      let res = data.data;
+      const { data: res } = data;
       loading.close();
       if (res.code === 200) {
         Message.success(res.msg);
-        this.dataId
-          ? this.$emit("dataChange", res.data)
-          : this.$emit("listChange");
+        this.$emit("listChange");
         this.switchDetailLog();
       } else {
         Message.error(res.msg || "添加失败，请稍后重试");

@@ -203,7 +203,7 @@ export default {
   methods: {
     ...mapMutations(["switchDetailLog"]),
     async getInfo() {
-      let loading = Loading.service();
+      const loading = Loading.service();
       const { data: res } = await this.$http.getRoleDetail({
         id: this.dataId,
         token: this.token
@@ -217,7 +217,7 @@ export default {
       }
     },
     async getBranchList() {
-      let loading = Loading.service(this.loadingOpts);
+      const loading = Loading.service(this.loadingOpts);
       const { data: res } = await this.$http.getBranchListByRoleDetail({
         token: this.token
       });
@@ -229,7 +229,7 @@ export default {
       }
     },
     async getModuleList() {
-      let loading = Loading.service({
+      const loading = Loading.service({
         target: document.getElementById("form")
       });
       const { data: res } = await this.$http.getModuleList({
@@ -254,7 +254,7 @@ export default {
         return;
       }
       this.errorMsg2 = "";
-      let loading = Loading.service({
+      const loading = Loading.service({
         target: document.getElementById("form")
       });
       if (this.dataId) {
@@ -270,7 +270,7 @@ export default {
           token: this.token
         });
       }
-      let res = data.data;
+      const { data: res } = data;
       loading.close();
       if (res.code === 200) {
         Message.success(res.msg);

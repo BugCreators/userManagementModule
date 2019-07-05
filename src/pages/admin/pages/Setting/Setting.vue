@@ -110,7 +110,7 @@ export default {
   methods: {
     ...mapMutations(["setSetting"]),
     async getSysSetting() {
-      let loading = Loading.service();
+      const loading = Loading.service();
       const { data: res } = await this.$http.getSysSetting();
       loading.close();
       if (res.code === 200) {

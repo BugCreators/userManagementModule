@@ -36,7 +36,7 @@
               @click="login"
               :disabled="!number || !password"
               :class="{ noClick: !number || !password }"
-              >{{ logining == true ? "登陆中..." : "登 录" }}</el-button
+              >{{ logining ? "登陆中..." : "登 录" }}</el-button
             >
           </div>
         </div>
@@ -75,7 +75,8 @@ export default {
     let userInfo = localStorage.getItem("avueUser");
     if (userInfo != null) {
       userInfo = JSON.parse(userInfo);
-      (this.number = userInfo.number), (this.password = userInfo.password);
+      this.number = userInfo.number;
+      this.password = userInfo.password;
       this.remember = true;
       this.isEncrypt = true;
     }
@@ -94,16 +95,16 @@ export default {
     },
     async login() {
       this.errMes = "";
-      if (this.number == "") {
+      if (this.number === "") {
         this.errMes = "账号不能为空";
         return;
       }
-      if (this.password == "") {
+      if (this.password === "") {
         this.errMes = "密码不能为空";
         return;
       }
       this.logining = true;
-      let password = this.isEncrypt ? this.password : md5(this.password);
+      const password = this.isEncrypt ? this.password : md5(this.password);
       const { data: res } = await this.$http.login({
         number: this.number,
         password
@@ -111,22 +112,22 @@ export default {
       if (res.code === 200) {
         /********** 记住密码 START ********/
         if (this.remember) {
-          let obj = {
+          const obj = {
             number: this.number,
             password
           };
-          let objStr = JSON.stringify(obj);
+          const objStr = JSON.stringify(obj);
           localStorage.setItem("avueUser", objStr);
         } else {
           localStorage.removeItem("avueUser");
         }
         /************** END **************/
-        let userObj = res.data;
+        const { data: userObj } = res;
         userObj.password = password;
-        let userInfo = JSON.stringify(userObj);
+        const userInfo = JSON.stringify(userObj);
         document.cookie = "avueUser=" + encodeURIComponent(userInfo) + ";";
 
-        let fromUrl = getUrlParam("fromUrl");
+        const fromUrl = getUrlParam("fromUrl");
         if (fromUrl != "" && fromUrl != null) {
           location.href = fromUrl;
         } else {

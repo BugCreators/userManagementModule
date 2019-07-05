@@ -18,17 +18,6 @@ Vue.prototype.$http = {
     });
   },
   /**
-   * @description 首頁-个人信息-获取用戶信息
-   * @param { number } 用戶账号
-   */
-  getUserInfo: data => {
-    return http({
-      url: "/api/user/getUserInfo",
-      method: "post",
-      data
-    });
-  },
-  /**
    * @description 首页-个人信息-修改用户信息
    * @param { number }       用户账号
    * @param { email }        邮箱

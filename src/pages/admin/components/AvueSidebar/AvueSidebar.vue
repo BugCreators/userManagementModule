@@ -63,7 +63,10 @@ export default {
   },
   props: {
     currentComponent: String,
-    isCollapse: Boolean
+    isCollapse: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {

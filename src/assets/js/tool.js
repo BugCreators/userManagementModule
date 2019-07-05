@@ -2,16 +2,16 @@ import { write, read, utils } from "xlsx";
 
 // 解析url参数
 function getUrlParam(name) {
-  let url = window.location.search;
-  let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-  let result = url.substr(1).match(reg);
+  const url = window.location.search;
+  const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+  const result = url.substr(1).match(reg);
   return result ? decodeURIComponent(result[2]) : null;
 }
 
 /************************导出Excel表格 BEGIN******************************/
 // 下载功能
 function saveAs(obj, fileName) {
-  var tmpa = document.createElement("a");
+  const tmpa = document.createElement("a");
   tmpa.download = fileName || "未命名";
   // 兼容ie
   if ("msSaveOrOpenBlob" in navigator) {
@@ -34,7 +34,7 @@ const wopts = {
 function downloadExl(json, type, fileName) {
   let tmpdata = json[0];
   json.unshift({});
-  var keyMap = []; //获取keys
+  const keyMap = []; //获取keys
   for (let k in tmpdata) {
     keyMap.push(k);
     json[0][k] = k;
@@ -61,12 +61,12 @@ function downloadExl(json, type, fileName) {
           v: v.v
         })
     );
-  var outputPos = Object.keys(tmpdata); //设置区域,比如表格从A1到D10
+  const outputPos = Object.keys(tmpdata); //设置区域,比如表格从A1到D10
   // tmpdata["B1"].s = {
   //   font: { sz: 14, bold: true, color: { rgb: "FFFFAA00" } },
   //   fill: { bgColor: { indexed: 64 }, fgColor: { rgb: "FFFF00" } }
   // }; //<====设置xlsx单元格样式
-  var tmpWB = {
+  const tmpWB = {
     SheetNames: ["mySheet"], //保存的表标题
     Sheets: {
       mySheet: Object.assign(
@@ -78,13 +78,13 @@ function downloadExl(json, type, fileName) {
       )
     }
   };
-  let tmpDown = new Blob(
+  const tmpDown = new Blob(
     [
       s2ab(
         write(
           tmpWB,
           {
-            bookType: type == undefined ? "xlsx" : type,
+            bookType: typeof type === "undefined" ? "xlsx" : type,
             bookSST: false,
             type: "binary"
           } //这里的数据是用来定义导出的格式类型
@@ -97,14 +97,12 @@ function downloadExl(json, type, fileName) {
   );
   saveAs(
     tmpDown,
-    fileName + "." + (wopts.bookType == "biff2" ? "xls" : wopts.bookType)
+    fileName + "." + (wopts.bookType === "biff2" ? "xls" : wopts.bookType)
   );
 }
 // 获取26个英文字母用来表示excel的列
 function getCharCol(n) {
-  // eslint-disable-next-line
-  let temCol = "",
-    s = "",
+  let s = "",
     m = 0;
   while (n > 0) {
     m = (n % 26) + 1;
@@ -115,12 +113,12 @@ function getCharCol(n) {
 }
 function s2ab(s) {
   if (typeof ArrayBuffer !== "undefined") {
-    let buf = new ArrayBuffer(s.length);
-    var view = new Uint8Array(buf);
+    const buf = new ArrayBuffer(s.length);
+    const view = new Uint8Array(buf);
     for (let i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff;
     return buf;
   } else {
-    let buf = new Array(s.length);
+    const buf = new Array(s.length);
     for (let i = 0; i != s.length; ++i) buf[i] = s.charCodeAt(i) & 0xff;
     return buf;
   }

@@ -74,7 +74,7 @@ export default {
         .catch(() => Message.info(`取消删除`));
     },
     async deleteItem() {
-      let loading = Loading.service();
+      const loading = Loading.service();
       const { data: res } = await this.$http.deleteCarouselItem({
         index: this.item.index,
         token: this.token

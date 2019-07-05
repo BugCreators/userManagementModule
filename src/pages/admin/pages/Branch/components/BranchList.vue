@@ -30,7 +30,7 @@
       <el-table-column prop="level" width="100" :label="i18n['level']"
         ><template slot-scope="scope">
           <span v-if="!isImport">{{
-            scope.row.level == 0 ? "校级" : "院级"
+            scope.row.level === 0 ? "校级" : "院级"
           }}</span>
           <span v-else>{{ scope.row.level }}</span>
         </template></el-table-column
@@ -135,7 +135,7 @@ export default {
   },
   methods: {
     async getList() {
-      let loading = Loading.service(this.loadingOpts);
+      const loading = Loading.service(this.loadingOpts);
       const { data: res } = await this.$http.getBranchList({
         pageSize: this.pageSize,
         pageIndex: this.pageIndex,
@@ -157,16 +157,6 @@ export default {
     editData(id) {
       this.$emit("openDetailLog", id);
     },
-    dataChange(data) {
-      let loading = Loading.service(this.loadingOpts);
-      for (let i = 0, len = this.list.length; i < len; i++) {
-        if (this.list[i].id == data.id) {
-          this.list[i] = data;
-          return;
-        }
-      }
-      loading.close();
-    },
     datasDeleteConfirm(ids) {
       if (ids.length <= 0) {
         Message.warning({
@@ -187,7 +177,7 @@ export default {
       });
       if (res.code === 200) {
         Message.success(res.msg);
-        if (this.list.length % this.pageSize == ids.length) {
+        if (this.list.length % this.pageSize === ids.length) {
           this.pageIndex--;
         }
         this.getList();
@@ -204,7 +194,7 @@ export default {
     },
     async listExport() {
       let allList;
-      let loading = Loading.service({
+      const loading = Loading.service({
         text: "获取数据导出中，请稍候..."
       });
       const { data: res } = await this.$http.getAllBranchList({
@@ -213,11 +203,7 @@ export default {
       loading.close();
       if (res.code === 200) {
         allList = res.data.map(item => {
-          if (item["等级"] == 0) {
-            item["等级"] = "校级";
-          } else {
-            item["等级"] = "院级";
-          }
+          item["等级"] = item["等级"] ? "院级" : "校级";
           return item;
         });
         downloadExl(allList, "xlsx", "部门列表");

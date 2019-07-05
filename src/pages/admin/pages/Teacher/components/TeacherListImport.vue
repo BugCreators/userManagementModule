@@ -142,12 +142,12 @@ export default {
       this.isImport = true;
     },
     async importExcel() {
-      let loading = Loading.service({
+      const loading = Loading.service({
         text: "导入中，请稍候···"
       });
-      let listCopy = JSON.parse(JSON.stringify(this.listExcel));
-      let newList = listCopy.map(item => {
-        let sex = item.sex;
+      const listCopy = JSON.parse(JSON.stringify(this.listExcel));
+      const newList = listCopy.map(item => {
+        const sex = item.sex;
         item.sex = this.sex[sex];
         item.role_id = 3;
         return item;

@@ -82,7 +82,7 @@ export default {
       this.$emit("closeLog");
     },
     handleChange(file, fileList) {
-      let fileType = file.raw.type;
+      const fileType = file.raw.type;
       const isJPG = fileType === "image/jpg" || fileType === "image/png";
       const isLt1M = file.size / 1024 / 1024 < 2;
       if (!isJPG) {
@@ -99,7 +99,7 @@ export default {
     },
     async uploadCarousel(param) {
       let data = {};
-      let formData = new FormData();
+      const formData = new FormData();
       formData.append("image", param.file);
       formData.append("token", this.token);
       if (this.dataIndex) {
@@ -109,7 +109,7 @@ export default {
         formData.append("website", this.item.href);
         data = await this.$http.addCarouselItem(formData);
       }
-      let res = data.data;
+      const { data: res } = data;
       if (res.code === 200) {
         Message.success(res.msg);
         this.$emit("settingChange");

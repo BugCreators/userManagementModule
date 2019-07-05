@@ -124,7 +124,7 @@ export default {
   },
   methods: {
     async getList() {
-      let loading = Loading.service(this.loadingOpts);
+      const loading = Loading.service(this.loadingOpts);
       const { data: res } = await this.$http.getClassList({
         pageSize: this.pageSize,
         pageIndex: this.pageIndex,
@@ -183,7 +183,7 @@ export default {
     },
     async listExport() {
       let allList;
-      let loading = Loading.service({
+      const loading = Loading.service({
         text: "获取数据导出中，请稍候..."
       });
       const { data: res } = await this.$http.getAllClassList({

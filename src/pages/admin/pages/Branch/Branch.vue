@@ -26,7 +26,6 @@
       v-if="showDetailLog"
       :dataId="currentId"
       @listChange="listChange"
-      @dataChange="dataChange"
     />
   </div>
 </template>
@@ -82,17 +81,8 @@ export default {
     changeCount(count) {
       this.count = count;
     },
-    logoChange(data) {
-      this.$refs["list"].logoChange(data);
-    },
-    logoDelete(data) {
-      this.$refs["list"].logoDelete(data);
-    },
     listChange() {
       this.$refs["list"].getList();
-    },
-    dataChange(data) {
-      this.$refs["list"].dataChange(data);
     },
     datasDelete() {
       this.$refs["list"].datasDeleteConfirm(this.$refs["list"].selectedId);

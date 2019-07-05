@@ -115,7 +115,7 @@ export default {
   },
   methods: {
     async getList() {
-      let loading = Loading.service(this.loadingOpts);
+      const loading = Loading.service(this.loadingOpts);
       const { data: res } = await this.$http.getRoleList({
         pageSize: this.pageSize,
         pageIndex: this.pageIndex,
@@ -157,7 +157,7 @@ export default {
       });
       if (res.code === 200) {
         Message.success(res.msg);
-        if (this.list.length % this.pageSize == ids.length) {
+        if (this.list.length % this.pageSize === ids.length) {
           this.pageIndex--;
         }
         this.getList();

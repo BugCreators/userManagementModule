@@ -19,5 +19,17 @@ export default {
       url: "/api/college/getCollegeList",
       method: "get"
     });
-  }
+  },
+  /**
+   * @description 首頁-个人信息-获取用戶信息
+   * @description 后台管理-个人信息
+   * @param { number } 用戶账号
+   */
+  getUserInfo: data => {
+    return http({
+      url: "/api/user/getUserInfo",
+      method: "post",
+      data
+    });
+  },
 };

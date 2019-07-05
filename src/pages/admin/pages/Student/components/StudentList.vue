@@ -124,7 +124,7 @@ export default {
   },
   methods: {
     async getList() {
-      let loading = Loading.service(this.loadingOpts);
+      const loading = Loading.service(this.loadingOpts);
       const { data: res } = await this.$http.getStudentList({
         pageSize: this.pageSize,
         pageIndex: this.pageIndex,
@@ -133,12 +133,8 @@ export default {
       });
       loading.close();
       if (res.code === 200) {
-        let listTemp = res.data.list.map(item => {
-          if (item.sex) {
-            item.sex = "男";
-          } else {
-            item.sex = "女";
-          }
+        const listTemp = res.data.list.map(item => {
+          item.sex = item.sex ? "男" : "女";
           return item;
         });
         this.list = listTemp;
@@ -192,7 +188,7 @@ export default {
       });
       if (res.code === 200) {
         Message.success(res.msg);
-        if (this.list.length % this.pageSize == ids.length) {
+        if (this.list.length % this.pageSize === ids.length) {
           this.pageIndex--;
         }
         this.getList();

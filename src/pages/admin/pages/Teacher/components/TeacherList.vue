@@ -124,7 +124,7 @@ export default {
       clearUserInfoM: "clearUserInfo"
     }),
     async getList() {
-      let loading = Loading.service(this.loadingOpts);
+      const loading = Loading.service(this.loadingOpts);
       const { data: res } = await this.$http.getTeacherList({
         pageSize: this.pageSize,
         pageIndex: this.pageIndex,
@@ -133,12 +133,8 @@ export default {
       });
       loading.close();
       if (res.code === 200) {
-        let listTemp = res.data.list.map(item => {
-          if (item.sex) {
-            item.sex = "男";
-          } else {
-            item.sex = "女";
-          }
+        const listTemp = res.data.list.map(item => {
+          item.sex = item.sex ? "男" : "女" ;
           return item;
         });
         this.list = listTemp;
@@ -205,7 +201,7 @@ export default {
       });
       if (res.code === 200) {
         Message.success(res.msg);
-        if (this.list.length % this.pageSize == ids.length) {
+        if (this.list.length % this.pageSize === ids.length) {
           this.pageIndex--;
         }
         this.getList();
@@ -222,21 +218,18 @@ export default {
     },
     async listExport() {
       let allList;
-      let loading = Loading.service({
+      const loading = Loading.service({
         text: "获取数据导出中，请稍候..."
       });
       const { data: res } = await this.$http.getAllTeacherList({
         token: this.token
       });
+      loading.close();
       if (res.code === 200) {
         if (res.data.length) {
-          let listTemp = res.data;
+          const listTemp = res.data;
           allList = listTemp.map(item => {
-            if (item[this.i18n["sex"]] == 1) {
-              item[this.i18n["sex"]] = "男";
-            } else {
-              item[this.i18n["sex"]] = "女";
-            }
+            item[this.i18n["sex"]] = item[this.i18n["sex"]] ? "男" : "女";
             return item;
           });
           downloadExl(allList, "xlsx", "教师列表");
@@ -246,7 +239,6 @@ export default {
       } else {
         Message.error(res.msg);
       }
-      loading.close();
     },
     importListChange() {
       this.list = this.listExcel.slice(
