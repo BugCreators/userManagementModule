@@ -65,14 +65,7 @@ export default {
       showLogoLog: state => state.showLogoLog,
       showDetailLog: state => state.showDetailLog,
       showImportLog: state => state.showImportLog
-    }),
-    selectedId() {
-      return this.$refs["list"].selectedId.map((value, index, array) => {
-        return {
-          id: array[index]["id"]
-        };
-      });
-    }
+    })
   },
   created() {
     this.setSearchValue({
