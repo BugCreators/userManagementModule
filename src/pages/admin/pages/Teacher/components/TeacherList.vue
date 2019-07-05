@@ -57,7 +57,7 @@
 import { Loading, Message, Pagination, Table, TableColumn } from "element-ui";
 import avueMsgBox from "@/components/avueMsgBox/avueMsgBox";
 import { downloadExl } from "@/assets/js/tool";
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "teacherList",
@@ -120,9 +120,6 @@ export default {
   },
   methods: {
     ...mapActions(["clearUserInfo"]),
-    ...mapMutations({
-      clearUserInfoM: "clearUserInfo"
-    }),
     async getList() {
       const loading = Loading.service(this.loadingOpts);
       const { data: res } = await this.$http.getTeacherList({
@@ -162,8 +159,7 @@ export default {
       if (res.code === 200) {
         Message.success(res.msg);
         if (res.data.changeByOwn) {
-          await this.clearUserInfo();
-          this.clearUserInfoM();
+          this.clearUserInfo();
           avueMsgBox(
             {
               message: "当前用户密码已重置，请重新登录",

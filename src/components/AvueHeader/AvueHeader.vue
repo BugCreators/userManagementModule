@@ -14,13 +14,13 @@
       <div class="header-right">
         <div class="otherSystem">
           <div
-            v-for="(item, index) in $store.state.setting.systemWebsite"
+            v-for="(item, index) in setting.systemWebsite"
             :key="index"
           >
             <a target="_blank" :href="item.website">
               <span>{{ item.name }}</span>
             </a>
-            <span v-if="index + 1 != $store.state.setting.systemWebsite.length"
+            <span v-if="index + 1 !== setting.systemWebsite.length"
               >|</span
             >
           </div>
@@ -29,20 +29,20 @@
           <a
             class="loginButton"
             :href="buttonInfo.href"
-            v-if="!$store.state.userInfo"
+            v-if="!userInfo"
             >{{ buttonInfo.text }}</a
           >
           <div v-else>
-            欢迎您！{{ $store.state.userInfo.roleName || "游客" }}
+            欢迎您！{{ userInfo.roleName || "游客" }}
             <el-dropdown @command="handleCommand">
               <span class="el-dropdown-link">
-                {{ $store.state.userInfo.realname
+                {{ userInfo.realname
                 }}<i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="userInfo">个人信息</el-dropdown-item>
                 <el-dropdown-item command="changePw">修改密码</el-dropdown-item>
-                <div v-if="$store.state.userInfo.intoBackstage">
+                <div v-if="userInfo.intoBackstage">
                   <el-dropdown-item v-if="!isAdmin" command="userManagement"
                     >用户管理</el-dropdown-item
                   >
@@ -63,7 +63,7 @@
 <script>
 import AvueImage from "../AvueImage/AvueImage";
 import { Dropdown, DropdownMenu, DropdownItem } from "element-ui";
-import { mapActions, mapMutations } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "AvueHeader",
@@ -94,6 +94,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(["userInfo", "setting"]),
     buttonInfo() {
       return location.pathname === "/login.html"
         ? {
@@ -108,9 +109,6 @@ export default {
   },
   methods: {
     ...mapActions(["clearUserInfo"]),
-    ...mapMutations({
-      clearUserInfoM: "clearUserInfo"
-    }),
     handleCommand(command) {
       switch (command) {
         case "userInfo":
@@ -134,9 +132,8 @@ export default {
           break;
       }
     },
-    async logout() {
-      await this.clearUserInfo();
-      this.clearUserInfoM();
+    logout() {
+      this.clearUserInfo();
       location.href = "index.html";
     }
   }

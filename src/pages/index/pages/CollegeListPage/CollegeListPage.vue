@@ -1,5 +1,4 @@
 <template>
-  <!-- <div style="padding-top:0px" v-if="$store.state.setting != ''"> -->
   <div class="collegePage">
     <!-- 顶部banner -->
     <Carousel />

@@ -38,7 +38,7 @@ import AvueHeader from "@/components/AvueHeader/AvueHeader";
 import AvueSidebar from "./components/AvueSidebar/AvueSidebar";
 import { Loading, Tabs, TabPane } from "element-ui";
 import avueMsgBox from "@/components/avueMsgBox/avueMsgBox";
-import { mapMutations, mapActions, mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "admin",
@@ -102,9 +102,6 @@ export default {
   },
   methods: {
     ...mapActions(["getUserInfo", "clearUserInfo"]),
-    ...mapMutations({
-      clearUserInfoM: "clearUserInfo"
-    }),
     async getBackIntoBackstage() {
       const loading = Loading.service();
       const { data: res } = await this.$http.intoBackstage({
@@ -121,8 +118,7 @@ export default {
           ).then(() => (location.href = "index.html"));
         }
       } else {
-        await this.clearUserInfo();
-        this.clearUserInfoM();
+        this.clearUserInfo();
         avueMsgBox(
           {
             message: res.msg

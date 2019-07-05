@@ -32,7 +32,7 @@ import {
 } from "element-ui";
 import avueMsgBox from "@/components/avueMsgBox/avueMsgBox";
 import md5 from "md5";
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "changePassword",
@@ -92,9 +92,6 @@ export default {
   },
   methods: {
     ...mapActions(["clearUserInfo"]),
-    ...mapMutations({
-      clearUserInfoM: "clearUserInfo"
-    }),
     confirmChange() {
       avueMsgBox({
         message: "确定进行修改？"
@@ -130,8 +127,7 @@ export default {
       if (res.code === 200) {
         Message.success(res.msg);
       } else if (res.code === 402) {
-        await this.clearUserInfo();
-        this.clearUserInfoM();
+        this.clearUserInfo();
         avueMsgBox(
           {
             message: "会话已过期，要进行操作请重新登陆！"

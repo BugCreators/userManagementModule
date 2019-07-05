@@ -1,11 +1,11 @@
 <template>
   <AvueImage
-    v-if="!$store.state.setting.carousel.length"
+    v-if="!setting.carousel.length"
     :srcImage="$store.state.defaultBanner"
   />
   <el-carousel class="poster" height="320px" type="card" v-else>
     <el-carousel-item
-      v-for="(item, index) in $store.state.setting.carousel"
+      v-for="(item, index) in setting.carousel"
       :key="index"
     >
       <a :href="item.href">
@@ -21,6 +21,7 @@
 <script>
 import { Carousel, CarouselItem } from "element-ui";
 import AvueImage from "@/components/AvueImage/AvueImage";
+import { mapState } from 'vuex';
 
 export default {
   name: "carousel",
@@ -28,6 +29,9 @@ export default {
     AvueImage,
     elCarousel: Carousel,
     elCarouselItem: CarouselItem
+  },
+  computed: {
+    ...mapState(["setting"])
   },
   methods: {
     logoUrl(url) {

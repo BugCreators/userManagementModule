@@ -47,7 +47,7 @@ import {
   Radio
 } from "element-ui";
 import avueMsgBox from "@/components/avueMsgBox/avueMsgBox";
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "userInfo",
@@ -142,9 +142,6 @@ export default {
   },
   methods: {
     ...mapActions(["clearUserInfo"]),
-    ...mapMutations({
-      clearUserInfoM: "clearUserInfo"
-    }),
     async getUserInfo() {
       const { data: res } = await this.$http.getUserInfo({
         number: this.$store.state.userInfo.number,
@@ -181,8 +178,7 @@ export default {
       }
     },
     async reload() {
-      await this.clearUserInfo();
-      this.clearUserInfoM();
+      this.clearUserInfo();
       avueMsgBox(
         {
           message: "会话已过期，要进行操作请重新登陆！"
