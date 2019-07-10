@@ -116,7 +116,7 @@ export default {
   methods: {
     async getList() {
       const loading = Loading.service(this.loadingOpts);
-      const { data: res } = await this.$http.getRoleList({
+      const res = await this.$http.getRoleList({
         pageSize: this.pageSize,
         pageIndex: this.pageIndex,
         searchValue: this.searchValue,
@@ -151,7 +151,7 @@ export default {
         .catch(() => Message.info("取消删除"));
     },
     async datasDelete(ids) {
-      const { data: res } = await this.$http.delRoles({
+      const res = await this.$http.delRoles({
         rolesId: ids,
         token: this.token
       });

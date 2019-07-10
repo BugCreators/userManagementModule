@@ -119,7 +119,7 @@ export default {
     ...mapActions(["clearUserInfo"]),
     async getList() {
       const loading = Loading.service(this.loadingOpts);
-      const { data: res } = await this.$http.getAdministratorList({
+      const res = await this.$http.getAdministratorList({
         pageSize: this.pageSize,
         pageIndex: this.pageIndex,
         searchValue: this.searchValue,
@@ -145,7 +145,7 @@ export default {
         .catch(() => Message.info("取消重置"));
     },
     async resetPw(id) {
-      const { data: res } = await this.$http.resetPwAdmin({
+      const res = await this.$http.resetPwAdmin({
         id,
         token: this.token
       });
@@ -184,7 +184,7 @@ export default {
         .catch(() => Message.info("取消删除"));
     },
     async datasDelete(ids) {
-      const { data: res } = await this.$http.delAdministrators({
+      const res = await this.$http.delAdministrators({
         adminsId: ids,
         token: this.token
       });

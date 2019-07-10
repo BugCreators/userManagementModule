@@ -131,7 +131,7 @@ export default {
     ...mapMutations(["switchDetailLog"]),
     async getInfo() {
       const loading = Loading.service();
-      const { data: res } = await this.$http.getBranchDetail({
+      const res = await this.$http.getBranchDetail({
         id: this.dataId,
         token: this.token
       });
@@ -164,7 +164,7 @@ export default {
           token: this.token
         });
       }
-      const { data: res } = data;
+      const res = data;
       loading.close();
       if (res.code === 200) {
         Message.success(res.msg);

@@ -90,7 +90,7 @@ export default {
     ...mapMutations(["setSetting"]),
     clickForgetPwd() {},
     async getSetting() {
-      const { data: res } = await this.$http.getSysSetting();
+      const res = await this.$http.getSysSetting();
       this.setSetting(res.data);
     },
     async login() {
@@ -105,7 +105,7 @@ export default {
       }
       this.logining = true;
       const password = this.isEncrypt ? this.password : md5(this.password);
-      const { data: res } = await this.$http.login({
+      const res = await this.$http.login({
         number: this.number,
         password
       });

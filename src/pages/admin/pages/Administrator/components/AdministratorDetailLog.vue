@@ -220,7 +220,7 @@ export default {
     ...mapMutations(["switchDetailLog"]),
     async getInfo() {
       const loading = Loading.service();
-      const { data: res } = await this.$http.getAdministratorDetail({
+      const res = await this.$http.getAdministratorDetail({
         id: this.dataId,
         token: this.token
       });
@@ -237,7 +237,7 @@ export default {
       const loading = Loading.service({
         target: document.getElementById("form")
       });
-      const { data: res } = await this.$http.getBranchListByAdminDetail({
+      const res = await this.$http.getBranchListByAdminDetail({
         token: this.token
       });
       loading.close();
@@ -252,7 +252,7 @@ export default {
       const loading = Loading.service({
         target: document.getElementById("form")
       });
-      const { data: res } = await this.$http.getRoleListByBranchId({
+      const res = await this.$http.getRoleListByBranchId({
         branchId: this.info.branch_id,
         token: this.token
       });
@@ -291,7 +291,7 @@ export default {
           token: this.token
         });
       }
-      const { data: res } = data;
+      const res = data;
       loading.close();
       if (res.code === 200) {
         Message.success(res.msg);

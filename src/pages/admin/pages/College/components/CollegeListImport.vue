@@ -126,7 +126,7 @@ export default {
       const loading = Loading.service({
         text: "导入中，请稍候···"
       });
-      const { data: res } = await this.$http.importCollegeList({
+      const res = await this.$http.importCollegeList({
         collegeList: this.listExcel,
         token: this.token
       });

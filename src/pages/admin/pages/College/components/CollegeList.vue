@@ -155,7 +155,7 @@ export default {
   methods: {
     async getList() {
       const loading = Loading.service(this.loadingOpts);
-      const { data: res } = await this.$http.getCollegeListByAdmin({
+      const res = await this.$http.getCollegeListByAdmin({
         pageSize: this.pageSize,
         pageIndex: this.pageIndex,
         searchValue: this.searchValue,
@@ -198,7 +198,7 @@ export default {
         .catch(() => Message.info("取消删除"));
     },
     async datasDelete(ids) {
-      const { data: res } = await this.$http.delCollege({
+      const res = await this.$http.delCollege({
         collegesId: ids,
         token: this.token
       });
@@ -224,7 +224,7 @@ export default {
       const loading = Loading.service({
         text: "获取数据导出中，请稍候..."
       });
-      const { data: res } = await this.$http.getAllCollegeList({
+      const res = await this.$http.getAllCollegeList({
         token: this.token
       });
       loading.close();

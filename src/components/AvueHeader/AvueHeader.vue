@@ -13,16 +13,11 @@
       </h1>
       <div class="header-right">
         <div class="otherSystem">
-          <div
-            v-for="(item, index) in setting.systemWebsite"
-            :key="index"
-          >
+          <div v-for="(item, index) in setting.systemWebsite" :key="index">
             <a target="_blank" :href="item.website">
               <span>{{ item.name }}</span>
             </a>
-            <span v-if="index + 1 !== setting.systemWebsite.length"
-              >|</span
-            >
+            <span v-if="index + 1 !== setting.systemWebsite.length">|</span>
           </div>
         </div>
         <div class="userInfo">

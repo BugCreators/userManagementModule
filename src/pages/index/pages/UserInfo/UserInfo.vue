@@ -143,7 +143,7 @@ export default {
   methods: {
     ...mapActions(["clearUserInfo"]),
     async getUserInfo() {
-      const { data: res } = await this.$http.getUserInfo({
+      const res = await this.$http.getUserInfo({
         number: this.$store.state.userInfo.number,
         token: this.token
       });
@@ -161,7 +161,7 @@ export default {
         .catch(() => Message.info("取消修改"));
     },
     async changeInfoByUser() {
-      const { data: res } = await this.$http.changeInfoByUser({
+      const res = await this.$http.changeInfoByUser({
         number: this.userInfo.number,
         email: this.userInfo.email,
         sex: this.userInfo.sex,

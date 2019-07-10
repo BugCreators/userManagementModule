@@ -122,7 +122,7 @@ export default {
     ...mapActions(["clearUserInfo"]),
     async getList() {
       const loading = Loading.service(this.loadingOpts);
-      const { data: res } = await this.$http.getTeacherList({
+      const res = await this.$http.getTeacherList({
         pageSize: this.pageSize,
         pageIndex: this.pageIndex,
         searchValue: this.searchValue,
@@ -152,7 +152,7 @@ export default {
         .catch(() => Message.info("取消重置"));
     },
     async resetPw(id) {
-      const { data: res } = await this.$http.resetPwTeacher({
+      const res = await this.$http.resetPwTeacher({
         id,
         token: this.token
       });
@@ -191,7 +191,7 @@ export default {
         .catch(() => Message.info("取消删除"));
     },
     async datasDelete(ids) {
-      const { data: res } = await this.$http.delTeachers({
+      const res = await this.$http.delTeachers({
         teachersId: ids,
         token: this.token
       });
@@ -217,7 +217,7 @@ export default {
       const loading = Loading.service({
         text: "获取数据导出中，请稍候..."
       });
-      const { data: res } = await this.$http.getAllTeacherList({
+      const res = await this.$http.getAllTeacherList({
         token: this.token
       });
       loading.close();

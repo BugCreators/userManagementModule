@@ -199,7 +199,7 @@ export default {
   },
   methods: {
     async getSelectAuthority() {
-      const { data: res } = await this.$http.getSelectAuthority({
+      const res = await this.$http.getSelectAuthority({
         token: this.token
       });
       if (res.code === 200) {

@@ -25,7 +25,7 @@ export default {
   async created() {
     const loading = Loading.service();
     await this.getUserInfo();
-    const { data: res } = await this.$http.getSysSetting();
+    const res = await this.$http.getSysSetting();
     loading.close();
     if (res.code === 200) {
       this.setSetting(res.data);

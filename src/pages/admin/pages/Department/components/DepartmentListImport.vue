@@ -130,7 +130,7 @@ export default {
       const loading = Loading.service({
         text: "导入中，请稍候···"
       });
-      const { data: res } = await this.$http.importDepartmentList({
+      const res = await this.$http.importDepartmentList({
         departmentList: this.listExcel,
         token: this.token
       });

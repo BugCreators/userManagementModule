@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     async getCollegeList() {
-      const { data: res } = await this.$http.getCollegeList();
+      const res = await this.$http.getCollegeList();
       if (res.code === 200) {
         this.collegeList = res.data;
       }

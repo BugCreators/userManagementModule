@@ -125,7 +125,7 @@ export default {
   methods: {
     async getList() {
       const loading = Loading.service(this.loadingOpts);
-      const { data: res } = await this.$http.getClassList({
+      const res = await this.$http.getClassList({
         pageSize: this.pageSize,
         pageIndex: this.pageIndex,
         searchValue: this.searchValue,
@@ -160,7 +160,7 @@ export default {
         .catch(() => Message.info("取消删除"));
     },
     async datasDelete(ids) {
-      const { data: res } = await this.$http.delClass({
+      const res = await this.$http.delClass({
         classId: ids,
         token: this.token
       });
@@ -186,7 +186,7 @@ export default {
       const loading = Loading.service({
         text: "获取数据导出中，请稍候..."
       });
-      const { data: res } = await this.$http.getAllClassList({
+      const res = await this.$http.getAllClassList({
         token: this.token
       });
       loading.close();

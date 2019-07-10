@@ -69,7 +69,7 @@ export default {
   },
   methods: {
     async getCarouselItem() {
-      const { data: res } = await this.$http.getCarouselItem({
+      const res = await this.$http.getCarouselItem({
         index: this.dataIndex,
         token: this.token
       });
@@ -109,7 +109,7 @@ export default {
         formData.append("website", this.item.href);
         data = await this.$http.addCarouselItem(formData);
       }
-      const { data: res } = data;
+      const res = data;
       if (res.code === 200) {
         Message.success(res.msg);
         this.$emit("settingChange");

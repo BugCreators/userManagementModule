@@ -75,7 +75,7 @@ export default {
     },
     async deleteItem() {
       const loading = Loading.service();
-      const { data: res } = await this.$http.deleteCarouselItem({
+      const res = await this.$http.deleteCarouselItem({
         index: this.item.index,
         token: this.token
       });
@@ -95,7 +95,7 @@ export default {
     },
     async changeInfo() {
       if (this.initHref !== this.item.href) {
-        const { data: res } = await this.$http.changeCarouselItemWebsite({
+        const res = await this.$http.changeCarouselItemWebsite({
           index: this.item.index,
           website: this.item.href,
           token: this.token

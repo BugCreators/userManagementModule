@@ -104,7 +104,7 @@ export default {
     ...mapActions(["getUserInfo", "clearUserInfo"]),
     async getBackIntoBackstage() {
       const loading = Loading.service();
-      const { data: res } = await this.$http.intoBackstage({
+      const res = await this.$http.intoBackstage({
         token: this.token
       });
       loading.close();

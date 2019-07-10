@@ -117,7 +117,7 @@ export default {
       }
       this.i18n[2].errorMsg = "";
 
-      const { data: res } = await this.$http.changePasswordByUser({
+      const res = await this.$http.changePasswordByUser({
         oldPw: md5(this.password.oldPw),
         newPw: md5(this.password.newPw),
         confirmPw: md5(this.password.confirmPw),

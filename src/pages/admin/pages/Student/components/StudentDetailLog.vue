@@ -223,7 +223,7 @@ export default {
     ...mapMutations(["switchDetailLog"]),
     async getInfo() {
       const loading = Loading.service();
-      const { data: res } = await this.$http.getStudentDetail({
+      const res = await this.$http.getStudentDetail({
         id: this.dataId,
         token: this.token
       });
@@ -238,7 +238,7 @@ export default {
       }
     },
     async getCollegeList() {
-      const { data: res } = await this.$http.getCollegeList();
+      const res = await this.$http.getCollegeList();
       if (res.code === 200) {
         this.collegeList = res.data;
       } else {
@@ -246,7 +246,7 @@ export default {
       }
     },
     async getMajorList(isChange) {
-      const { data: res } = await this.$http.getMajorListBycollegeId({
+      const res = await this.$http.getMajorListBycollegeId({
         id: this.info.college_id,
         token: this.token
       });
@@ -264,7 +264,7 @@ export default {
       }
     },
     async getClassList(isChange) {
-      const { data: res } = await this.$http.getClassListByMajorId({
+      const res = await this.$http.getClassListByMajorId({
         id: this.info.major_id,
         token: this.token
       });
@@ -318,7 +318,7 @@ export default {
           token: this.token
         });
       }
-      const { data: res } = data;
+      const res = data;
       loading.close();
       if (res.code === 200) {
         Message.success(res.msg);

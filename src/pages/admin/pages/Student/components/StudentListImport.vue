@@ -155,7 +155,7 @@ export default {
   methods: {
     ...mapMutations(["switchImportLog"]),
     async getCollegeList() {
-      const { data: res } = await this.$http.getCollegeList();
+      const res = await this.$http.getCollegeList();
       if (res.code === 200) {
         this.collegeList = res.data;
       } else {
@@ -163,7 +163,7 @@ export default {
       }
     },
     async getMajorList() {
-      const { data: res } = await this.$http.getMajorListBycollegeId({
+      const res = await this.$http.getMajorListBycollegeId({
         id: this.data.college_id,
         token: this.token
       });
@@ -181,7 +181,7 @@ export default {
       }
     },
     async getClassList() {
-      const { data: res } = await this.$http.getClassListByMajorId({
+      const res = await this.$http.getClassListByMajorId({
         id: this.data.major_id,
         token: this.token
       });
@@ -283,7 +283,7 @@ export default {
         item.class_id = this.data.class_id;
         return item;
       });
-      const { data: res } = await this.$http.importStudentList({
+      const res = await this.$http.importStudentList({
         data: this.data,
         studentList: newList,
         token: this.token

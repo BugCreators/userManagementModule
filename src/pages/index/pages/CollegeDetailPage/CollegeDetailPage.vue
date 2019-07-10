@@ -77,7 +77,7 @@ export default {
   },
   methods: {
     async getCollegeDetail(id) {
-      const { data: res } = await this.$http.getCollegeDetail({
+      const res = await this.$http.getCollegeDetail({
         id: id || this.collegeId
       });
       if (res.code === 200) {

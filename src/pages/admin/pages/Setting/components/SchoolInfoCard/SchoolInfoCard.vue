@@ -63,7 +63,7 @@ export default {
       ) {
         this.switchDisabled();
       } else {
-        const { data: res } = await this.$http.changeSchoolInfo({
+        const res = await this.$http.changeSchoolInfo({
           schoolInfo: {
             name: this.schoolInfo.name,
             address: this.schoolInfo.address

@@ -65,7 +65,7 @@ export default {
       ) {
         this.switchDisabled();
       } else {
-        const { data: res } = await this.$http.changeSystemItem({
+        const res = await this.$http.changeSystemItem({
           system: this.system,
           token: this.token
         });
@@ -85,7 +85,7 @@ export default {
         .catch(() => Message.info(`取消删除`));
     },
     async deleteItem() {
-      const { data: res } = await this.$http.deleteSystemItem({
+      const res = await this.$http.deleteSystemItem({
         index: this.system.index,
         token: this.token
       });

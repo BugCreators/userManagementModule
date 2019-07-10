@@ -63,7 +63,7 @@ export default {
       this.$emit("closeLog");
     },
     async addSystem() {
-      const { data: res } = await this.$http.addSystemItem({
+      const res = await this.$http.addSystemItem({
         system: this.system,
         token: this.token
       });

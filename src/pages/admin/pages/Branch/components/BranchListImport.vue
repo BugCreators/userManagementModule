@@ -144,7 +144,7 @@ export default {
         item.level = this.level[level];
         return item;
       });
-      const { data: res } = await this.$http.importBranchList({
+      const res = await this.$http.importBranchList({
         branchList: newList,
         token: this.token
       });

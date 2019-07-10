@@ -74,7 +74,7 @@ export default {
   methods: {
     ...mapMutations(["switchLogoLog"]),
     async getCollegeLogo() {
-      const { data: res } = await this.$http.getCollegeLogo({
+      const res = await this.$http.getCollegeLogo({
         token: this.token,
         id: this.collegeId
       });
@@ -93,7 +93,7 @@ export default {
       data.append("image", file);
       data.append("id", this.collegeId);
       data.append("token", this.token);
-      const { data: res } = await this.$http.changeCollegeLogo(data);
+      const res = await this.$http.changeCollegeLogo(data);
       if (res.code === 200) {
         Message.success(res.msg);
         this.$emit("listChange");
@@ -121,7 +121,7 @@ export default {
         .catch(() => Message.info("取消删除"));
     },
     async deleteLogo() {
-      const { data: res } = await this.$http.deleteCollegeLogo({
+      const res = await this.$http.deleteCollegeLogo({
         id: this.collegeId,
         token: this.token
       });

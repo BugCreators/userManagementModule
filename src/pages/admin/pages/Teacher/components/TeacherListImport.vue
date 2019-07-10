@@ -152,7 +152,7 @@ export default {
         item.role_id = 3;
         return item;
       });
-      const { data: res } = await this.$http.importTeacherList({
+      const res = await this.$http.importTeacherList({
         teacherList: newList,
         token: this.token
       });

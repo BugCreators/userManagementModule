@@ -124,7 +124,7 @@ export default {
       this.$emit("switchExportLog");
     },
     async getCollegeList() {
-      const { data: res } = await this.$http.getCollegeList();
+      const res = await this.$http.getCollegeList();
       if (res.code === 200) {
         this.collegeList = this.defaultOption.concat(res.data);
       } else {
@@ -132,7 +132,7 @@ export default {
       }
     },
     async getMajorList() {
-      const { data: res } = await this.$http.getMajorListBycollegeId({
+      const res = await this.$http.getMajorListBycollegeId({
         id: this.info.college_id,
         token: this.token
       });
@@ -149,7 +149,7 @@ export default {
       }
     },
     async getClassList() {
-      const { data: res } = await this.$http.getClassListByMajorId({
+      const res = await this.$http.getClassListByMajorId({
         id: this.info.major_id,
         token: this.token
       });
@@ -187,7 +187,7 @@ export default {
       const loading = Loading.service({
         text: "获取数据导出中，请稍候..."
       });
-      const { data: res } = await this.$http.getAllStudentList({
+      const res = await this.$http.getAllStudentList({
         data: this.info,
         token: this.token
       });
