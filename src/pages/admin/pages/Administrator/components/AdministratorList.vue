@@ -11,8 +11,8 @@
         v-if="!isImport"
         prop="branchName"
         label="部门"
-      ></el-table-column
-      ><el-table-column
+      ></el-table-column>
+      <el-table-column
         v-if="!isImport"
         prop="roleName"
         label="身份"
@@ -51,8 +51,7 @@
           :total="listCount"
           @current-change="pageChange"
           background
-        >
-        </el-pagination>
+        ></el-pagination>
       </div>
     </div>
   </div>

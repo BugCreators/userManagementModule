@@ -131,7 +131,7 @@ export default {
       loading.close();
       if (res.code === 200) {
         const listTemp = res.data.list.map(item => {
-          item.sex = item.sex ? "男" : "女" ;
+          item.sex = item.sex ? "男" : "女";
           return item;
         });
         this.list = listTemp;

@@ -21,18 +21,15 @@
           </div>
         </div>
         <div class="userInfo">
-          <a
-            class="loginButton"
-            :href="buttonInfo.href"
-            v-if="!userInfo"
-            >{{ buttonInfo.text }}</a
-          >
+          <a v-if="!userInfo" class="loginButton" :href="buttonInfo.href">
+            {{ buttonInfo.text }}
+          </a>
           <div v-else>
             欢迎您！{{ userInfo.roleName || "游客" }}
             <el-dropdown @command="handleCommand">
               <span class="el-dropdown-link">
-                {{ userInfo.realname
-                }}<i class="el-icon-arrow-down el-icon--right"></i>
+                {{ userInfo.realname }}
+                <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="userInfo">个人信息</el-dropdown-item>
@@ -76,7 +73,8 @@ export default {
   },
   mounted() {
     if (!this.isAdmin) {
-      const navHeight = document.getElementsByClassName("header")[0].offsetHeight;
+      const navHeight = document.getElementsByClassName("header")[0]
+        .offsetHeight;
       onscroll = function() {
         const scrolltop =
           document.documentElement.scrollTop || document.body.scrollTop;

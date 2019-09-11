@@ -1,9 +1,5 @@
 <template>
-  <el-menu
-    :default-active="currentComponent"
-    :collapse="isCollapse"
-    router
-  >
+  <el-menu :default-active="currentComponent" :collapse="isCollapse" router>
     <el-tooltip
       effect="dark"
       placement="right"
@@ -186,8 +182,8 @@ export default {
         select_role: 0,
         select_student: 0,
         select_teacher: 0
-      },
-    }
+      }
+    };
   },
   computed: {
     ...mapState({

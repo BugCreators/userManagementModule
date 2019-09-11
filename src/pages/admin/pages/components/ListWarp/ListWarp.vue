@@ -40,7 +40,7 @@ export default {
     },
     exportFuncName: {
       type: String,
-      default: "listExportConfirm"  
+      default: "listExportConfirm"
     },
     moduleName: String,
     showDeleted: {

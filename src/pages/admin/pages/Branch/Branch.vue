@@ -48,7 +48,7 @@ export default {
     return {
       count: 0,
       currentId: undefined,
-      moduleName: "branch",
+      moduleName: "branch"
     };
   },
   computed: {

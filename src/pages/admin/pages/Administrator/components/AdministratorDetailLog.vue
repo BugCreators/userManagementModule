@@ -18,9 +18,7 @@
           name="realname"
           :placeholder="'请输入' + i18n['realname']"
         >
-          <i class="errorMsg" slot="suffix">
-            {{ errorMsg }}
-          </i>
+          <i class="errorMsg" slot="suffix">{{ errorMsg }}</i>
         </el-input>
       </el-form-item>
       <el-form-item :label="i18n['number']" prop="number">
@@ -29,9 +27,7 @@
           name="number"
           placeholder="请输入11位职工号"
         >
-          <i class="errorMsg" slot="suffix">
-            {{ errorMsg2 }}
-          </i>
+          <i class="errorMsg" slot="suffix">{{ errorMsg2 }}</i>
         </el-input>
       </el-form-item>
       <el-form-item :label="i18n['sex']">
@@ -51,12 +47,9 @@
             :key="item.id"
             :label="item.name"
             :value="item.id"
-          >
-          </el-option>
+          ></el-option>
         </el-select>
-        <i class="errorMsg">
-          {{ errorMsg3 }}
-        </i>
+        <i class="errorMsg">{{ errorMsg3 }}</i>
       </el-form-item>
       <el-form-item :label="i18n['role']" prop="role_id">
         <el-select
@@ -68,12 +61,9 @@
             :key="item.id"
             :label="item.name"
             :value="item.id"
-          >
-          </el-option>
+          ></el-option>
         </el-select>
-        <i class="errorMsg">
-          {{ errorMsg4 }}
-        </i>
+        <i class="errorMsg">{{ errorMsg4 }}</i>
       </el-form-item>
       <el-form-item :label="i18n['phone']" prop="phone">
         <el-input

@@ -10,7 +10,7 @@
         下载模板
       </el-button>
       <el-upload
-        accept=".xls,.xlsx"
+        accept=".xls, .xlsx"
         action="111"
         class="excelUpload"
         :auto-upload="false"
@@ -23,9 +23,7 @@
           导入文件
         </el-button>
       </el-upload>
-      <div class="el-upload__tip importTip">
-        只能上传xls/xlsx文件
-      </div>
+      <div class="el-upload__tip importTip">只能上传xls/xlsx文件</div>
     </div>
     <ClassList v-if="listExcel" :listExcel="listExcel" :isImport="true" />
     <div class="logWarp">

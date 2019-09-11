@@ -19,12 +19,9 @@
             :key="index"
             :label="value"
             :value="value"
-          >
-          </el-option>
+          ></el-option>
         </el-select>
-        <i class="errorMsg">
-          {{ errorMsg4 }}
-        </i>
+        <i class="errorMsg">{{ errorMsg4 }}</i>
       </el-form-item>
       <el-form-item :label="i18n['name']" prop="name">
         <el-input
@@ -32,9 +29,7 @@
           name="name"
           :placeholder="'请输入' + i18n['name']"
         >
-          <i class="errorMsg" slot="suffix">
-            {{ errorMsg }}
-          </i>
+          <i class="errorMsg" slot="suffix">{{ errorMsg }}</i>
         </el-input>
       </el-form-item>
       <el-form-item :label="i18n['collegeName']" prop="college_id">
@@ -48,12 +43,9 @@
             :key="item.id"
             :label="item.name"
             :value="item.id"
-          >
-          </el-option>
+          ></el-option>
         </el-select>
-        <i class="errorMsg">
-          {{ errorMsg2 }}
-        </i>
+        <i class="errorMsg">{{ errorMsg2 }}</i>
       </el-form-item>
       <el-form-item :label="i18n['majorName']" prop="major_id">
         <el-select
@@ -65,12 +57,9 @@
             :key="item.id"
             :label="item.name"
             :value="item.id"
-          >
-          </el-option>
+          ></el-option>
         </el-select>
-        <i class="errorMsg">
-          {{ errorMsg3 }}
-        </i>
+        <i class="errorMsg">{{ errorMsg3 }}</i>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">

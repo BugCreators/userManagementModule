@@ -53,8 +53,7 @@
           :total="listCount"
           @current-change="pageChange"
           background
-        >
-        </el-pagination>
+        ></el-pagination>
       </div>
     </div>
   </div>

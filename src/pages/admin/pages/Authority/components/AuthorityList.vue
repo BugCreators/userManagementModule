@@ -23,8 +23,7 @@
           :total="authorityListCount"
           @current-change="pageChange"
           background
-        >
-        </el-pagination>
+        ></el-pagination>
       </div>
     </div>
   </div>
