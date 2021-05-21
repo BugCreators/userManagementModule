@@ -38,11 +38,17 @@ export default {
   name: "college",
   components: {
     CollegeListImport: () =>
-      import(/* webpackChunkName: "collegeListImport" */ "./components/CollegeListImport"),
+      import(
+        /* webpackChunkName: "collegeListImport" */ "./components/CollegeListImport"
+      ),
     CollegeDetailLog: () =>
-      import(/* webpackChunkName: "collegeDetailLog" */ "./components/CollegeDetailLog"),
+      import(
+        /* webpackChunkName: "collegeDetailLog" */ "./components/CollegeDetailLog"
+      ),
     CollegeLogoLog: () =>
-      import(/* webpackChunkName: "collegeLogoLog" */ "./components/CollegeLogoLog"),
+      import(
+        /* webpackChunkName: "collegeLogoLog" */ "./components/CollegeLogoLog"
+      ),
     CollegeList,
     ListWarp,
     SearchBox

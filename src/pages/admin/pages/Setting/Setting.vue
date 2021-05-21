@@ -70,18 +70,28 @@ export default {
   name: "sysSetting",
   components: {
     CarouselCard: () =>
-      import(/* webpackChunkName: "carouselCard" */ "./components/CarouselCard/CarouselCard"),
+      import(
+        /* webpackChunkName: "carouselCard" */ "./components/CarouselCard/CarouselCard"
+      ),
     CarouselLog: () =>
-      import(/* webpackChunkName: "carouselLog" */ "./components/CarouselLog/CarouselLog"),
+      import(
+        /* webpackChunkName: "carouselLog" */ "./components/CarouselLog/CarouselLog"
+      ),
     elCard: Card,
     elForm: Form,
     elFormItem: FormItem,
     OtherSystemCard: () =>
-      import(/* webpackChunkName: "otherSystemCard" */ "./components/OtherSystemCard/OtherSystemCard"),
+      import(
+        /* webpackChunkName: "otherSystemCard" */ "./components/OtherSystemCard/OtherSystemCard"
+      ),
     OtherSystemLog: () =>
-      import(/* webpackChunkName: "otherSystemLog" */ "./components/OtherSystemLog/OtherSystemLog"),
+      import(
+        /* webpackChunkName: "otherSystemLog" */ "./components/OtherSystemLog/OtherSystemLog"
+      ),
     SchoolInfoCard: () =>
-      import(/* webpackChunkName: "schoolInfoCard" */ "./components/SchoolInfoCard/SchoolInfoCard")
+      import(
+        /* webpackChunkName: "schoolInfoCard" */ "./components/SchoolInfoCard/SchoolInfoCard"
+      )
   },
   data() {
     return {

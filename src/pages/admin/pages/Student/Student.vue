@@ -37,11 +37,17 @@ export default {
   name: "student",
   components: {
     StudentListImport: () =>
-      import(/* webpackChunkName: "studentListImport" */ "./components/StudentListImport"),
+      import(
+        /* webpackChunkName: "studentListImport" */ "./components/StudentListImport"
+      ),
     StudentDetailLog: () =>
-      import(/* webpackChunkName: "studentDetailLog" */ "./components/StudentDetailLog"),
+      import(
+        /* webpackChunkName: "studentDetailLog" */ "./components/StudentDetailLog"
+      ),
     StudentListExport: () =>
-      import(/* webpackChunkName: "studentListExport" */ "./components/StudentListExport"),
+      import(
+        /* webpackChunkName: "studentListExport" */ "./components/StudentListExport"
+      ),
     StudentList,
     ListWarp,
     SearchBox

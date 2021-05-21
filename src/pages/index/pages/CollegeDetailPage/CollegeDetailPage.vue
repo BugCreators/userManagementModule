@@ -52,7 +52,9 @@ export default {
     elBreadcrumbItem: BreadcrumbItem,
     AvueImage,
     MajorList: () =>
-      import(/* webpackChunkName: "majorList" */ "../../components/CollegeDetailMajorList/CollegeDetailMajorList")
+      import(
+        /* webpackChunkName: "majorList" */ "../../components/CollegeDetailMajorList/CollegeDetailMajorList"
+      )
   },
   data() {
     return {

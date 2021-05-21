@@ -32,9 +32,13 @@ export default {
   name: "teacher",
   components: {
     TeacherListImport: () =>
-      import(/* webpackChunkName: "teacherListImport" */ "./components/TeacherListImport"),
+      import(
+        /* webpackChunkName: "teacherListImport" */ "./components/TeacherListImport"
+      ),
     TeacherDetailLog: () =>
-      import(/* webpackChunkName: "teacherDetailLog" */ "./components/TeacherDetailLog"),
+      import(
+        /* webpackChunkName: "teacherDetailLog" */ "./components/TeacherDetailLog"
+      ),
     TeacherList,
     ListWarp,
     SearchBox

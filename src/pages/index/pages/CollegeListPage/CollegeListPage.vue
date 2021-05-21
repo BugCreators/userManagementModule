@@ -20,9 +20,13 @@ export default {
   components: {
     Carousel,
     CollegeList: () =>
-      import(/* webpackChunkName: "collegeList" */ "../../components/CollegeList/CollegeList"),
+      import(
+        /* webpackChunkName: "collegeList" */ "../../components/CollegeList/CollegeList"
+      ),
     MyNoData: () =>
-      import(/* webpackChunkName: "myNoData" */ "@/components/MyNoData/MyNoData")
+      import(
+        /* webpackChunkName: "myNoData" */ "@/components/MyNoData/MyNoData"
+      )
   },
   data() {
     return {

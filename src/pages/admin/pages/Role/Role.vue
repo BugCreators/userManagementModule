@@ -38,7 +38,9 @@ export default {
   name: "role",
   components: {
     RoleDetailLog: () =>
-      import(/* webpackChunkName: "roleDetailLog" */ "./components/RoleDetailLog"),
+      import(
+        /* webpackChunkName: "roleDetailLog" */ "./components/RoleDetailLog"
+      ),
     RoleList,
     ListWarp,
     SearchBox

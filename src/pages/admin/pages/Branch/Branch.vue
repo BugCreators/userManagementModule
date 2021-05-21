@@ -37,9 +37,13 @@ export default {
   name: "branch",
   components: {
     BranchListImport: () =>
-      import(/* webpackChunkName: "branchListImport" */ "./components/BranchListImport"),
+      import(
+        /* webpackChunkName: "branchListImport" */ "./components/BranchListImport"
+      ),
     BranchDetailLog: () =>
-      import(/* webpackChunkName: "branchDetailLog" */ "./components/BranchDetailLog"),
+      import(
+        /* webpackChunkName: "branchDetailLog" */ "./components/BranchDetailLog"
+      ),
     BranchList,
     ListWarp,
     SearchBox

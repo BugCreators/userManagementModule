@@ -33,9 +33,13 @@ export default {
   name: "department",
   components: {
     DepartmentListImport: () =>
-      import(/* webpackChunkName: "departmentListImport" */ "./components/DepartmentListImport"),
+      import(
+        /* webpackChunkName: "departmentListImport" */ "./components/DepartmentListImport"
+      ),
     DepartmentDetailLog: () =>
-      import(/* webpackChunkName: "departmentDetailLog" */ "./components/DepartmentDetailLog"),
+      import(
+        /* webpackChunkName: "departmentDetailLog" */ "./components/DepartmentDetailLog"
+      ),
     DepartmentList,
     ListWarp,
     SearchBox

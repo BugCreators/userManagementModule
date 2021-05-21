@@ -36,7 +36,9 @@ const router = new Router({
       path: "/authority",
       name: "authority",
       component: () =>
-        import(/* webpackChunkName: "authority" */ "./pages/Authority/Authority"),
+        import(
+          /* webpackChunkName: "authority" */ "./pages/Authority/Authority"
+        ),
       meta: {
         requireAuth: true
       }
@@ -46,7 +48,9 @@ const router = new Router({
       path: "/administrator",
       name: "administrator",
       component: () =>
-        import(/* webpackChunkName: "administrator" */ "./pages/Administrator/Administrator"),
+        import(
+          /* webpackChunkName: "administrator" */ "./pages/Administrator/Administrator"
+        ),
       meta: {
         requireAuth: true
       }
@@ -76,7 +80,9 @@ const router = new Router({
       path: "/department",
       name: "department",
       component: () =>
-        import(/* webpackChunkName: "department" */ "./pages/Department/Department"),
+        import(
+          /* webpackChunkName: "department" */ "./pages/Department/Department"
+        ),
       meta: {
         requireAuth: true
       }
@@ -130,7 +136,9 @@ const router = new Router({
       path: "/userInfo",
       name: "userInfo",
       component: () =>
-        import(/* webpackChunkName: "userInfo" */ "../index/pages/UserInfo/UserInfo"),
+        import(
+          /* webpackChunkName: "userInfo" */ "../index/pages/UserInfo/UserInfo"
+        ),
       meta: {
         requireAuth: true
       }
@@ -139,7 +147,9 @@ const router = new Router({
       path: "/changePw",
       name: "changePw",
       component: () =>
-        import(/* webpackChunkName: "changePw" */ "../index/pages/ChangePassword/ChangePassword"),
+        import(
+          /* webpackChunkName: "changePw" */ "../index/pages/ChangePassword/ChangePassword"
+        ),
       meta: {
         requireAuth: true
       }

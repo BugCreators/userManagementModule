@@ -37,9 +37,13 @@ export default {
   name: "class",
   components: {
     ClassListImport: () =>
-      import(/* webpackChunkName: "ClassListImport" */ "./components/ClassListImport"),
+      import(
+        /* webpackChunkName: "ClassListImport" */ "./components/ClassListImport"
+      ),
     ClassDetailLog: () =>
-      import(/* webpackChunkName: "ClassDetailLog" */ "./components/ClassDetailLog"),
+      import(
+        /* webpackChunkName: "ClassDetailLog" */ "./components/ClassDetailLog"
+      ),
     ClassList,
     ListWarp,
     SearchBox

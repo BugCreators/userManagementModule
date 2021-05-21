@@ -39,7 +39,9 @@ export default {
   name: "administrator",
   components: {
     AdministratorDetailLog: () =>
-      import(/* webpackChunkName: "administratorDetailLog" */ "./components/AdministratorDetailLog"),
+      import(
+        /* webpackChunkName: "administratorDetailLog" */ "./components/AdministratorDetailLog"
+      ),
     AdministratorList,
     ListWarp,
     SearchBox

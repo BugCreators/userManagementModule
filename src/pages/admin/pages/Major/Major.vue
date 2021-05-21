@@ -32,9 +32,13 @@ export default {
   name: "major",
   components: {
     MajorListImport: () =>
-      import(/* webpackChunkName: "majorListImport" */ "./components/MajorListImport"),
+      import(
+        /* webpackChunkName: "majorListImport" */ "./components/MajorListImport"
+      ),
     MajorDetailLog: () =>
-      import(/* webpackChunkName: "majorDetailLog" */ "./components/MajorDetailLog"),
+      import(
+        /* webpackChunkName: "majorDetailLog" */ "./components/MajorDetailLog"
+      ),
     MajorList,
     ListWarp,
     SearchBox
